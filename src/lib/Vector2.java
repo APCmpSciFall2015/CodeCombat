@@ -1,9 +1,11 @@
 package lib;
+
 /**
  * The Vector2 class represents a 2x1 matrix vector and provides common
  * operations on said object.
- * <ul>
+ * 
  * Some design notes:
+ * <ul>
  * <li>The cross product is returned as a float, not a 3rd dimensional vector
  * despite that it represents a vector orthogonal to any 2 input vectors.</li>
  * <li>Angles are not stored as fields; all angles are calculated when needed.
@@ -144,7 +146,7 @@ public class Vector2
 	 */
 	public float angleBetween(Vector2 v)
 	{
-		return (float) Math.cos(dot(v) / (v.mag() * mag()));
+		return (float) Math.acos(dot(v) / (v.mag() * mag()));
 	}
 
 	/**
@@ -242,33 +244,9 @@ public class Vector2
 	public void lerp(Vector2 v, float alpha)
 	{
 		this.x *= (1 - alpha) * x + v.x * alpha;
-		this.y *= (1 - alpha) * x + v.y * alpha;
+		this.y *= (1 - alpha) * y + v.y * alpha;
 	}
-
-	/**
-	 * The angleBetween method returns the angle between this vector and another
-	 * in radians.
-	 * @param v1 1st vector
-	 * @param v2 2nd vector
-	 * @return angle between vectors
-	 */
-	public float angleBetween(Vector2 v1, Vector2 v2)
-	{
-		return (float) Math.cos(v1.dot(v2) / (v1.mag() * v2.mag()));
-	}
-
-	/**
-	 * The rotate method returns a vector rotated from the input vector by an angle deltaTheta.
-	 * @param v vector
-	 * @param deltaTheta angle to rotate by
-	 */
-	public Vector2 rotate(Vector2 v, float deltaTheta)
-	{
-		float theta = v.angle() + deltaTheta;
-		float mag = v.mag();
-		return new Vector2(mag * (float) Math.cos(theta), mag * (float) Math.sin(theta));
-	}
-
+	
 	// Static methods
 	// ----------------------------------------------------------
 
@@ -343,6 +321,8 @@ public class Vector2
 	/**
 	 * The normalize method converts the magnitude of this vector to 1, making
 	 * it a unit vector in its given direction.
+	 * @param v vector
+	 * @return normalized vector
 	 */
 	public static Vector2 normalize(Vector2 v)
 	{
@@ -356,10 +336,24 @@ public class Vector2
 	 * @param v1 1st vector
 	 * @param v2 2nd vector
 	 * @param alpha alpha value
+	 * @return linear interpolation of v1 and v2
 	 */
 	public static Vector2 lerp(Vector2 v1, Vector2 v2, float alpha)
 	{
 		return new Vector2((1 - alpha) * v1.x + v2.x * alpha, (1 - alpha) * v1.y + v2.y * alpha);
+	}
+	
+	/**
+	 * The rotate method returns a vector rotated from the input vector by an angle deltaTheta.
+	 * @param v vector
+	 * @param deltaTheta angle to rotate by
+	 * @return rotated vector
+	 */
+	public static Vector2 rotate(Vector2 v, float deltaTheta)
+	{
+		float theta = v.angle() + deltaTheta;
+		float mag = v.mag();
+		return new Vector2(mag * (float) Math.cos(theta), mag * (float) Math.sin(theta));
 	}
 
 	// Getters and Setters
