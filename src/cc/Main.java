@@ -6,6 +6,8 @@ import java.awt.Image;
 
 public class Main extends Applet implements Runnable
 {
+	private World world = new World();
+	
 	// Applet parameters
 	// -------------------------------------------------------------
 
@@ -83,6 +85,7 @@ public class Main extends Applet implements Runnable
 	@Override
 	public void paint(Graphics g)
 	{
+		world.paint(g);
 	}
 
 	@Override
@@ -90,6 +93,8 @@ public class Main extends Applet implements Runnable
 	{
 		while (true)
 		{
+			world.update();
+			repaint();
 			// sleep for rest of frame time
 			try
 			{

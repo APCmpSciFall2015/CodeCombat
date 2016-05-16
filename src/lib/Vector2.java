@@ -2,9 +2,7 @@ package lib;
 
 /**
  * The Vector2 class represents a 2x1 matrix vector and provides common
- * operations on said object.
- * 
- * Some design notes:
+ * operations on said object. Some design notes:
  * <ul>
  * <li>The cross product is returned as a float, not a 3rd dimensional vector
  * despite that it represents a vector orthogonal to any 2 input vectors.</li>
@@ -73,8 +71,7 @@ public class Vector2
 	@Override
 	public boolean equals(Object o)
 	{
-		return o instanceof Vector2 
-				&& this.x < ((Vector2) o).x + EPSILON && this.x > ((Vector2) o).x - EPSILON
+		return o instanceof Vector2 && this.x < ((Vector2) o).x + EPSILON && this.x > ((Vector2) o).x - EPSILON
 				&& this.y < ((Vector2) o).y + EPSILON && this.y > ((Vector2) o).y - EPSILON;
 	}
 
@@ -151,54 +148,63 @@ public class Vector2
 
 	/**
 	 * The rotate method rotates this vector by a given angle deltaTheta.
-	 * @param deltaTheta angle to rotate by
+	 * @param deltaTheta angle to rotate by * @return reference to self
 	 */
-	public void rotate(float deltaTheta)
+	public Vector2 rotate(float deltaTheta)
 	{
 		float theta = angle() + deltaTheta;
 		float mag = mag();
 		this.x = mag * (float) Math.cos(theta);
 		this.y = mag * (float) Math.sin(theta);
+		return this;
 	}
 
 	/**
 	 * The add method adds another vector to this vector.
 	 * @param v vector to add
+	 * @return reference to self
 	 */
-	public void add(Vector2 v)
+	public Vector2 add(Vector2 v)
 	{
 		this.x += v.x;
 		this.y += v.y;
+		return this;
 	}
 
 	/**
 	 * The sub method subtracts another vector from this vector.
 	 * @param v vector
+	 *  @return reference to self
 	 */
-	public void sub(Vector2 v)
+	public Vector2 sub(Vector2 v)
 	{
 		this.x -= v.x;
 		this.y -= v.y;
+		return this;
 	}
 
 	/**
 	 * The mult method multiplies this vector by another vector
 	 * @param n scalar to multiply by
+	 *  @return reference to self
 	 */
-	public void mult(float n)
+	public Vector2 mult(float n)
 	{
 		this.x *= n;
 		this.y *= n;
+		return this;
 	}
 
 	/**
 	 * The div method divides this vector by a scalar.
 	 * @param n scalar to divide by
+	 *  @return reference to self
 	 */
-	public void div(float n)
+	public Vector2 div(float n)
 	{
 		this.x /= n;
 		this.y /= n;
+		return this;
 	}
 
 	/**
@@ -227,12 +233,14 @@ public class Vector2
 	/**
 	 * The normalize method converts the magnitude of this vector to 1, making
 	 * it a unit vector in its given direction.
+	 *  @return reference to self
 	 */
-	public void normalize()
+	public Vector2 normalize()
 	{
 		float theta = angle();
 		this.x = (float) Math.cos(theta);
 		this.y = (float) Math.sin(theta);
+		return this;
 	}
 
 	/**
@@ -240,13 +248,15 @@ public class Vector2
 	 * another vector and sets it equal to this vector
 	 * @param v vector
 	 * @param alpha alpha value
+	 * @return reference to self
 	 */
-	public void lerp(Vector2 v, float alpha)
+	public Vector2 lerp(Vector2 v, float alpha)
 	{
 		this.x *= (1 - alpha) * x + v.x * alpha;
 		this.y *= (1 - alpha) * y + v.y * alpha;
+		return this;
 	}
-	
+
 	// Static methods
 	// ----------------------------------------------------------
 
@@ -318,9 +328,10 @@ public class Vector2
 	{
 		return new Vector2((1 - alpha) * v1.x + v2.x * alpha, (1 - alpha) * v1.y + v2.y * alpha);
 	}
-	
+
 	/**
-	 * The rotate method returns a vector rotated from the input vector by an angle deltaTheta.
+	 * The rotate method returns a vector rotated from the input vector by an
+	 * angle deltaTheta.
 	 * @param v vector
 	 * @param deltaTheta angle to rotate by
 	 * @return rotated vector
