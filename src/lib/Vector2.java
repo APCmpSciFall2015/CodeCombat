@@ -251,30 +251,6 @@ public class Vector2
 	// ----------------------------------------------------------
 
 	/**
-	 * The cross method returns the cross product of 2 vectors as a float. This
-	 * value is indicative of a vector orthogonal to the 2 vectors involved in
-	 * its computation but is not returned as a 3rd dimensional vector object.
-	 * @param v1 1st vector in computation
-	 * @param v2 2nd vector in computation
-	 * @return cross product as float
-	 */
-	public static float cross(Vector2 v1, Vector2 v2)
-	{
-		return v1.x * v2.y + v1.y * v2.x;
-	}
-
-	/**
-	 * The dot method returns the dot product of 2 vectors.
-	 * @param v1 1st vector in computation
-	 * @param v2 2nd vector in computation
-	 * @return dot product
-	 */
-	public static float dot(Vector2 v1, Vector2 v2)
-	{
-		return v1.x * v2.x + v1.y * v2.y;
-	}
-
-	/**
 	 * The add method adds 2 vectors and produces a new vector.
 	 * @param v1 1st vector
 	 * @param v2 2nd vector

@@ -149,27 +149,11 @@ public class Vector2Test
 	}
 	
 	@Test
-	public void testCrossStatic()
-	{
-		Vector2 v1 = new Vector2(2, 1);
-		Vector2 v2 = new Vector2(1, 2);
-		assertEquals(Vector2.cross(v1, v2), 5, .001);
-	}
-	
-	@Test
 	public void testDot()
 	{
 		Vector2 v1 = new Vector2(2, 1);
 		Vector2 v2 = new Vector2(1, 2);
 		assertEquals(v1.dot(v2), 4, 0.001);
-	}
-	
-	@Test
-	public void testDotStatic()
-	{
-		Vector2 v1 = new Vector2(2, 1);
-		Vector2 v2 = new Vector2(1, 2);
-		assertEquals(Vector2.dot(v1, v2), 4, .001);
 	}
 	
 	@Test
