@@ -22,6 +22,9 @@ public class Circle extends Sprite
 		g.setColor(Color.MAGENTA);
 		Vector2 direction = getAcceleration().normalize();
 		g.fillOval((int) (getPosition().getX() - direction.getX() * 20) - 5, (int) (getPosition().getY() + direction.getY() * 20) - 5, 10, 10);
+		g.fillOval((int) (getPosition().getX() + direction.getX() * 20) - 5, (int) (getPosition().getY() + direction.getY() * 20) - 5, 10, 10);
+		g.setColor(Color.BLUE);
+		g.fillOval((int) (getPosition().getX() + getVelocity().normalize().getX() * 20) - 5, (int) (getPosition().getY() + getVelocity().normalize().getY() * 20) - 5, 10, 10);
 	}
 
 	@Override
@@ -33,7 +36,7 @@ public class Circle extends Sprite
 		Vector2 oldVelocity = getVelocity();
 		if(getVelocity().mag() < 10) setVelocity(getVelocity().add(getAcceleration())); // update the instantaneous vel
 		else setVelocity(getVelocity().add(getAcceleration()).normalize().mult(10)); // truncate the max vel
-		
+		setAcceleration(new Vector2(getVelocity().getY(), -getVelocity().getX()).normalize().mult(2));
 		setPosition(getPosition().add(getVelocity().add(oldVelocity).div(2))); // calc avg vel over interval for UAM and add to pos
 	}
 }
