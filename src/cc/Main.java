@@ -6,11 +6,13 @@ import java.awt.Image;
 
 public class Main extends Applet implements Runnable
 {
+	private World world = new World();
+	
 	// Applet parameters
 	// -------------------------------------------------------------
 
 	/** frame rate of applet set to 60 fps **/
-	public static final long frameRate = 1000 / 60;
+	public static final long frameRate = 1000 / 6;
 	/** scale of time as pertinent to frameRate **/
 	public static final double timeScale = 1.0 / 12.0;
 	/** width of applet **/
@@ -83,6 +85,7 @@ public class Main extends Applet implements Runnable
 	@Override
 	public void paint(Graphics g)
 	{
+		world.paint(g);
 	}
 
 	@Override
@@ -90,6 +93,8 @@ public class Main extends Applet implements Runnable
 	{
 		while (true)
 		{
+			world.update();
+			repaint();
 			// sleep for rest of frame time
 			try
 			{
