@@ -1,5 +1,4 @@
 package cc;
-
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -29,8 +28,8 @@ public class World {
 			for (int j = i + 1; j < sprites.size(); j++) {
 				if (checkCollision(sprites.get(i), sprites.get(j))) {
 					collisions = true;
-					sprites.get(i).collision(sprites.get(j));
-					sprites.get(j).collision(sprites.get(i));
+					sprites.get(i).collide(sprites.get(j));
+					sprites.get(j).collide(sprites.get(i));
 				}
 			}
 		}
