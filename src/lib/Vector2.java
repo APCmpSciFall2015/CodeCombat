@@ -45,8 +45,8 @@ public class Vector2
 	{
 		if (!isPolar)
 			throw new IllegalArgumentException(); // idiot proof
-		this.x = (float) Math.cos(angle);
-		this.y = (float) Math.sin(angle);
+		this.x = (float) Math.cos(angle) * magnitude;
+		this.y = (float) Math.sin(angle) * magnitude;
 	}
 
 	/**

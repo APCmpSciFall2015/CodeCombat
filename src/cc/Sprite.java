@@ -6,9 +6,10 @@ import java.awt.Graphics;
 import lib.Vector2;
 
 public abstract class Sprite
-{
-	public static final float MAX_VELOCITY = 5f;
-	
+{	
+	public static final float MAX_VELOCITY = 20f;
+
+	private boolean alive = true;
 	private World world;
 	private int width;
 	private int height;
@@ -84,11 +85,12 @@ public abstract class Sprite
 		this.world = world;
 	}
 	
+	
 	// Abstract methods
 	// -----------------------------------------------------
 	
-	public abstract void update();
 	public abstract void paint(Graphics g);
+	public abstract void update();
 	public abstract void collide(Sprite s);
 	
 	// Getters and setters
@@ -162,5 +164,15 @@ public abstract class Sprite
 	protected  void setWorld(World world)
 	{
 		this.world = world;
+	}
+
+	public boolean isAlive()
+	{
+		return alive;
+	}
+
+	public void setAlive(boolean alive)
+	{
+		this.alive = alive;
 	}
 }

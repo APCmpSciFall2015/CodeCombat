@@ -8,7 +8,6 @@ import lib.Vector2;
 
 public class Circle extends Sprite
 {
-	private ArrayList<Projectile> projectiles;
 
 	public Circle(float x, float y, World world)
 	{
@@ -16,7 +15,6 @@ public class Circle extends Sprite
 		setVelocity(new Vector2(1, 0, true));
 		setWidth(40);
 		setHeight(40);
-		projectiles = new ArrayList<Projectile>();
 		setColor(Color.BLUE);
 	}
 
@@ -39,28 +37,25 @@ public class Circle extends Sprite
 		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
 		g.fillOval((int) (getPosition().getX() + getVelocity().normalize().getX() * getWidth() / 2) - 5,
 				(int) (getPosition().getY() + getVelocity().normalize().getY() * getHeight() / 2) - 5, 10, 10);
-
-		// paint projectiles
-		for (Projectile p : projectiles)
-		{
-			p.paint(g);
-		}
 	}
 
 	@Override
 	public void update()
 	{
+		// slide on walls
+		if (getPosition().getX() - getWidth() / 2 < 0) setPosition(getPosition().setX(getWidth() / 2));
+		else if (getPosition().getX() + getWidth() / 2 > getWorld().getWidth()) setPosition(getPosition().setX(getWorld().getWidth() - getWidth() / 2));
+		if (getPosition().getY() - getWidth() / 2 < 0) setPosition(getPosition().setY(getWidth() / 2));
+		else if (getPosition().getY() + getWidth() / 2 > getWorld().getHeight()) setPosition(getPosition().setY(getWorld().getHeight() - getHeight() / 2));
+		
+		// update position
 		setPosition(getPosition().add(getVelocity()));
-		setVelocity(new Vector2(1f, (float) (getVelocity().angle() + Math.PI / 100), true));
+		
+		// test change in velocity and shooting
+		setVelocity(new Vector2(2f, (float) (getVelocity().angle() + Math.PI / 500), true));
 		if (i % 60 == 0)
 		{
 			shoot();
-		}
-		System.out.println(getVelocity());
-
-		for (Projectile p : projectiles)
-		{
-			p.update();
 		}
 		i++;
 	}
@@ -95,14 +90,18 @@ public class Circle extends Sprite
 		{
 			exchange(s);
 		}
+		else if (s instanceof Projectile)
+		{
+			if (!((Projectile) s).isOwner(this)) setAlive(false); // die when hit by hostile projectile
+		}
 	}
 
 	public void shoot()
 	{
-		projectiles.add(new Projectile(
+		getWorld().generateObject(new Projectile(
 				(int) (getPosition().getX() + getVelocity().normalize().getX() * getWidth() / 2) - getHeight() / 4,
 				(int) (getPosition().getY() + getVelocity().normalize().getY() * getHeight() / 2) - getHeight() / 4,
-				getVelocity(), getColor(), getWorld()));
+				getVelocity(), this, getWorld()));
 	}
 
 }

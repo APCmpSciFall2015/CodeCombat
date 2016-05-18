@@ -6,7 +6,7 @@ import java.awt.Image;
 
 public class Main extends Applet implements Runnable
 {
-	private World world = new World();
+	private World world;
 	
 	// Applet parameters
 	// -------------------------------------------------------------
@@ -41,6 +41,7 @@ public class Main extends Applet implements Runnable
 		}
 		setSize(width, height);
 		setBackground(backgroundColor);
+		world = new World(main);
 	}
 
 	@Override
@@ -105,5 +106,25 @@ public class Main extends Applet implements Runnable
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public int getWidth()
+	{
+		return width;
+	}
+
+	public void setWidth(int width)
+	{
+		this.width = width;
+	}
+
+	public int getHeight()
+	{
+		return height;
+	}
+
+	public void setHeight(int height)
+	{
+		this.height = height;
 	}
 }
