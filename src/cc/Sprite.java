@@ -9,6 +9,8 @@ public abstract class Sprite
 	public static final float MAX_VELOCITY = 5f;
 	
 	private World world;
+	private int width;
+	private int height;
 	private Vector2 position;
 	private Vector2 velocity; 
 	private Vector2 acceleration;
@@ -16,24 +18,44 @@ public abstract class Sprite
 	// Constructors
 	// --------------------------------------------------
 	
-	public Sprite()
+	public Sprite(World world)
 	{
+		this.width = 0;
+		this.height = 0;
 		this.position = new Vector2(0, 0);
 		this.velocity = new Vector2(0, 0);
 		this.acceleration = new Vector2(0, 0);
+		this.world = world; // shallow copy
 	}
 	
-	public Sprite(float x, float y)
+	public Sprite(float x, float y, World world)
 	{
+		this.width = 0;
+		this.height = 0;
 		this.position = new Vector2(x, y);
+		this.velocity = new Vector2(0, 0);
+		this.acceleration = new Vector2(0, 0);
+		this.world = world; // shallow copy
 	}
 	
 	public Sprite(Vector2 position, Vector2 velocity, Vector2 acceleration, World world)
 	{
+		this.width = 0;
+		this.height = 0;
 		this.position = position.copy();
 		this.velocity = velocity.copy();
 		this.acceleration = acceleration.copy();
-		this.world = world; // shallow copy; this is not accessible in subclasses directly
+		this.world = world; // shallow copy
+	}
+	
+	public Sprite(int width, int height, Vector2 position, Vector2 velocity, Vector2 acceleration, World world)
+	{
+		this.width = width;
+		this.height = height;
+		this.position = position.copy();
+		this.velocity = velocity.copy();
+		this.acceleration = acceleration.copy();
+		this.world = world; // shallow copy
 	}
 	
 	// Abstract methods
@@ -75,5 +97,23 @@ public abstract class Sprite
 		this.acceleration = acceleration.copy();
 	}
 
+	public int getWidth()
+	{
+		return width;
+	}
 
+	public void setWidth(int width)
+	{
+		this.width = width;
+	}
+
+	public int getHeight()
+	{
+		return height;
+	}
+
+	public void setHeight(int height)
+	{
+		this.height = height;
+	}
 }

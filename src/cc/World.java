@@ -17,6 +17,12 @@ public class World {
 		}
 	}
 
+	public void paint(Graphics g) {
+		for (Sprite s : sprites) {
+			s.paint(g);
+		}
+	}
+
 	public boolean checkCollisions() {
 		boolean collisions = false;
 		for (int i = 0; i < sprites.size() - 1; i++) {
@@ -40,11 +46,5 @@ public class World {
 
 	public boolean checkCollision(float Ax, float Ay, float AX, float AY, float Bx, float By, float BX, float BY) {
 		return !(AX < Bx || BX < Ax || AY < By || BY < Ay);
-	}
-
-	public void paint(Graphics g) {
-		for (Sprite s : sprites) {
-			s.paint(g);
-		}
 	}
 }
