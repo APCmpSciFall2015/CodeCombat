@@ -1,6 +1,9 @@
 package cc;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+
+import lib.Vector2;
 
 public class World
 {
@@ -27,4 +30,6 @@ public class World
 			s.paint(g);
 		}
 	}
+	
+	
 }

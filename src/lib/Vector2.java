@@ -351,29 +351,32 @@ public class Vector2
 	 * accordingly)
 	 * @param mag magnitude
 	 */
-	public void setMag(float mag)
+	public Vector2 setMag(float mag)
 	{
 		float theta = angle();
 		this.x = mag * (float) Math.cos(theta);
 		this.y = mag * (float) Math.sin(theta);
+		return this;
 	}
 
 	/**
 	 * The setX method sets the x component of this vector
 	 * @param x x vector component
 	 */
-	public void setX(float x)
+	public Vector2 setX(float x)
 	{
 		this.x = x;
+		return this;
 	}
 
 	/**
 	 * The setY method sets the y component of this vector
 	 * @param y y vector component
 	 */
-	public void setY(float y)
+	public Vector2 setY(float y)
 	{
 		this.y = y;
+		return this;
 	}
 
 	/**
