@@ -12,7 +12,7 @@ public class Main extends Applet implements Runnable
 	// -------------------------------------------------------------
 
 	/** frame rate of applet set to 60 fps **/
-	public static final long frameRate = 1000 / 6;
+	public static final long frameRate = 1000 / 60;
 	/** scale of time as pertinent to frameRate **/
 	public static final double timeScale = 1.0 / 12.0;
 	/** width of applet **/
@@ -20,7 +20,7 @@ public class Main extends Applet implements Runnable
 	/** height of applet **/
 	private int height = 600;
 	/** color of background **/
-	private Color backgroundColor = Color.BLACK;
+	private Color backgroundColor = Color.GRAY;
 	/** instance of self **/
 	public static Main main;
 	/** Thread to run on **/
