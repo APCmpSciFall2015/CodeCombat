@@ -12,6 +12,8 @@ import java.awt.Image;
  */
 public class Main extends Applet implements Runnable
 {
+	public static final boolean DEBUG = false;
+	
 	/** plane of existence help by the applet **/
 	private World world;
 	

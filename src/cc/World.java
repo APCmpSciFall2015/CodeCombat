@@ -103,10 +103,13 @@ public class World
 	 */
 	public boolean colliding(Sprite A, Sprite B)
 	{
-		return colliding(A.getPosition().getX() - A.getWidth() / 2, A.getPosition().getY() - A.getHeight() / 2,
+		// @formatter:off
+		return colliding(
+				A.getPosition().getX() - A.getWidth() / 2, A.getPosition().getY() - A.getHeight() / 2,
 				A.getPosition().getX() + A.getWidth() / 2, A.getPosition().getY() + A.getHeight() / 2,
 				B.getPosition().getX() - B.getWidth() / 2, B.getPosition().getY() - B.getHeight() / 2,
 				B.getPosition().getX() + B.getWidth() / 2, B.getPosition().getY() + B.getHeight() / 2);
+		// @formatter:on
 	}
 
 	/**

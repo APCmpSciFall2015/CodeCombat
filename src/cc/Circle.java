@@ -46,22 +46,28 @@ public class Circle extends Sprite
 
 	@Override
 	public void paint(Graphics g)
-	{
+	{	
 		// @formatter:off
 		g.setColor(getColor());
 		// paint circle
 		g.fillOval(
 				(int) getPosition().getX() - getWidth() / 2,
 				(int) getPosition().getY() - getWidth() / 2,
-				40, 40);
+				getWidth(), getHeight());
 
 		// paint direction visualizer (color declared is inverted)
 		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
 		g.fillOval(
 				(int) (getPosition().getX() + getVelocity().normalize().getX() * getWidth() / 2) - 5,
 				(int) (getPosition().getY() + getVelocity().normalize().getY() * getHeight() / 2) - 5,
-				10, 10);
+				getWidth() / 4, getHeight() / 4);
 		// @formatter:on
+		
+		if(Main.DEBUG)
+			g.drawRect(
+					(int) getPosition().getX() - getWidth() / 2,
+					(int) getPosition().getY() - getWidth() / 2,
+					getWidth(), getHeight());
 	}
 
 	int i = 0;

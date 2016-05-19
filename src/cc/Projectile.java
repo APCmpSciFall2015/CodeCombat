@@ -1,5 +1,6 @@
 package cc;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import lib.Vector2;
@@ -33,15 +34,22 @@ public class Projectile extends Sprite
 
 	@Override
 	public void paint(Graphics g)
-	{
+	{	
 		// @formatter:off
 		// paint circle for projectile
 		g.setColor(getColor());
 		g.fillOval(
-				(int) (getPosition().getX() + getWidth() / 2), 
-				(int) (getPosition().getY() + getHeight() / 2),
+				(int) (getPosition().getX() - getWidth() / 2), 
+				(int) (getPosition().getY() - getHeight() / 2),
 				getWidth(), getHeight());
 		// @formatter:on
+		
+		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
+		if(Main.DEBUG)
+			g.drawRect(
+					(int) getPosition().getX() - getWidth() / 2,
+					(int) getPosition().getY() - getWidth() / 2,
+					getWidth(), getHeight());
 	}
 
 	@Override
