@@ -36,21 +36,6 @@ public abstract class Sprite
 	// --------------------------------------------------
 
 	/**
-	 * Sprite Copy Constructor
-	 * @param s sprite to copy
-	 */
-	public Sprite(Sprite s)
-	{
-		this.width = s.width;
-		this.height = s.height;
-		this.position = s.position.copy();
-		this.velocity = s.velocity.copy();
-		this.acceleration = s.acceleration.copy();
-		this.color = s.color;
-		this.world = s.world;
-	}
-
-	/**
 	 * 7-Argument Sprite Constructor
 	 * @param width width
 	 * @param height height
@@ -131,6 +116,12 @@ public abstract class Sprite
 	// Abstract methods
 	// -----------------------------------------------------
 
+	/**
+	 * The copy method returns a deep copy of the sprite.
+	 * @return copy of sprite
+	 */
+	public abstract Sprite copy();
+	
 	/**
 	 * The paint method draws the sprite
 	 * @param g Graphics to paint on

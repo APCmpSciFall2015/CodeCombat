@@ -12,6 +12,12 @@ public class Projectile extends Sprite
 	/** owner circle **/
 	private Circle c;
 
+	public Projectile(Projectile p)
+	{
+		super(p.getWidth(), p.getHeight(), p.getPosition(), p.getVelocity(), p.getAcceleration(), p.getColor(),
+				p.getWorld());
+	}
+	
 	/**
 	 * 5-Argument Projectile Constructor
 	 * @param x x pos
@@ -74,6 +80,12 @@ public class Projectile extends Sprite
 		// @formatter:off
 		if (s != c) setAlive(false);
 		// @formatter:on
+	}
+	
+	@Override
+	public Sprite copy()
+	{
+		return new Projectile(this);
 	}
 
 	/**

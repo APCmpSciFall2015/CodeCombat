@@ -7,6 +7,12 @@ import lib.Vector2;
 
 public class Obstacle extends Sprite
 {
+	public Obstacle(Obstacle o)
+	{
+		super(o.getWidth(), o.getHeight(), o.getPosition(), o.getVelocity(), o.getAcceleration(), o.getColor(),
+				o.getWorld());
+	}
+	
 	/**
 	 * 5-Argument Obstacle Constructor
 	 * @param width width
@@ -40,5 +46,11 @@ public class Obstacle extends Sprite
 	@Override
 	public void collide(Sprite s)
 	{
+	}
+	
+	@Override
+	public Sprite copy()
+	{
+		return new Obstacle(this);
 	}
 }

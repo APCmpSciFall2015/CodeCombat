@@ -17,6 +17,18 @@ public class Circle extends Sprite
 	public static final float MAX_TURNING_ANGLE = (float) Math.PI / 60f;
 
 	/**
+	 * Circle copy constructor
+	 * @param x x pos
+	 * @param y y pos
+	 * @param world plane of existence
+	 */
+	public Circle(Circle c)
+	{
+		super(c.getWidth(), c.getHeight(), c.getPosition(), c.getVelocity(), c.getAcceleration(), c.getColor(),
+				c.getWorld());
+	}
+
+	/**
 	 * 3-Argument Circle constructor
 	 * @param x x pos
 	 * @param y y pos
@@ -46,7 +58,7 @@ public class Circle extends Sprite
 
 	@Override
 	public void paint(Graphics g)
-	{	
+	{
 		// @formatter:off
 		g.setColor(getColor());
 		// paint circle
@@ -62,11 +74,9 @@ public class Circle extends Sprite
 				(int) (getPosition().getY() + getVelocity().normalize().getY() * getHeight() / 2) - 5,
 				getWidth() / 4, getHeight() / 4);
 		// @formatter:on
-		
-		if(Main.DEBUG)
-			g.drawRect(
-					(int) getPosition().getX() - getWidth() / 2,
-					(int) getPosition().getY() - getWidth() / 2,
+
+		if (Main.DEBUG)
+			g.drawRect((int) getPosition().getX() - getWidth() / 2, (int) getPosition().getY() - getWidth() / 2,
 					getWidth(), getHeight());
 	}
 
@@ -108,6 +118,12 @@ public class Circle extends Sprite
 		// slide on all other objects
 		else if (!(s instanceof Projectile)) slide(s);
 		// @formatter:on
+	}
+
+	@Override
+	public Sprite copy()
+	{
+		return new Circle(this);
 	}
 
 	/**
