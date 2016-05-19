@@ -148,7 +148,8 @@ public class Vector2
 
 	/**
 	 * The rotate method rotates this vector by a given angle deltaTheta.
-	 * @param deltaTheta angle to rotate by * @return reference to self
+	 * @param deltaTheta angle to rotate by  
+	 * @return reference to self
 	 */
 	public Vector2 rotate(float deltaTheta)
 	{
@@ -350,6 +351,7 @@ public class Vector2
 	 * The setMag method sets the magnitude of the vector (adjusts x and y
 	 * accordingly)
 	 * @param mag magnitude
+	 * @return reference to self
 	 */
 	public Vector2 setMag(float mag)
 	{
@@ -362,6 +364,7 @@ public class Vector2
 	/**
 	 * The setX method sets the x component of this vector
 	 * @param x x vector component
+	 * @return reference to self
 	 */
 	public Vector2 setX(float x)
 	{
@@ -372,6 +375,7 @@ public class Vector2
 	/**
 	 * The setY method sets the y component of this vector
 	 * @param y y vector component
+	 * @return reference to self
 	 */
 	public Vector2 setY(float y)
 	{

@@ -1,11 +1,18 @@
 package cc;
+
 import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
+/**
+ * The Main class is the host applet for the game.
+ * @author Robert
+ * @version 0.1
+ */
 public class Main extends Applet implements Runnable
 {
+	/** plane of existence help by the applet **/
 	private World world;
 	
 	// Applet parameters
@@ -29,6 +36,7 @@ public class Main extends Applet implements Runnable
 	private Graphics gg;
 	/** Image to double buffer with **/
 	private Image ii;
+	/** Serializable id **/
 	private static final long serialVersionUID = 3206847208968227199L;
 
 	@Override
@@ -41,6 +49,7 @@ public class Main extends Applet implements Runnable
 		}
 		setSize(width, height);
 		setBackground(backgroundColor);
+		// setup game
 		world = new World(main);
 	}
 
@@ -96,6 +105,7 @@ public class Main extends Applet implements Runnable
 		{
 			world.update();
 			repaint();
+			
 			// sleep for rest of frame time
 			try
 			{
@@ -108,23 +118,41 @@ public class Main extends Applet implements Runnable
 		}
 	}
 
+	/**
+	 * The getWidth method returns the width of the applet.
+	 * @return width of applet
+	 */
 	public int getWidth()
 	{
 		return width;
 	}
 
+	/**
+	 * The setWidth method sets the width of the applet.
+	 * @param width width of applet
+	 */
 	public void setWidth(int width)
 	{
 		this.width = width;
+		setSize(width, height);
 	}
 
+	/**
+	 * The getHeight method returns the height of the applet.
+	 * @return height of applet
+	 */
 	public int getHeight()
 	{
 		return height;
 	}
 
+	/**
+	 * The setHeight method sets the height of the applet.
+	 * @param height height of applet
+	 */
 	public void setHeight(int height)
 	{
 		this.height = height;
+		setSize(width, height);
 	}
 }
