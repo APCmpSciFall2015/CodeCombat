@@ -20,8 +20,6 @@ public class Main extends Applet implements Runnable
 
 	/** frame rate of applet set to 60 fps **/
 	public static final long frameRate = 1000 / 60;
-	/** scale of time as pertinent to frameRate **/
-	public static final double timeScale = 1.0 / 12.0;
 	/** width of applet **/
 	private int width = 800;
 	/** height of applet **/

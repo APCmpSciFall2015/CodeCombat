@@ -100,7 +100,7 @@ public class Circle extends Sprite
 		// die when hit by projectile (not own projectile)
 		if (s instanceof Projectile && !((Projectile) s).isOwner(this)) setAlive(false);
 		// slide on all other objects
-		else slide(s);
+		else if (!(s instanceof Projectile)) slide(s);
 		// @formatter:on
 	}
 
