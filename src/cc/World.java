@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import lib.Vector2;
+
 /**
  * The world class represents a plane of existence for sprites.
  * 
@@ -46,23 +48,13 @@ public class World {
 		}
 		checkCollisions();
 	}
-
-	public ArrayList<Sprite> requestInView(Sprite o) {
-		return requestInView(o, (float) 1.98968);
-	}
-
-	public ArrayList<Sprite> requestInView(Sprite o, float fieldOfView) {
+	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView) {
 		ArrayList<Sprite> observed = new ArrayList<Sprite>();
 		for (Sprite s : sprites) {
-			if (s.getPosition().getY() > (o.getPosition().getY()
-				+ Math.tan(Math.atan(o.getVelocity().getY() / o.getVelocity().getX())
-				- fieldOfView/ 2)
-				+ o.getVelocity().getX() * s.getPosition().getX())
-				&& s.getPosition().getY() < (o.getPosition().getY()
-				+ Math.tan(Math.atan(o.getVelocity().getY() / o.getVelocity().getX()) + fieldOfView / 2)
-				+ o.getVelocity().getX() * s.getPosition().getX()))
-				observed.add(s);
+			if (Math.abs(face.angle() - Vector2.sub(s.getPosition(), position).angle()) < Math.abs(fieldOfView / 2))
+				observed.add(s.copy());
 		}
+
 		return observed;
 	}
 
