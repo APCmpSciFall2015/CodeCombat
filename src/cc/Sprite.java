@@ -3,6 +3,7 @@ package cc;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import cc.Main.GameState;
 import lib.Vector2;
 
 /**
@@ -13,7 +14,7 @@ import lib.Vector2;
  */
 public abstract class Sprite
 {
-	/** maximum  velocity of sprites **/
+	/** maximum velocity of sprites **/
 	public static final float MAX_VELOCITY = 20f;
 	/** whether or not the sprite is alive **/
 	private boolean alive = true;
@@ -23,7 +24,7 @@ public abstract class Sprite
 	private Color color;
 	/** size of sprite **/
 	private Vector2 size;
-	/** location of sprite **/	
+	/** location of sprite **/
 	private Vector2 position;
 	/** rate of change in location of sprite **/
 	private Vector2 velocity;
@@ -44,8 +45,7 @@ public abstract class Sprite
 	 * @param color color
 	 * @param world plane of existence
 	 */
-	public Sprite(Vector2 size, Vector2 position, Vector2 velocity, Vector2 acceleration, Color color,
-			World world)
+	public Sprite(Vector2 size, Vector2 position, Vector2 velocity, Vector2 acceleration, Color color, World world)
 	{
 		this.size = size.copy();
 		this.position = position.copy();
@@ -57,7 +57,7 @@ public abstract class Sprite
 
 	// Instance methods
 	// ----------------------------------------------------
-	
+
 	/**
 	 * The slide method sets the position of a colliding object such that its
 	 * bounding box lies on the edge of the colliding object's bounding box.
@@ -65,17 +65,113 @@ public abstract class Sprite
 	 */
 	public void slide(Sprite s)
 	{
-		// slide on left and right of sprite
-		if (getPosition().getX() - getSize().getX() / 2 < s.getPosition().getX() + s.getSize().getX())
-			setPosition(getPosition().setX(s.getPosition().getX() - s.getSize().getX() / 2 + getSize().getX()));
-		else if (getPosition().getX() + getSize().getX() / 2 > s.getPosition().getX() - s.getSize().getX() / 2)
-			setPosition(getPosition().setX(s.getPosition().getX() + s.getSize().getX() / 2 + getSize().getX()));
+		
+		// if (getPosition().getY() - getSize().getY() / 2 <
+		// s.getPosition().getY() + s.getSize().getY() / 2
+		// && getPosition().getY() + getSize().getY() / 2 >
+		// s.getPosition().getY() - s.getSize().getY() / 2
+		// && getPosition().getX() - getSize().getX() / 2 >
+		// s.getPosition().getX() + s.getSize().getX() / 2
+		// && getPosition().getX() + getSize().getX() / 2 <
+		// s.getPosition().getX() - s.getSize().getX() / 2)
 
-		// slide on top and bottom of sprite
-		if (getPosition().getY() - getSize().getY() / 2 < s.getPosition().getY() + s.getSize().getY())
-			setPosition(getPosition().setY(s.getPosition().getY() - s.getSize().getY() / 2 + getSize().getY()));
-		else if (getPosition().getY() + getSize().getY() / 2 > s.getPosition().getY() - s.getSize().getY() / 2)
-			setPosition(getPosition().setY(s.getPosition().getY() + s.getSize().getY() / 2 + getSize().getY()));
+		// slide on left and right of sprite
+		// if(Math.abs(getPosition().sub(s.getPosition()).angle()) < Math.PI /
+		// 4)
+		// {
+		// if (getPosition().getX() < s.getPosition().getX())
+		// setPosition(getPosition().setX(s.getPosition().getX() -
+		// s.getSize().getX() / 2 - getSize().getX() / 2));
+		// else
+		// setPosition(getPosition().setX(s.getPosition().getX() +
+		// s.getSize().getX() / 2 + getSize().getX() / 2));
+		// }
+		// else
+		// {
+		// if (getPosition().getY() < s.getPosition().getY())
+		// setPosition(getPosition().setY(s.getPosition().getY() -
+		// s.getSize().getY() / 2 - getSize().getY() / 2));
+		// else
+		// setPosition(getPosition().setY(s.getPosition().getY() +
+		// s.getSize().getY() / 2 + getSize().getY() / 2));
+		// }
+
+//		if (getPosition().getX() - getSize().getX() / 2 < s.getPosition().getX() + s.getSize().getX() / 2
+//				&& getPosition().getX() - getSize().getX() / 2 > s.getPosition().getX())
+//		{
+//
+//		}
+//		else if (getPosition().getX() + getSize().getX() / 2 > s.getPosition().getX() - s.getSize().getX() / 2
+//				&& getPosition().getX() + getSize().getX() / 2 < s.getPosition().getX())
+//		{
+//
+//		}
+
+		// if (getPosition().getY() - getSize().getY() / 2 <
+		// s.getPosition().getY() + s.getSize().getY() / 2
+		// && getPosition().getY() + getSize().getY() / 2 >
+		// s.getPosition().getY() - s.getSize().getY() / 2
+		// && getPosition().getX() - getSize().getX() / 2 >
+		// s.getPosition().getX() + s.getSize().getX() / 2
+		// && getPosition().getX() + getSize().getX() / 2 <
+		// s.getPosition().getX() - s.getSize().getX() / 2)
+		// {
+		// if (getPosition().getX() < s.getPosition().getX())
+		// setPosition(getPosition().setX(s.getPosition().getX() -
+		// s.getSize().getX() / 2 - getSize().getX() / 2));
+		// else
+		// setPosition(getPosition().setX(s.getPosition().getX() +
+		// s.getSize().getX() / 2 + getSize().getX() / 2));
+		// }
+		// else
+		// {
+		// if (getPosition().getY() < s.getPosition().getY())
+		// setPosition(getPosition().setY(s.getPosition().getY() -
+		// s.getSize().getY() / 2 - getSize().getY() / 2));
+		// else
+		// setPosition(getPosition().setY(s.getPosition().getY() +
+		// s.getSize().getY() / 2 + getSize().getY() / 2));
+		// }
+
+		// if (getPosition().getX() - getSize().getX() / 2 <
+		// s.getPosition().getX() + s.getSize().getX() / 2)
+		// setPosition(getPosition().setX(s.getPosition().getX() +
+		// s.getSize().getX() / 2 + getSize().getX() / 2));
+		// else if (getPosition().getX() + getSize().getX() / 2 <
+		// s.getPosition().getX() - s.getSize().getX() / 2)
+		// setPosition(getPosition().setX(s.getPosition().getX() -
+		// s.getSize().getX() / 2 - getSize().getX() / 2));
+
+		// if (getPosition().getY() > s.getPosition().getY())
+		// setPosition(getPosition().setY(s.getPosition().getY() +
+		// s.getSize().getY() / 2 + getSize().getY() / 2));
+		// else setPosition(getPosition().setY(s.getPosition().getY() -
+		// s.getSize().getY() / 2 - getSize().getY() / 2));
+
+		// if ((int) getPosition().getX() - (int) getSize().getX() / 2 < (int)
+		// s.getPosition().getX()
+		// + (int) s.getSize().getX() / 2)
+		// {
+		// System.out.println("left collision");
+		//
+		// }
+		// else if ((int) getPosition().getX() + (int) getSize().getX() / 2 >
+		// (int) s.getPosition().getX()
+		// - (int) s.getSize().getX() / 2)
+		// {
+		// System.out.println("right collision");
+		//
+		// }
+		/*
+		 * // slide on top and bottom of sprite if (getPosition().getY() -
+		 * getSize().getY() / 2 < s.getPosition().getY() + s.getSize().getY() /
+		 * 2) setPosition(getPosition().setY(s.getPosition().getY() -
+		 * s.getSize().getY() / 2 + getSize().getY() / 2)); else if
+		 * (getPosition().getY() + getSize().getY() / 2 > s.getPosition().getY()
+		 * - s.getSize().getY() / 2)
+		 * setPosition(getPosition().setY(s.getPosition().getY() +
+		 * s.getSize().getY() / 2 + getSize().getY() / 2));
+		 */
 	}
 
 	/**
@@ -85,7 +181,8 @@ public abstract class Sprite
 	 */
 	public void exchange(Sprite s)
 	{
-		// this changes the velocity of this sprite... how will the other sprite get my velocity?
+		// this changes the velocity of this sprite... how will the other sprite
+		// get my velocity?
 		setVelocity(s.getVelocity());
 	}
 
@@ -118,7 +215,7 @@ public abstract class Sprite
 	 * @return copy of sprite
 	 */
 	public abstract Sprite copy();
-	
+
 	/**
 	 * The paint method draws the sprite
 	 * @param g Graphics to paint on
@@ -131,7 +228,8 @@ public abstract class Sprite
 	public abstract void update();
 
 	/**
-	 * The collide method defines collision behavior for the sprite upon collision with another sprite.
+	 * The collide method defines collision behavior for the sprite upon
+	 * collision with another sprite.
 	 * @param s colliding sprite
 	 */
 	public abstract void collide(Sprite s);

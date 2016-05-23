@@ -28,13 +28,16 @@ public class World
 		this.main = main; // shallow copy
 
 		// initialize game objects
-		
-		do{
+
+		do
+		{
 			sprites = new ArrayList<Sprite>();
-			int numberOfObstacles = (int)(Math.random() * 5 + 6);
-			for(int i = 0; i < numberOfObstacles; i++){
+			int numberOfObstacles = 40;//(int) (Math.random() * 5 + 6);
+			for (int i = 0; i < numberOfObstacles; i++)
+			{
 				Vector2 size = new Vector2(0, 0);
-				switch((int)(Math.random()*3)){
+				switch ((int) (Math.random() * 3))
+				{
 				case 0:
 					size = new Vector2(10, 60);
 					break;
@@ -44,19 +47,22 @@ public class World
 				case 2:
 					size = new Vector2(30, 30);
 					break;
-				default:break;
+				default:
+					break;
 				}
-				Vector2 position = new Vector2((int)(Math.random() * (main.getWidth()-size.getX()) + size.getX()/2), (int)(Math.random() * (main.getHeight()-size.getY()) + size.getY()/2));
-				sprites.add(new Obstacle((int)size.getX(), (int)size.getY(), position, new Color(0, 0, 0), this));
+				Vector2 position = new Vector2(
+						(int) (Math.random() * (main.getWidth() - size.getX()) + size.getX() / 2),
+						(int) (Math.random() * (main.getHeight() - size.getY()) + size.getY() / 2));
+				sprites.add(new Obstacle(size, position, new Color(0, 0, 0), this));
 				System.out.println("Obstacle made");
 			}
 			System.out.println("remaking");
-		}while(checkCollisions());
+		} while (checkCollisions());
 		System.out.println("Done");
-//
-//		// test generate sprites
-//		sprites.add(new Circle(200, 300, this));
-//		sprites.add(new Circle(400, 300, Color.RED, this));
+		//
+		// // test generate sprites
+		 sprites.add(new Circle(200, 300, this));
+		 sprites.add(new Circle(400, 300, Color.RED, this));
 	}
 
 	/**
