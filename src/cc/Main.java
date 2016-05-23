@@ -39,6 +39,14 @@ public class Main extends Applet implements Runnable
 	/** Serializable id **/
 	private static final long serialVersionUID = 3206847208968227199L;
 
+	/** GameState enum */
+	public enum GameState {
+		MENU, PLAY, PAUSED;
+	}
+	/** GameState */
+	private static GameState gameState = GameState.PLAY;
+	
+	
 	@Override
 	public void init()
 	{
@@ -101,7 +109,7 @@ public class Main extends Applet implements Runnable
 	@Override
 	public void run()
 	{
-		while (true)
+		while (gameState.equals(GameState.PLAY))
 		{
 			world.update();
 			repaint();
@@ -116,6 +124,29 @@ public class Main extends Applet implements Runnable
 				e.printStackTrace();
 			}
 		}
+	}
+	/**
+	 * The restart method resets the world and restarts the game.
+	 */
+	public void restart()
+	{
+		world = new World(main);
+	}
+	/**
+	 * The pause method sets the gameState enum to PAUSED and opens the pause menu.
+	 */
+	public void pause()
+	{
+		gameState = GameState.PAUSED;
+		//Open menu
+	}
+	/**
+	 * The end method sets the gameState enum to MENU and returns the game to the main menu.
+	 */
+	public void end()
+	{
+		gameState = GameState.MENU;
+		//Do menu stuff
 	}
 
 	/**
@@ -154,5 +185,21 @@ public class Main extends Applet implements Runnable
 	{
 		this.height = height;
 		setSize(width, height);
+	}
+	/**
+	 * The getGameState method returns the current game state.
+	 * @return The current game state
+	 */
+	public static GameState getGameState() 
+	{
+		return gameState;
+	}
+	/**
+	 * The setGameState method sets gameState to the desired state
+	 * @param gameState game state
+	 */
+	public static void setGameState(GameState gameState) 
+	{
+		Main.gameState = gameState;
 	}
 }
