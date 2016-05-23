@@ -14,7 +14,7 @@ public class Projectile extends Sprite
 
 	public Projectile(Projectile p)
 	{
-		super(p.getWidth(), p.getHeight(), p.getPosition(), p.getVelocity(), p.getAcceleration(), p.getColor(),
+		super(p.getSize(), p.getPosition(), p.getVelocity(), p.getAcceleration(), p.getColor(),
 				p.getWorld());
 	}
 	
@@ -29,7 +29,8 @@ public class Projectile extends Sprite
 	public Projectile(float x, float y, Vector2 velocity, Circle c, World world)
 	{
 		// @formatter:off
-		super(10, 10,
+		super(
+				new Vector2(10, 10), //size
 				new Vector2(x, y), // pos
 				new Vector2(PROJECTILE_SPEED, velocity.angle(), true), // vel
 				new Vector2(0, 0), // acc
@@ -45,17 +46,17 @@ public class Projectile extends Sprite
 		// paint circle for projectile
 		g.setColor(getColor());
 		g.fillOval(
-				(int) (getPosition().getX() - getWidth() / 2), 
-				(int) (getPosition().getY() - getHeight() / 2),
-				getWidth(), getHeight());
+				(int) (getPosition().getX() - getSize().getX() / 2), 
+				(int) (getPosition().getY() - getSize().getY() / 2),
+				(int) getSize().getX(), (int) getSize().getY());
 		// @formatter:on
 		
 		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
 		if(Main.DEBUG)
 			g.drawRect(
-					(int) getPosition().getX() - getWidth() / 2,
-					(int) getPosition().getY() - getWidth() / 2,
-					getWidth(), getHeight());
+					(int) (getPosition().getX() - getSize().getX() / 2),
+					(int) (getPosition().getY() - getSize().getX() / 2),
+					(int) getSize().getX(), (int) getSize().getY());
 	}
 
 	@Override
@@ -63,10 +64,10 @@ public class Projectile extends Sprite
 	{
 		// @formatter:off
 		// die if out of bounds
-		if (getPosition().getX() - getWidth() / 2 < 0 
-				|| getPosition().getX() + getWidth() / 2 > getWorld().getWidth()
-				|| getPosition().getY() - getWidth() / 2 < 0
-				|| getPosition().getY() + getWidth() / 2 > getWorld().getHeight())
+		if (getPosition().getX() - getSize().getX() / 2 < 0 
+				|| getPosition().getX() + getSize().getX() / 2 > getWorld().getSize().getX()
+				|| getPosition().getY() - getSize().getX() / 2 < 0
+				|| getPosition().getY() + getSize().getX() / 2 > getWorld().getSize().getY())
 			setAlive(false);
 		// @formatter:on
 

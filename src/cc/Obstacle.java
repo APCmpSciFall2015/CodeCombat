@@ -9,7 +9,7 @@ public class Obstacle extends Sprite
 {
 	public Obstacle(Obstacle o)
 	{
-		super(o.getWidth(), o.getHeight(), o.getPosition(), o.getVelocity(), o.getAcceleration(), o.getColor(),
+		super(o.getSize(), o.getPosition(), o.getVelocity(), o.getAcceleration(), o.getColor(),
 				o.getWorld());
 	}
 	
@@ -21,9 +21,9 @@ public class Obstacle extends Sprite
 	 * @param color color
 	 * @param world plane of existence
 	 */
-	public Obstacle(int width, int height, Vector2 position, Color color, World world)
+	public Obstacle(Vector2 size, Vector2 position, Color color, World world)
 	{
-		super(width, height, position, new Vector2(0, 0), new Vector2(0, 0), color, world);
+		super(size, position, new Vector2(0, 0), new Vector2(0, 0), color, world);
 	}
 
 	public void paint(Graphics g)
@@ -32,9 +32,9 @@ public class Obstacle extends Sprite
 		// paint rectangle for obstacle
 		g.setColor(getColor());
 		g.fillRect(
-				(int) (getPosition().getX() - getWidth() / 2),
-				(int) (getPosition().getY() - getHeight() / 2),
-				getWidth(), getHeight());
+				(int) (getPosition().getX() - getSize().getX() / 2),
+				(int) (getPosition().getY() - getSize().getY() / 2),
+				(int) getSize().getX(), (int) getSize().getY());
 		// @formatter:on
 	}
 

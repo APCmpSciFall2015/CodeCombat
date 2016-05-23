@@ -19,13 +19,11 @@ public abstract class Sprite
 	private boolean alive = true;
 	/** plane of existence for the sprite **/
 	private World world;
-	/** width of sprite **/
-	private int width;
-	/** height of sprite **/
-	private int height;
 	/** color of sprite **/
 	private Color color;
-	/** location of sprite **/
+	/** size of sprite **/
+	private Vector2 size;
+	/** location of sprite **/	
 	private Vector2 position;
 	/** rate of change in location of sprite **/
 	private Vector2 velocity;
@@ -46,11 +44,10 @@ public abstract class Sprite
 	 * @param color color
 	 * @param world plane of existence
 	 */
-	public Sprite(int width, int height, Vector2 position, Vector2 velocity, Vector2 acceleration, Color color,
+	public Sprite(Vector2 size, Vector2 position, Vector2 velocity, Vector2 acceleration, Color color,
 			World world)
 	{
-		this.width = width;
-		this.height = height;
+		this.size = size.copy();
 		this.position = position.copy();
 		this.velocity = velocity.copy();
 		this.acceleration = acceleration.copy();
@@ -69,16 +66,16 @@ public abstract class Sprite
 	public void slide(Sprite s)
 	{
 		// slide on left and right of sprite
-		if (getPosition().getX() - getWidth() / 2 < s.getPosition().getX() + s.getWidth())
-			setPosition(getPosition().setX(s.getPosition().getX() - s.getWidth() / 2 + getWidth()));
-		else if (getPosition().getX() + getWidth() / 2 > s.getPosition().getX() - s.getWidth() / 2)
-			setPosition(getPosition().setX(s.getPosition().getX() + s.getWidth() / 2 + getWidth()));
+		if (getPosition().getX() - getSize().getX() / 2 < s.getPosition().getX() + s.getSize().getX())
+			setPosition(getPosition().setX(s.getPosition().getX() - s.getSize().getX() / 2 + getSize().getX()));
+		else if (getPosition().getX() + getSize().getX() / 2 > s.getPosition().getX() - s.getSize().getX() / 2)
+			setPosition(getPosition().setX(s.getPosition().getX() + s.getSize().getX() / 2 + getSize().getX()));
 
 		// slide on top and bottom of sprite
-		if (getPosition().getY() - getHeight() / 2 < s.getPosition().getY() + s.getHeight())
-			setPosition(getPosition().setY(s.getPosition().getY() - s.getHeight() / 2 + getHeight()));
-		else if (getPosition().getY() + getHeight() / 2 > s.getPosition().getY() - s.getHeight() / 2)
-			setPosition(getPosition().setY(s.getPosition().getY() + s.getHeight() / 2 + getHeight()));
+		if (getPosition().getY() - getSize().getY() / 2 < s.getPosition().getY() + s.getSize().getY())
+			setPosition(getPosition().setY(s.getPosition().getY() - s.getSize().getY() / 2 + getSize().getY()));
+		else if (getPosition().getY() + getSize().getY() / 2 > s.getPosition().getY() - s.getSize().getY() / 2)
+			setPosition(getPosition().setY(s.getPosition().getY() + s.getSize().getY() / 2 + getSize().getY()));
 	}
 
 	/**
@@ -100,14 +97,14 @@ public abstract class Sprite
 	public void bounce(Sprite s)
 	{
 		// bounce in X direction
-		if (getPosition().getX() < s.getPosition().getX() + s.getWidth() / 2
-				&& getPosition().getX() > s.getPosition().getX() - s.getWidth() / 2)
+		if (getPosition().getX() < s.getPosition().getX() + s.getSize().getX() / 2
+				&& getPosition().getX() > s.getPosition().getX() - s.getSize().getX() / 2)
 		{
 			setVelocity(getVelocity().setY(-getVelocity().getY()));
 		}
 		// bounce in Y direction
-		if (getPosition().getY() < s.getPosition().getY() + s.getWidth() / 2
-				&& getPosition().getY() > s.getPosition().getY() - s.getWidth() / 2)
+		if (getPosition().getY() < s.getPosition().getY() + s.getSize().getX() / 2
+				&& getPosition().getY() > s.getPosition().getY() - s.getSize().getX() / 2)
 		{
 			setVelocity(getVelocity().setX(-getVelocity().getX()));
 		}
@@ -142,6 +139,16 @@ public abstract class Sprite
 	// Getters and setters
 	// -----------------------------------------------------
 
+	public Vector2 getSize()
+	{
+		return size;
+	}
+
+	public void setSize(Vector2 size)
+	{
+		this.size = size;
+	}
+
 	public Vector2 getPosition()
 	{
 		return position.copy();
@@ -170,26 +177,6 @@ public abstract class Sprite
 	public void setAcceleration(Vector2 acceleration)
 	{
 		this.acceleration = acceleration.copy();
-	}
-
-	public int getWidth()
-	{
-		return width;
-	}
-
-	public void setWidth(int width)
-	{
-		this.width = width;
-	}
-
-	public int getHeight()
-	{
-		return height;
-	}
-
-	public void setHeight(int height)
-	{
-		this.height = height;
 	}
 
 	public Color getColor()

@@ -24,7 +24,7 @@ public class Circle extends Sprite
 	 */
 	public Circle(Circle c)
 	{
-		super(c.getWidth(), c.getHeight(), c.getPosition(), c.getVelocity(), c.getAcceleration(), c.getColor(),
+		super(c.getSize(), c.getPosition(), c.getVelocity(), c.getAcceleration(), c.getColor(),
 				c.getWorld());
 	}
 
@@ -37,7 +37,8 @@ public class Circle extends Sprite
 	public Circle(float x, float y, World world)
 	{
 		// @formatter:off
-		super(40, 40, // size
+		super(
+				new Vector2(40, 40), // size
 				new Vector2(x, y), new Vector2(1, 0, true), new Vector2(0, 0), // pos, vel, acc
 				new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)), // random color
 				world);
@@ -53,7 +54,7 @@ public class Circle extends Sprite
 	 */
 	public Circle(float x, float y, Color color, World world)
 	{
-		super(40, 40, new Vector2(x, y), new Vector2(1, 0, true), new Vector2(0, 0), color, world);
+		super(new Vector2(40, 40), new Vector2(x, y), new Vector2(1, 0, true), new Vector2(0, 0), color, world);
 	}
 
 	@Override
@@ -63,21 +64,21 @@ public class Circle extends Sprite
 		g.setColor(getColor());
 		// paint circle
 		g.fillOval(
-				(int) getPosition().getX() - getWidth() / 2,
-				(int) getPosition().getY() - getWidth() / 2,
-				getWidth(), getHeight());
+				(int) (getPosition().getX() - getSize().getX() / 2),
+				(int) (getPosition().getY() - getSize().getX() / 2),
+				(int) getSize().getX(), (int) getSize().getY());
 
 		// paint direction visualizer (color declared is inverted)
 		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
 		g.fillOval(
-				(int) (getPosition().getX() + getVelocity().normalize().getX() * getWidth() / 2) - 5,
-				(int) (getPosition().getY() + getVelocity().normalize().getY() * getHeight() / 2) - 5,
-				getWidth() / 4, getHeight() / 4);
+				(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2) - 5,
+				(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2) - 5,
+				(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
 		// @formatter:on
 
 		if (Main.DEBUG)
-			g.drawRect((int) getPosition().getX() - getWidth() / 2, (int) getPosition().getY() - getWidth() / 2,
-					getWidth(), getHeight());
+			g.drawRect((int) (getPosition().getX() - getSize().getX() / 2), (int) (getPosition().getY() - getSize().getX() / 2),
+					(int) getSize().getX(), (int) getSize().getY());
 	}
 
 	int i = 0;
@@ -86,16 +87,16 @@ public class Circle extends Sprite
 	public void update()
 	{
 		// slide on left and right walls
-		if (getPosition().getX() - getWidth() / 2 < 0)
-			setPosition(getPosition().setX(getWidth() / 2));
-		else if (getPosition().getX() + getWidth() / 2 > getWorld().getWidth())
-			setPosition(getPosition().setX(getWorld().getWidth() - getWidth() / 2));
+		if (getPosition().getX() - getSize().getX() / 2 < 0)
+			setPosition(getPosition().setX(getSize().getX() / 2));
+		else if (getPosition().getX() + getSize().getX() / 2 > getWorld().getSize().getX())
+			setPosition(getPosition().setX(getWorld().getSize().getX() - getSize().getX() / 2));
 
 		// slide on top and bottom walls
-		if (getPosition().getY() - getWidth() / 2 < 0)
-			setPosition(getPosition().setY(getWidth() / 2));
-		else if (getPosition().getY() + getWidth() / 2 > getWorld().getHeight())
-			setPosition(getPosition().setY(getWorld().getHeight() - getHeight() / 2));
+		if (getPosition().getY() - getSize().getX() / 2 < 0)
+			setPosition(getPosition().setY(getSize().getX() / 2));
+		else if (getPosition().getY() + getSize().getX() / 2 > getWorld().getSize().getY())
+			setPosition(getPosition().setY(getWorld().getSize().getY() - getSize().getY() / 2));
 
 		// update position
 		setPosition(getPosition().add(getVelocity()));
@@ -135,8 +136,8 @@ public class Circle extends Sprite
 		// generate a new projectile in front of the circle traveling faster in
 		// the same direction
 		getWorld().generateObject(new Projectile(
-				(int) (getPosition().getX() + getVelocity().normalize().getX() * getWidth() / 2) - getHeight() / 4,
-				(int) (getPosition().getY() + getVelocity().normalize().getY() * getHeight() / 2) - getHeight() / 4,
+				(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2) - getSize().getY() / 4,
+				(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2) - getSize().getY() / 4,
 				getVelocity(), this, getWorld()));
 	}
 

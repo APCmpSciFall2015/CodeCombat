@@ -21,7 +21,7 @@ public class World
 
 	/**
 	 * 1-Argument World Constructor
-	 * @param main host appleto
+	 * @param main host applet
 	 */
 	public World(Main main)
 	{
@@ -116,10 +116,10 @@ public class World
 	public boolean colliding(Sprite A, Sprite B)
 	{
 		// @formatter:off
-		return colliding(A.getPosition().getX() - A.getWidth() / 2, A.getPosition().getY() - A.getHeight() / 2,
-				A.getPosition().getX() + A.getWidth() / 2, A.getPosition().getY() + A.getHeight() / 2,
-				B.getPosition().getX() - B.getWidth() / 2, B.getPosition().getY() - B.getHeight() / 2,
-				B.getPosition().getX() + B.getWidth() / 2, B.getPosition().getY() + B.getHeight() / 2);
+		return colliding(A.getPosition().getX() - A.getSize().getX() / 2, A.getPosition().getY() - A.getSize().getY() / 2,
+				A.getPosition().getX() + A.getSize().getX() / 2, A.getPosition().getY() + A.getSize().getY() / 2,
+				B.getPosition().getX() - B.getSize().getX() / 2, B.getPosition().getY() - B.getSize().getY() / 2,
+				B.getPosition().getX() + B.getSize().getX() / 2, B.getPosition().getY() + B.getSize().getY() / 2);
 		// @formatter:on
 	}
 
@@ -141,21 +141,8 @@ public class World
 		return !(AX < Bx || BX < Ax || AY < By || BY < Ay);
 	}
 
-	/**
-	 * The getHeight method gets the height of the world
-	 * @return world height
-	 **/
-	public int getHeight()
+	public Vector2 getSize()
 	{
-		return main.getHeight();
-	}
-
-	/**
-	 * The getWidth method gets the width of the world
-	 * @return world width
-	 **/
-	public int getWidth()
-	{
-		return main.getWidth();
+		return new Vector2(main.getWidth(), main.getHeight());
 	}
 }
