@@ -148,6 +148,9 @@ public class Main extends Applet implements Runnable
 		gameState = GameState.MENU;
 		//Do menu stuff
 	}
+	
+	// Getters and Setters
+	// --------------------------------------------------------------------------------------------
 
 	/**
 	 * The getWidth method returns the width of the applet.
