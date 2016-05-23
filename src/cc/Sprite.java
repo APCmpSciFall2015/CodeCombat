@@ -3,7 +3,6 @@ package cc;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import cc.Main.GameState;
 import lib.Vector2;
 
 /**
@@ -65,113 +64,56 @@ public abstract class Sprite
 	 */
 	public void slide(Sprite s)
 	{
-		
-		// if (getPosition().getY() - getSize().getY() / 2 <
-		// s.getPosition().getY() + s.getSize().getY() / 2
-		// && getPosition().getY() + getSize().getY() / 2 >
-		// s.getPosition().getY() - s.getSize().getY() / 2
-		// && getPosition().getX() - getSize().getX() / 2 >
-		// s.getPosition().getX() + s.getSize().getX() / 2
-		// && getPosition().getX() + getSize().getX() / 2 <
-		// s.getPosition().getX() - s.getSize().getX() / 2)
+		// calculate the distances required to move this sprite outside of the other sprite s
+		float[] dists = new float[] {
+				s.getPosition().getX() + s.getSize().getX() / 2 - (getPosition().getX() - getSize().getX() / 2),
+				getPosition().getX() + getSize().getX() / 2 - (s.getPosition().getX() - s.getSize().getX() / 2),
+				s.getPosition().getY() + s.getSize().getY() / 2 - (getPosition().getY() - getSize().getY() / 2),
+				getPosition().getY() + getSize().getY() / 2 - (s.getPosition().getY() - s.getSize().getY() / 2) 
+				};
 
-		// slide on left and right of sprite
-		// if(Math.abs(getPosition().sub(s.getPosition()).angle()) < Math.PI /
-		// 4)
-		// {
-		// if (getPosition().getX() < s.getPosition().getX())
-		// setPosition(getPosition().setX(s.getPosition().getX() -
-		// s.getSize().getX() / 2 - getSize().getX() / 2));
-		// else
-		// setPosition(getPosition().setX(s.getPosition().getX() +
-		// s.getSize().getX() / 2 + getSize().getX() / 2));
-		// }
-		// else
-		// {
-		// if (getPosition().getY() < s.getPosition().getY())
-		// setPosition(getPosition().setY(s.getPosition().getY() -
-		// s.getSize().getY() / 2 - getSize().getY() / 2));
-		// else
-		// setPosition(getPosition().setY(s.getPosition().getY() +
-		// s.getSize().getY() / 2 + getSize().getY() / 2));
-		// }
+		// find the smallest distance
+		int minIndex = 0;
+		float minValue = dists[0];
+		for (int i = 1; i < dists.length; i++)
+		{
+			if (dists[i] < minValue)
+			{
+				minIndex = i;
+				minValue = dists[i];
+			}
+		}
 
-//		if (getPosition().getX() - getSize().getX() / 2 < s.getPosition().getX() + s.getSize().getX() / 2
-//				&& getPosition().getX() - getSize().getX() / 2 > s.getPosition().getX())
-//		{
-//
-//		}
-//		else if (getPosition().getX() + getSize().getX() / 2 > s.getPosition().getX() - s.getSize().getX() / 2
-//				&& getPosition().getX() + getSize().getX() / 2 < s.getPosition().getX())
-//		{
-//
-//		}
+		// Set position outside of colliding sprite on the proper side
+		switch (minIndex)
+		{
+		case 0:
+			setPosition(getPosition().setX(s.getPosition().getX() + s.getSize().getX() / 2 + getSize().getX() / 2)); // right side sprite
+			break;
+		case 1:
+			setPosition(getPosition().setX(s.getPosition().getX() - s.getSize().getX() / 2 - getSize().getX() / 2)); // left other sprite
+			break;
+		case 2:
+			setPosition(getPosition().setY(s.getPosition().getY() + s.getSize().getY() / 2 + getSize().getY() / 2)); // top other sprite
+			break;
+		case 3:
+			setPosition(getPosition().setY(s.getPosition().getY() - s.getSize().getY() / 2 - getSize().getY() / 2)); // bottom other sprite
+			break;
+		}
 
-		// if (getPosition().getY() - getSize().getY() / 2 <
-		// s.getPosition().getY() + s.getSize().getY() / 2
-		// && getPosition().getY() + getSize().getY() / 2 >
-		// s.getPosition().getY() - s.getSize().getY() / 2
-		// && getPosition().getX() - getSize().getX() / 2 >
-		// s.getPosition().getX() + s.getSize().getX() / 2
-		// && getPosition().getX() + getSize().getX() / 2 <
-		// s.getPosition().getX() - s.getSize().getX() / 2)
-		// {
-		// if (getPosition().getX() < s.getPosition().getX())
-		// setPosition(getPosition().setX(s.getPosition().getX() -
-		// s.getSize().getX() / 2 - getSize().getX() / 2));
-		// else
-		// setPosition(getPosition().setX(s.getPosition().getX() +
-		// s.getSize().getX() / 2 + getSize().getX() / 2));
-		// }
-		// else
-		// {
-		// if (getPosition().getY() < s.getPosition().getY())
-		// setPosition(getPosition().setY(s.getPosition().getY() -
-		// s.getSize().getY() / 2 - getSize().getY() / 2));
-		// else
-		// setPosition(getPosition().setY(s.getPosition().getY() +
-		// s.getSize().getY() / 2 + getSize().getY() / 2));
-		// }
-
-		// if (getPosition().getX() - getSize().getX() / 2 <
-		// s.getPosition().getX() + s.getSize().getX() / 2)
-		// setPosition(getPosition().setX(s.getPosition().getX() +
-		// s.getSize().getX() / 2 + getSize().getX() / 2));
-		// else if (getPosition().getX() + getSize().getX() / 2 <
-		// s.getPosition().getX() - s.getSize().getX() / 2)
-		// setPosition(getPosition().setX(s.getPosition().getX() -
-		// s.getSize().getX() / 2 - getSize().getX() / 2));
-
-		// if (getPosition().getY() > s.getPosition().getY())
-		// setPosition(getPosition().setY(s.getPosition().getY() +
-		// s.getSize().getY() / 2 + getSize().getY() / 2));
-		// else setPosition(getPosition().setY(s.getPosition().getY() -
-		// s.getSize().getY() / 2 - getSize().getY() / 2));
-
-		// if ((int) getPosition().getX() - (int) getSize().getX() / 2 < (int)
-		// s.getPosition().getX()
-		// + (int) s.getSize().getX() / 2)
-		// {
-		// System.out.println("left collision");
-		//
-		// }
-		// else if ((int) getPosition().getX() + (int) getSize().getX() / 2 >
-		// (int) s.getPosition().getX()
-		// - (int) s.getSize().getX() / 2)
-		// {
-		// System.out.println("right collision");
-		//
-		// }
-		/*
-		 * // slide on top and bottom of sprite if (getPosition().getY() -
-		 * getSize().getY() / 2 < s.getPosition().getY() + s.getSize().getY() /
-		 * 2) setPosition(getPosition().setY(s.getPosition().getY() -
-		 * s.getSize().getY() / 2 + getSize().getY() / 2)); else if
-		 * (getPosition().getY() + getSize().getY() / 2 > s.getPosition().getY()
-		 * - s.getSize().getY() / 2)
-		 * setPosition(getPosition().setY(s.getPosition().getY() +
-		 * s.getSize().getY() / 2 + getSize().getY() / 2));
-		 */
+		if (Main.DEBUG)
+		{
+			System.out.println("collision");
+			System.out.println(minIndex);
+			System.out.println(
+					s.getPosition().getX() + s.getSize().getX() / 2 - (getPosition().getX() - getSize().getX() / 2));
+			System.out.println(
+					getPosition().getX() + getSize().getX() / 2 - (s.getPosition().getX() - s.getSize().getX() / 2));
+			System.out.println(
+					s.getPosition().getY() + s.getSize().getY() / 2 - (getPosition().getY() - getSize().getY() / 2));
+			System.out.println(
+					getPosition().getY() + getSize().getY() / 2 - (s.getPosition().getY() - s.getSize().getY() / 2));
+		}
 	}
 
 	/**

@@ -32,7 +32,7 @@ public class World
 		do
 		{
 			sprites = new ArrayList<Sprite>();
-			int numberOfObstacles = 40;//(int) (Math.random() * 5 + 6);
+			int numberOfObstacles = (int) (Math.random() * 20 + 30);
 			for (int i = 0; i < numberOfObstacles; i++)
 			{
 				Vector2 size = new Vector2(0, 0);
@@ -54,11 +54,11 @@ public class World
 						(int) (Math.random() * (main.getWidth() - size.getX()) + size.getX() / 2),
 						(int) (Math.random() * (main.getHeight() - size.getY()) + size.getY() / 2));
 				sprites.add(new Obstacle(size, position, new Color(0, 0, 0), this));
-				System.out.println("Obstacle made");
+				if (Main.DEBUG) System.out.println("Obstacle made");
 			}
-			System.out.println("remaking");
+			if (Main.DEBUG) System.out.println("remaking");
 		} while (checkCollisions());
-		System.out.println("Done");
+		if (Main.DEBUG) System.out.println("Done");
 		//
 		// // test generate sprites
 		 sprites.add(new Circle(200, 300, this));
