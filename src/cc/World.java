@@ -128,8 +128,9 @@ public class World
 				if (colliding(sprites.get(i), sprites.get(j)))
 				{
 					collisions = true;
+					Sprite s = sprites.get(i).copy();
 					sprites.get(i).collide(sprites.get(j));
-					sprites.get(j).collide(sprites.get(i));
+					sprites.get(j).collide(s);
 				}
 			}
 		}
