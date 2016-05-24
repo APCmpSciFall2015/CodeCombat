@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import cc.Main.GameState;
 import lib.Vector2;
 
 /**
@@ -54,15 +55,23 @@ public class World
 						(int) (Math.random() * (main.getWidth() - size.getX()) + size.getX() / 2),
 						(int) (Math.random() * (main.getHeight() - size.getY()) + size.getY() / 2));
 				sprites.add(new Obstacle(size, position, new Color(0, 0, 0), this));
-				if (Main.DEBUG) System.out.println("Obstacle made");
+				if (Main.DEBUG)
+					System.out.println("Obstacle made");
 			}
-			if (Main.DEBUG) System.out.println("remaking");
+			if (Main.DEBUG)
+				System.out.println("remaking");
 		} while (checkCollisions());
-		if (Main.DEBUG) System.out.println("Done");
-		//
-		// // test generate sprites
-		 sprites.add(new Circle(200, 300, this));
-		 sprites.add(new Circle(400, 300, Color.RED, this));
+		if (Main.DEBUG)
+			System.out.println("Done");
+		// generate test Circles
+		sprites.add(new Circle(200, 300, this));
+		sprites.add(new Circle(400, 300, Color.RED, this));
+
+		// test requestInView method
+		// System.out.println(requestInView(sprites.get(sprites.size() -
+		// 2).getPosition(), sprites.get(sprites.size() - 2).getVelocity(),
+		// (float) Math.PI / 2));
+		// main.setGameState(GameState.PAUSED);
 	}
 
 	/**
