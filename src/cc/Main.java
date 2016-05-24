@@ -13,10 +13,10 @@ import java.awt.Image;
 public class Main extends Applet implements Runnable
 {
 	public static final boolean DEBUG = true;
-	
+
 	/** plane of existence help by the applet **/
 	private World world;
-	
+
 	// Applet parameters
 	// -------------------------------------------------------------
 
@@ -40,12 +40,16 @@ public class Main extends Applet implements Runnable
 	private static final long serialVersionUID = 3206847208968227199L;
 
 	/** GameState enum */
-	public enum GameState {
+	public enum GameState
+	{
 		MENU, PLAY, PAUSED;
 	}
+
 	/** GameState */
 	private static GameState gameState = GameState.PLAY;
-	
+
+	//  Applet core
+	// ------------------------------------
 	
 	@Override
 	public void init()
@@ -113,7 +117,7 @@ public class Main extends Applet implements Runnable
 		{
 			world.update();
 			repaint();
-			
+
 			// sleep for rest of frame time
 			try
 			{
@@ -125,6 +129,10 @@ public class Main extends Applet implements Runnable
 			}
 		}
 	}
+
+	// Game Actions
+	// -------------------------------------------------------
+
 	/**
 	 * The restart method resets the world and restarts the game.
 	 */
@@ -132,23 +140,27 @@ public class Main extends Applet implements Runnable
 	{
 		world = new World(main);
 	}
+
 	/**
-	 * The pause method sets the gameState enum to PAUSED and opens the pause menu.
+	 * The pause method sets the gameState enum to PAUSED and opens the pause
+	 * menu.
 	 */
 	public void pause()
 	{
 		gameState = GameState.PAUSED;
-		//Open menu
+		// Open menu
 	}
+
 	/**
-	 * The end method sets the gameState enum to MENU and returns the game to the main menu.
+	 * The end method sets the gameState enum to MENU and returns the game to
+	 * the main menu.
 	 */
 	public void end()
 	{
 		gameState = GameState.MENU;
-		//Do menu stuff
+		// Do menu stuff
 	}
-	
+
 	// Getters and Setters
 	// --------------------------------------------------------------------------------------------
 
@@ -189,19 +201,21 @@ public class Main extends Applet implements Runnable
 		this.height = height;
 		setSize(width, height);
 	}
+
 	/**
 	 * The getGameState method returns the current game state.
 	 * @return The current game state
 	 */
-	public static GameState getGameState() 
+	public static GameState getGameState()
 	{
 		return gameState;
 	}
+
 	/**
 	 * The setGameState method sets gameState to the desired state
 	 * @param gameState game state
 	 */
-	public static void setGameState(GameState gameState) 
+	public static void setGameState(GameState gameState)
 	{
 		Main.gameState = gameState;
 	}

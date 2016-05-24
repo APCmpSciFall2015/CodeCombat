@@ -7,10 +7,13 @@ import lib.Vector2;
 
 public class Obstacle extends Sprite
 {
+	/**
+	 * Obstacle Copy Constructor
+	 * @param o
+	 */
 	public Obstacle(Obstacle o)
 	{
-		super(o.getSize(), o.getPosition(), o.getVelocity(), o.getAcceleration(), o.getColor(),
-				o.getWorld());
+		super(o);
 	}
 	
 	/**
@@ -26,6 +29,11 @@ public class Obstacle extends Sprite
 		super(size, position, new Vector2(0, 0), new Vector2(0, 0), color, world);
 	}
 
+	
+	// Overridden methods
+	// --------------------------------------------
+	
+	@Override
 	public void paint(Graphics g)
 	{
 		// @formatter:off
@@ -35,7 +43,9 @@ public class Obstacle extends Sprite
 				(int) (getPosition().getX() - getSize().getX() / 2),
 				(int) (getPosition().getY() - getSize().getY() / 2),
 				(int) getSize().getX(), (int) getSize().getY());
-		// @formatter:on
+		// @formatter:on\
+		
+		if(Main.DEBUG) super.paint(g);
 	}
 
 	@Override

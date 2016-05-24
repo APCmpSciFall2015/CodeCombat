@@ -12,10 +12,12 @@ public class Projectile extends Sprite
 	/** owner circle **/
 	private Circle c;
 
+	// Constructors
+	// --------------------------------------------------------------
+	
 	public Projectile(Projectile p)
 	{
-		super(p.getSize(), p.getPosition(), p.getVelocity(), p.getAcceleration(), p.getColor(),
-				p.getWorld());
+		super(p);
 	}
 	
 	/**
@@ -35,10 +37,13 @@ public class Projectile extends Sprite
 				new Vector2(PROJECTILE_SPEED, velocity.angle(), true), // vel
 				new Vector2(0, 0), // acc
 				c.getColor(), world);
-		this.c = c;
+		this.c = ( Circle) c.copy();
 		// @formatter:on
 	}
 
+	// Overridden methods
+	// -----------------------------------------------------------------
+	
 	@Override
 	public void paint(Graphics g)
 	{	
@@ -51,12 +56,8 @@ public class Projectile extends Sprite
 				(int) getSize().getX(), (int) getSize().getY());
 		// @formatter:on
 		
-		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
-		if(Main.DEBUG)
-			g.drawRect(
-					(int) (getPosition().getX() - getSize().getX() / 2),
-					(int) (getPosition().getY() - getSize().getX() / 2),
-					(int) getSize().getX(), (int) getSize().getY());
+		
+		if(Main.DEBUG) super.paint(g);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class Projectile extends Sprite
 	public void collide(Sprite s)
 	{
 		// @formatter:off
-		if (s != c) setAlive(false);
+		if (s.getId() != c.getId()) setAlive(false);
 		// @formatter:on
 	}
 	
@@ -96,6 +97,6 @@ public class Projectile extends Sprite
 	 */
 	public boolean isOwner(Circle c)
 	{
-		return this.c == c; // compare reference (must be exact same instance)
+		return this.c.getId() == c.getId();
 	}
 }

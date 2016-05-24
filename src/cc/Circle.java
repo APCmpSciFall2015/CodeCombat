@@ -16,6 +16,9 @@ public class Circle extends Sprite
 	/** maximum rate of change in the direction of velocity **/
 	public static final float MAX_TURNING_ANGLE = (float) Math.PI / 60f;
 
+	// Constructors
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Circle copy constructor
 	 * @param x x pos
@@ -24,8 +27,7 @@ public class Circle extends Sprite
 	 */
 	public Circle(Circle c)
 	{
-		super(c.getSize(), c.getPosition(), c.getVelocity(), c.getAcceleration(), c.getColor(),
-				c.getWorld());
+		super(c);
 	}
 
 	/**
@@ -57,6 +59,9 @@ public class Circle extends Sprite
 		super(new Vector2(40, 40), new Vector2(x, y), new Vector2(1, 0, true), new Vector2(0, 0), color, world);
 	}
 
+	// Overridden methods
+	// -----------------------------------------------------------------------
+	
 	@Override
 	public void paint(Graphics g)
 	{
@@ -76,9 +81,7 @@ public class Circle extends Sprite
 				(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
 		// @formatter:on
 
-		if (Main.DEBUG)
-			g.drawRect((int) (getPosition().getX() - getSize().getX() / 2), (int) (getPosition().getY() - getSize().getX() / 2),
-					(int) getSize().getX(), (int) getSize().getY());
+		if (Main.DEBUG) super.paint(g);
 	}
 
 	int i = 0;
@@ -127,6 +130,9 @@ public class Circle extends Sprite
 		return new Circle(this);
 	}
 
+	// instance methods
+	// ----------------------------------------------------------------------
+	
 	/**
 	 * The shoot method generates a projectile in an attempt to destroy other
 	 * circles.
@@ -136,8 +142,8 @@ public class Circle extends Sprite
 		// generate a new projectile in front of the circle traveling faster in
 		// the same direction
 		getWorld().generateObject(new Projectile(
-				(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2) - getSize().getY() / 4,
-				(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2) - getSize().getY() / 4,
+				(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
+				(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
 				getVelocity(), this, getWorld()));
 	}
 

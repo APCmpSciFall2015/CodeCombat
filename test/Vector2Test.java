@@ -5,7 +5,7 @@ import org.junit.Test;
 import lib.Vector2;
 
 public class Vector2Test
-{
+{	
 	@Test
 	public void testNormalize()
 	{

@@ -28,7 +28,7 @@ public class World
 		this.main = main; // shallow copy
 
 		// initialize game objects
-
+		sprites = new ArrayList<Sprite>();
 		do
 		{
 			sprites = new ArrayList<Sprite>();

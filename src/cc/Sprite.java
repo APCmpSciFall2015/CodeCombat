@@ -1,6 +1,7 @@
 package cc;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import lib.Vector2;
@@ -15,6 +16,14 @@ public abstract class Sprite
 {
 	/** maximum velocity of sprites **/
 	public static final float MAX_VELOCITY = 20f;
+	/** running id count of sprites **/
+	protected static int idCount = 0;
+
+	// instance variables
+	// -------------------------------------------
+
+	/** id of sprite **/
+	private int id;
 	/** whether or not the sprite is alive **/
 	private boolean alive = true;
 	/** plane of existence for the sprite **/
@@ -33,6 +42,17 @@ public abstract class Sprite
 	// Constructors
 	// --------------------------------------------------
 
+	protected Sprite(Sprite s)
+	{
+		this.id = s.getId();
+		this.size = s.size.copy();
+		this.position = s.position.copy();
+		this.velocity = s.velocity.copy();
+		this.acceleration = s.acceleration.copy();
+		this.color = s.getColor();
+		this.world = s.getWorld();
+	}
+	
 	/**
 	 * 7-Argument Sprite Constructor
 	 * @param width width
@@ -46,6 +66,7 @@ public abstract class Sprite
 	 */
 	public Sprite(Vector2 size, Vector2 position, Vector2 velocity, Vector2 acceleration, Color color, World world)
 	{
+		this.id = idCount++;
 		this.size = size.copy();
 		this.position = position.copy();
 		this.velocity = velocity.copy();
@@ -110,7 +131,6 @@ public abstract class Sprite
 		}
 
 		if (Main.DEBUG)
-
 		{
 			System.out.println("collision");
 			System.out.println(direction);
@@ -158,6 +178,26 @@ public abstract class Sprite
 			setVelocity(getVelocity().setX(-getVelocity().getX()));
 		}
 	}
+	
+	/**
+	 * The paint method draws the sprite
+	 * @param g Graphics to paint on
+	 */
+	public void paint(Graphics g)
+	{
+		// draw AABB
+		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
+		g.drawRect(
+				(int) (getPosition().getX() - getSize().getX() / 2),
+				(int) (getPosition().getY() - getSize().getY() / 2),
+				(int) getSize().getX(), (int) getSize().getY());
+		
+		// draw text data
+		Font font = new Font("Serif", Font.PLAIN, 12);
+		g.setColor(this.color);
+		g.setFont(font);
+		g.drawString("" + this, (int) (getPosition().getX() - getSize().getX() / 1.5), (int) (getPosition().getY() - getSize().getY() / 1.5));
+	}
 
 	// Abstract methods
 	// -----------------------------------------------------
@@ -167,12 +207,6 @@ public abstract class Sprite
 	 * @return copy of sprite
 	 */
 	public abstract Sprite copy();
-
-	/**
-	 * The paint method draws the sprite
-	 * @param g Graphics to paint on
-	 */
-	public abstract void paint(Graphics g);
 
 	/**
 	 * The update method updates the state of the sprite.
@@ -186,6 +220,15 @@ public abstract class Sprite
 	 */
 	public abstract void collide(Sprite s);
 
+	// Overridden methods
+	// ----------------------------------------------------
+	
+	@Override
+	public String toString()
+	{
+		return (this.getClass() + ": " + id).substring(9);
+	}
+	
 	// Getters and setters
 	// -----------------------------------------------------
 
@@ -257,5 +300,15 @@ public abstract class Sprite
 	public void setAlive(boolean alive)
 	{
 		this.alive = alive;
+	}
+
+	public int getId()
+	{
+		return id;
+	}
+	
+	protected void setId(int id)
+	{
+		this.id = id;
 	}
 }
