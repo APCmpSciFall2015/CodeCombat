@@ -33,6 +33,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	private int shootTimer = RELOAD_TIME;
 	/** timer for respawns **/
 	private int respawnTimer = RESPAWN_TIME;
+	
 
 	// Constructors
 	// --------------------------------------------------------------------
@@ -179,7 +180,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		if (respawnTimer == 0)
 		{
-			setAlive(true);
+			getWorld().spawn(this);
 			respawnTimer = RESPAWN_TIME;
 		}
 	}

@@ -33,7 +33,7 @@ public class World
 	{
 		this.mainApplet = mainApplet; // shallow copy
 		this.size = size.copy(); 
-		
+
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
 		do
@@ -61,22 +61,26 @@ public class World
 						(int) (Math.random() * (size.getX() - spriteSize.getX()) + spriteSize.getX() / 2),
 						(int) (Math.random() * (size.getY() - spriteSize.getY()) + spriteSize.getY() / 2));
 				sprites.add(new Obstacle(spriteSize, position, new Color(0, 0, 0), this));
-//				if (MainApplet.DEBUG)
-//					System.out.println("Obstacle made");
+				//				if (MainApplet.DEBUG)
+				//					System.out.println("Obstacle made");
 			}
-//			if (MainApplet.DEBUG)
-//				System.out.println("remaking");
+			//			if (MainApplet.DEBUG)
+			//				System.out.println("remaking");
 		} while (checkCollisions());
-//		if (MainApplet.DEBUG)
-//			System.out.println("Done");
+		//		if (MainApplet.DEBUG)
+		//			System.out.println("Done");
 		// generate test Circles
-		sprites.add(new Circle(100, 100, this));
-		sprites.add(new Circle(200, 200, this));
-		sprites.add(new Circle(300, 300, this));
-		sprites.add(new Circle(400, 400, this));
-		sprites.add(new Circle(500, 500, Color.RED, this));
-			
-		
+		//		sprites.add(new Circle(100, 100, this));
+		//		sprites.add(new Circle(200, 200, this));
+		//		sprites.add(new Circle(300, 300, this));
+		//		sprites.add(new Circle(400, 400, this));
+		//		sprites.add(new Circle(500, 500, Color.RED, this));
+		for(int x = 0; x < 5; x++)
+		{
+			spawn();
+		}
+
+
 
 		// test requestInView method
 		// System.out.println(requestInView(sprites.get(sprites.size() -
@@ -84,38 +88,41 @@ public class World
 		// (float) Math.PI / 2));
 		// mainApplet.setGameState(GameState.PAUSED);
 	}
-	
+
+	/**
+	 * spawns a circle in the world
+	 */
 	public void spawn()
 	{
 		boolean willCollide = false;
 		Circle c = new Circle(0, 0, this);
 		do 
 		{
-			int count = 0;
-			int x = (int) ((int) Math.random() * getSize().getX());
-			int y = (int) ((int) Math.random() * getSize().getY());
+			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
+			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
 			Vector2 position = new Vector2(x, y);
 			c.setPosition(position);
-		
-			while(count < sprites.size() && !willCollide)
-			{
-				System.out.println(count);
-				if(colliding(sprites.get(count), c))
-				{
-					willCollide = true;
-				}
-				count++;
-			}
-			if(!willCollide)
-			{
-				sprites.add(c);
-			}
+			willCollide = colliding(c);
 		} while(willCollide);
+		sprites.add(c);
 	}
-	
-	public void spawn(Circle c)
+
+	/**
+	 * respawns a circle in the world in a random location
+	 * @param respawn the circle to respawn
+	 */
+	public void spawn(Circle respawn)
 	{
-		
+		boolean willCollide = false;
+		do
+		{
+			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
+			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
+			Vector2 position = new Vector2(x, y);
+			respawn.setPosition(position);
+			willCollide = colliding(respawn);
+		}while(willCollide);
+		respawn.setAlive(true);
 	}
 
 	/**
@@ -189,6 +196,27 @@ public class World
 		}
 		return collisions;
 	}
+	
+	/**
+	 * Checks to see if a sprite will collide with any other sprites in the world using an
+	 * Axis-Aligned Bounding-Box
+	 * @param sprite the sprite to check against the world
+	 * @return true, if there is a collision
+	 */
+	public boolean colliding(Sprite sprite)
+	{
+		int count = 0;
+		boolean willCollide = false;
+		while(count < sprites.size() && !willCollide)
+		{
+			if(colliding(sprites.get(count), sprite))
+			{
+				willCollide = true;
+			}
+			count++;
+		}
+		return willCollide;
+	}
 
 	/**
 	 * The colliding method checks if 2 sprites are colliding using an
@@ -199,6 +227,10 @@ public class World
 	 */
 	public boolean colliding(Sprite A, Sprite B)
 	{
+		if(A == B) //if the sprites are the same
+		{
+			return false;
+		}
 		// @formatter:off
 		return colliding(
 				A.getPosition().getX() - A.getSize().getX() / 2, A.getPosition().getY() - A.getSize().getY() / 2,
@@ -228,7 +260,7 @@ public class World
 
 	// Getters and Setters
 	// ---------------------------------------------
-	
+
 	protected MainApplet getMainApplet()
 	{
 		return mainApplet;
@@ -238,7 +270,7 @@ public class World
 	{
 		this.mainApplet = mainApplet;
 	}
-	
+
 	public Vector2 getSize()
 	{
 		return size.copy();
