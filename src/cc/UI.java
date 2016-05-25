@@ -67,15 +67,17 @@ public class UI
 		FontMetrics fm = g.getFontMetrics();
 
 		int lineHeight = fm.getHeight();
-		int x = main.getWidth() / 8;
-		int y = main.getWidth() / 8 + lineHeight * 2;
+		int width = (int) main.getWorld().getSize().getX();
+		int height = (int) main.getWorld().getSize().getY();
+		int x = width / 8;
+		int y = width / 8 + lineHeight * 2;
 
 		// draw background
 		g.setColor(new Color(55, 55, 55, 230));
-		g.fillRect(main.getWidth() / 8, main.getHeight() / 8, main.getWidth() - main.getWidth() / 4,
-				main.getHeight() - main.getHeight() / 4);
+		g.fillRect(width / 8, height / 8, width * 3 / 4,
+				height * 3 / 4);
 		g.setColor(Color.RED);
-		g.drawString("Full Stats", main.getWidth() / 8 + lineHeight / 2, main.getHeight() / 8 + lineHeight);
+		g.drawString("Full Stats", width / 8 + lineHeight / 2, height / 8 + lineHeight);
 
 		// display circle data
 		x += lineHeight;
@@ -94,8 +96,8 @@ public class UI
 		}
 
 		// overlay data about existing objects
-		y = main.getWidth() / 8 + lineHeight * 2;
-		x = main.getWidth() - main.getWidth() / 2;
+		y = width / 8 + lineHeight * 2;
+		x = width - width / 2;
 		g.setColor(Color.RED);
 		g.drawString("Total Ticks: " + main.getTicks(), x, y);
 		y += lineHeight;

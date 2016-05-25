@@ -1,7 +1,7 @@
 package cc;
 
 import java.awt.Dimension;
-
+import java.io.Serializable;
 import javax.swing.JFrame;
 
 /**
@@ -9,7 +9,7 @@ import javax.swing.JFrame;
  * @author Robert
  * @version 0.1
  */
-public class Main
+public class Main implements Serializable
 {
 	/** debug mode enabled? **/
 	public static boolean DEBUG = false;

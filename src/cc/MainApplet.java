@@ -157,7 +157,6 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 
 	public void togglePause()
 	{
-		System.out.println(gameState);
 		if (gameState.equals(GameState.PLAY))
 			gameState = GameState.PAUSED;
 		else if (gameState.equals(GameState.PAUSED))
@@ -204,8 +203,6 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	 */
 	public void setWidth(int width)
 	{
-		Main.worldWidth = width;
-		setSize(width, Main.worldHeight);
 	}
 
 	/**
@@ -223,8 +220,6 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	 */
 	public void setHeight(int height)
 	{
-		Main.worldHeight = height;
-		setSize(Main.worldWidth, height);
 	}
 
 	/**
