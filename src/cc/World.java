@@ -33,7 +33,7 @@ public class World
 		do
 		{
 			sprites = new ArrayList<Sprite>();
-			int numberOfObstacles = (int) (Math.random() * 20 + 30);
+			int numberOfObstacles = (int) (Math.random() * 5 + 6);
 			for (int i = 0; i < numberOfObstacles; i++)
 			{
 				Vector2 size = new Vector2(0, 0);
@@ -64,7 +64,7 @@ public class World
 		if (Main.DEBUG)
 			System.out.println("Done");
 		// generate test Circles
-		sprites.add(new Circle(200, 300, this));
+		sprites.add(new Circle(200, 300, Color.BLUE, this));
 		sprites.add(new Circle(400, 300, Color.RED, this));
 
 		// test requestInView method
