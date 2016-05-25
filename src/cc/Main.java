@@ -134,7 +134,15 @@ public class Main extends Applet implements Runnable, ComponentListener
 	@Override
 	public void paint(Graphics g)
 	{
-		world.paint(g);
+		if(gameState.equals(GameState.PLAY))
+		{
+			world.paint(g);
+		}
+		
+		else
+		{
+			g.drawString("PAUSED", getWidth() / 2, getHeight() / 2);
+		}
 	}
 
 	@Override
