@@ -203,6 +203,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	 */
 	public void setWidth(int width)
 	{
+		setSize(width, (int) getSize().getHeight());
 	}
 
 	/**
@@ -220,6 +221,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	 */
 	public void setHeight(int height)
 	{
+		setSize((int) getSize().getWidth(), height);
 	}
 
 	/**
