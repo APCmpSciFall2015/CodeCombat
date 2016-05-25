@@ -1,6 +1,5 @@
 package cc;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import lib.Vector2;
@@ -37,7 +36,7 @@ public class Projectile extends Sprite
 				new Vector2(PROJECTILE_SPEED, velocity.angle(), true), // vel
 				new Vector2(0, 0), // acc
 				c.getColor(), world);
-		this.c = ( Circle) c.copy();
+		this.c = c; // intentional shallow copy
 		// @formatter:on
 	}
 
@@ -69,7 +68,7 @@ public class Projectile extends Sprite
 				|| getPosition().getX() + getSize().getX() / 2 > getWorld().getSize().getX()
 				|| getPosition().getY() - getSize().getX() / 2 < 0
 				|| getPosition().getY() + getSize().getX() / 2 > getWorld().getSize().getY())
-			setAlive(false);
+			setExistence(false);
 		// @formatter:on
 
 		// update position
@@ -80,7 +79,11 @@ public class Projectile extends Sprite
 	public void collide(Sprite s)
 	{
 		// @formatter:off
-		if (s.getId() != c.getId()) setAlive(false);
+		if (s.getId() != c.getId()) 
+		{
+				setExistence(false);
+				if(s instanceof Circle) c.setKills(c.getKills() + 1);
+		}
 		// @formatter:on
 	}
 	

@@ -24,8 +24,10 @@ public abstract class Sprite
 
 	/** id of sprite **/
 	private int id;
-	/** whether or not the sprite is alive **/
-	private boolean alive = true;
+	/** whether or not the sprite exists **/
+	private boolean existence;
+	/** whether or not the Circle is alive **/
+	private boolean alive;
 	/** plane of existence for the sprite **/
 	private World world;
 	/** color of sprite **/
@@ -44,13 +46,16 @@ public abstract class Sprite
 
 	protected Sprite(Sprite s)
 	{
-		this.id = s.getId();
+		this.id = s.id;
 		this.size = s.size.copy();
 		this.position = s.position.copy();
 		this.velocity = s.velocity.copy();
 		this.acceleration = s.acceleration.copy();
 		this.color = s.getColor();
 		this.world = s.getWorld();
+		this.existence = s.existence;
+		this.alive = s.alive;
+		this.existence = s.existence;
 	}
 	
 	/**
@@ -73,6 +78,8 @@ public abstract class Sprite
 		this.acceleration = acceleration.copy();
 		this.color = color;
 		this.world = world;
+		this.existence = true;
+		this.alive = true;
 	}
 
 	// Instance methods
@@ -130,19 +137,19 @@ public abstract class Sprite
 			break;
 		}
 
-		if (Main.DEBUG)
-		{
-			System.out.println("collision");
-			System.out.println(direction);
-			System.out.println(
-					s.getPosition().getX() + s.getSize().getX() / 2 - (getPosition().getX() - getSize().getX() / 2));
-			System.out.println(
-					getPosition().getX() + getSize().getX() / 2 - (s.getPosition().getX() - s.getSize().getX() / 2));
-			System.out.println(
-					s.getPosition().getY() + s.getSize().getY() / 2 - (getPosition().getY() - getSize().getY() / 2));
-			System.out.println(
-					getPosition().getY() + getSize().getY() / 2 - (s.getPosition().getY() - s.getSize().getY() / 2));
-		}
+//		if (Main.DEBUG)
+//		{
+//			System.out.println("collision");
+//			System.out.println(direction);
+//			System.out.println(
+//					s.getPosition().getX() + s.getSize().getX() / 2 - (getPosition().getX() - getSize().getX() / 2));
+//			System.out.println(
+//					getPosition().getX() + getSize().getX() / 2 - (s.getPosition().getX() - s.getSize().getX() / 2));
+//			System.out.println(
+//					s.getPosition().getY() + s.getSize().getY() / 2 - (getPosition().getY() - getSize().getY() / 2));
+//			System.out.println(
+//					getPosition().getY() + getSize().getY() / 2 - (s.getPosition().getY() - s.getSize().getY() / 2));
+//		}
 
 	}
 
@@ -198,6 +205,24 @@ public abstract class Sprite
 		g.setFont(font);
 		g.drawString("" + this, (int) (getPosition().getX() - getSize().getX() / 1.5), (int) (getPosition().getY() - getSize().getY() / 1.5));
 	}
+	
+	/**
+	 * The update method updates the condition of the sprite.
+	 */
+	public void update()
+	{
+		// slide on left and right walls
+		if (getPosition().getX() - getSize().getX() / 2 < 0)
+			setPosition(getPosition().setX(getSize().getX() / 2));
+		else if (getPosition().getX() + getSize().getX() / 2 > getWorld().getSize().getX())
+			setPosition(getPosition().setX(getWorld().getSize().getX() - getSize().getX() / 2));
+
+		// slide on top and bottom walls
+		if (getPosition().getY() - getSize().getX() / 2 < 0)
+			setPosition(getPosition().setY(getSize().getX() / 2));
+		else if (getPosition().getY() + getSize().getX() / 2 > getWorld().getSize().getY())
+			setPosition(getPosition().setY(getWorld().getSize().getY() - getSize().getY() / 2));
+	}
 
 	// Abstract methods
 	// -----------------------------------------------------
@@ -207,11 +232,6 @@ public abstract class Sprite
 	 * @return copy of sprite
 	 */
 	public abstract Sprite copy();
-
-	/**
-	 * The update method updates the state of the sprite.
-	 */
-	public abstract void update();
 
 	/**
 	 * The collide method defines collision behavior for the sprite upon
@@ -292,14 +312,14 @@ public abstract class Sprite
 		this.world = world;
 	}
 
-	public boolean isAlive()
+	public boolean getExistence()
 	{
-		return alive;
+		return existence;
 	}
 
-	public void setAlive(boolean alive)
+	public void setExistence(boolean existence)
 	{
-		this.alive = alive;
+		this.existence = existence;
 	}
 
 	public int getId()
@@ -310,5 +330,15 @@ public abstract class Sprite
 	protected void setId(int id)
 	{
 		this.id = id;
+	}
+
+	public boolean isAlive()
+	{
+		return alive;
+	}
+
+	public void setAlive(boolean alive)
+	{
+		this.alive = alive;
 	}
 }
