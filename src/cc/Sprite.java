@@ -130,19 +130,19 @@ public abstract class Sprite
 			break;
 		}
 
-		if (Main.DEBUG)
-		{
-			System.out.println("collision");
-			System.out.println(direction);
-			System.out.println(
-					s.getPosition().getX() + s.getSize().getX() / 2 - (getPosition().getX() - getSize().getX() / 2));
-			System.out.println(
-					getPosition().getX() + getSize().getX() / 2 - (s.getPosition().getX() - s.getSize().getX() / 2));
-			System.out.println(
-					s.getPosition().getY() + s.getSize().getY() / 2 - (getPosition().getY() - getSize().getY() / 2));
-			System.out.println(
-					getPosition().getY() + getSize().getY() / 2 - (s.getPosition().getY() - s.getSize().getY() / 2));
-		}
+//		if (Main.DEBUG)
+//		{
+//			System.out.println("collision");
+//			System.out.println(direction);
+//			System.out.println(
+//					s.getPosition().getX() + s.getSize().getX() / 2 - (getPosition().getX() - getSize().getX() / 2));
+//			System.out.println(
+//					getPosition().getX() + getSize().getX() / 2 - (s.getPosition().getX() - s.getSize().getX() / 2));
+//			System.out.println(
+//					s.getPosition().getY() + s.getSize().getY() / 2 - (getPosition().getY() - getSize().getY() / 2));
+//			System.out.println(
+//					getPosition().getY() + getSize().getY() / 2 - (s.getPosition().getY() - s.getSize().getY() / 2));
+//		}
 
 	}
 

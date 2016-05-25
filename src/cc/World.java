@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import cc.Main.GameState;
 import lib.Vector2;
 
 /**
@@ -15,6 +14,8 @@ import lib.Vector2;
  */
 public class World
 {
+	/** size of world **/
+	private Vector2 size;
 	/** sprites in the plane of existence **/
 	private ArrayList<Sprite> sprites;
 	/** Host applet **/
@@ -24,10 +25,11 @@ public class World
 	 * 1-Argument World Constructor
 	 * @param main host applet
 	 */
-	public World(Main main)
+	public World(Main main, Vector2 size)
 	{
 		this.main = main; // shallow copy
-
+		this.size = size.copy(); 
+		
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
 		do
@@ -36,36 +38,39 @@ public class World
 			int numberOfObstacles = (int) (Math.random() * 20 + 30);
 			for (int i = 0; i < numberOfObstacles; i++)
 			{
-				Vector2 size = new Vector2(0, 0);
+				Vector2 spriteSize = new Vector2(0, 0);
 				switch ((int) (Math.random() * 3))
 				{
 				case 0:
-					size = new Vector2(10, 60);
+					spriteSize = new Vector2(10, 60);
 					break;
 				case 1:
-					size = new Vector2(60, 10);
+					spriteSize = new Vector2(60, 10);
 					break;
 				case 2:
-					size = new Vector2(30, 30);
+					spriteSize = new Vector2(30, 30);
 					break;
 				default:
 					break;
 				}
 				Vector2 position = new Vector2(
-						(int) (Math.random() * (main.getWidth() - size.getX()) + size.getX() / 2),
-						(int) (Math.random() * (main.getHeight() - size.getY()) + size.getY() / 2));
-				sprites.add(new Obstacle(size, position, new Color(0, 0, 0), this));
-				if (Main.DEBUG)
-					System.out.println("Obstacle made");
+						(int) (Math.random() * (size.getX() - spriteSize.getX()) + spriteSize.getX() / 2),
+						(int) (Math.random() * (size.getY() - spriteSize.getY()) + spriteSize.getY() / 2));
+				sprites.add(new Obstacle(spriteSize, position, new Color(0, 0, 0), this));
+//				if (Main.DEBUG)
+//					System.out.println("Obstacle made");
 			}
-			if (Main.DEBUG)
-				System.out.println("remaking");
+//			if (Main.DEBUG)
+//				System.out.println("remaking");
 		} while (checkCollisions());
-		if (Main.DEBUG)
-			System.out.println("Done");
+//		if (Main.DEBUG)
+//			System.out.println("Done");
 		// generate test Circles
-		sprites.add(new Circle(200, 300, this));
-		sprites.add(new Circle(400, 300, Color.RED, this));
+		sprites.add(new Circle(100, 100, this));
+		sprites.add(new Circle(200, 200, this));
+		sprites.add(new Circle(300, 300, this));
+		sprites.add(new Circle(400, 400, this));
+		sprites.add(new Circle(500, 500, Color.RED, this));
 
 		// test requestInView method
 		// System.out.println(requestInView(sprites.get(sprites.size() -
@@ -183,6 +188,6 @@ public class World
 
 	public Vector2 getSize()
 	{
-		return new Vector2(main.getWidth(), main.getHeight());
+		return size.copy();
 	}
 }

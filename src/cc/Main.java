@@ -1,16 +1,26 @@
 package cc;
 
 import java.applet.Applet;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.Graphics2D;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import lib.Vector2;
 
 /**
  * The Main class is the host applet for the game.
  * @author Robert
  * @version 0.1
  */
-public class Main extends Applet implements Runnable
+public class Main extends Applet implements Runnable, ComponentListener
 {
 	public static final boolean DEBUG = true;
 
@@ -23,9 +33,9 @@ public class Main extends Applet implements Runnable
 	/** frame rate of applet set to 60 fps **/
 	public static final long frameRate = 1000 / 60;
 	/** width of applet **/
-	private int width = 800;
+	private static int worldWidth = 800;
 	/** height of applet **/
-	private int height = 600;
+	private static int worldHeight = 600;
 	/** color of background **/
 	private Color backgroundColor = Color.GRAY;
 	/** instance of self **/
@@ -35,19 +45,40 @@ public class Main extends Applet implements Runnable
 	/** Graphics to double buffer with **/
 	private Graphics gg;
 	/** Image to double buffer with **/
-	private Image ii;
+	private BufferedImage bi;
 	/** Serializable id **/
 	private static final long serialVersionUID = 3206847208968227199L;
 
 	/** GameState enum */
-	public enum GameState
+	public static enum GameState
 	{
 		MENU, PLAY, PAUSED;
 	}
 
 	/** GameState */
 	private static GameState gameState = GameState.PLAY;
-
+	
+	private static JFrame frame;
+	
+	// Initialization of JFrame
+	public static void main(String[] args)
+	{
+		frame = new JFrame("Code Combat");
+		
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setPreferredSize(new Dimension(worldWidth, worldHeight));
+		frame.add(panel);
+		
+		Applet applet = new Main();
+		applet.init();
+		applet.start();
+		
+		panel.add(applet, BorderLayout.CENTER);
+		
+		frame.pack();
+		frame.setVisible(true);
+	}
+	
 	//  Applet core
 	// ------------------------------------
 	
@@ -59,10 +90,9 @@ public class Main extends Applet implements Runnable
 		{
 			main = this;
 		}
-		setSize(width, height);
+		setSize(worldWidth, worldHeight);
+		world = new World(main, new Vector2(worldWidth, worldHeight));
 		setBackground(backgroundColor);
-		// setup game
-		world = new World(main);
 	}
 
 	@Override
@@ -89,21 +119,18 @@ public class Main extends Applet implements Runnable
 	@Override
 	public void update(Graphics g)
 	{
-		if (ii == null)
-		{
-			ii = createImage(this.getWidth(), this.getHeight());
-			gg = ii.getGraphics();
-		}
-
-		gg.setColor(getBackground());
-		gg.fillRect(0, 0, this.getWidth(), this.getHeight());
-
-		gg.setColor(getForeground());
-		paint(gg);
-
-		g.drawImage(ii, 0, 0, this);
+		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(), BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2 = bi.createGraphics();
+		
+		// paint world
+		g2.setColor(Color.GRAY);
+		g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
+		paint(g2);
+		
+		// paint the scaled image on the applet
+		g.drawImage(bi, 0, 0, getWidth(), getHeight(),  null);
 	}
-
+	
 	@Override
 	public void paint(Graphics g)
 	{
@@ -138,7 +165,7 @@ public class Main extends Applet implements Runnable
 	 */
 	public void restart()
 	{
-		world = new World(main);
+		world = new World(main, new Vector2(worldWidth, worldHeight));
 	}
 
 	/**
@@ -170,7 +197,7 @@ public class Main extends Applet implements Runnable
 	 */
 	public int getWidth()
 	{
-		return width;
+		return (int)  getSize().getWidth();//frame.getWidth();
 	}
 
 	/**
@@ -179,8 +206,8 @@ public class Main extends Applet implements Runnable
 	 */
 	public void setWidth(int width)
 	{
-		this.width = width;
-		setSize(width, height);
+		this.worldWidth = width;
+		setSize(width, worldHeight);
 	}
 
 	/**
@@ -189,7 +216,7 @@ public class Main extends Applet implements Runnable
 	 */
 	public int getHeight()
 	{
-		return height;
+		return (int) getSize().getHeight();//frame.getHeight();
 	}
 
 	/**
@@ -198,8 +225,8 @@ public class Main extends Applet implements Runnable
 	 */
 	public void setHeight(int height)
 	{
-		this.height = height;
-		setSize(width, height);
+		this.worldHeight = height;
+		setSize(worldWidth, height);
 	}
 
 	/**
@@ -218,5 +245,32 @@ public class Main extends Applet implements Runnable
 	public static void setGameState(GameState gameState)
 	{
 		Main.gameState = gameState;
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0)
+	{
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

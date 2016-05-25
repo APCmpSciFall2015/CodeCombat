@@ -1,6 +1,5 @@
 package cc;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import lib.Vector2;
