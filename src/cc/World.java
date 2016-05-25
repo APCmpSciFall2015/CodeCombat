@@ -21,9 +21,13 @@ public class World
 	/** Host applet **/
 	private Main main;
 
+	// Constructors
+	// ---------------------------------------------------------
+	
 	/**
-	 * 1-Argument World Constructor
+	 * 2-Argument World Constructor
 	 * @param main host applet
+	 * @param size size of world
 	 */
 	public World(Main main, Vector2 size)
 	{
@@ -86,7 +90,7 @@ public class World
 	{
 		for (int i = sprites.size() - 1; i >= 0; i--)
 		{
-			if (sprites.get(i).isAlive())
+			if (sprites.get(i).getExistence())
 				sprites.get(i).update();
 			else
 				sprites.remove(i);
@@ -139,7 +143,7 @@ public class World
 		{
 			for (int j = i + 1; j < sprites.size(); j++)
 			{
-				if (colliding(sprites.get(i), sprites.get(j)))
+				if (sprites.get(i).isAlive() && sprites.get(j).isAlive() && colliding(sprites.get(i), sprites.get(j)))
 				{
 					collisions = true;
 					Sprite s = sprites.get(i).copy();
@@ -186,6 +190,9 @@ public class World
 		return !(AX < Bx || BX < Ax || AY < By || BY < Ay);
 	}
 
+	// Getters and Setters
+	// ---------------------------------------------
+	
 	public Vector2 getSize()
 	{
 		return size.copy();

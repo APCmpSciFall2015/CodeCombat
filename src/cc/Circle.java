@@ -15,10 +15,23 @@ public class Circle extends Sprite
 {
 	/** maximum rate of change in the direction of velocity **/
 	public static final float MAX_TURNING_ANGLE = (float) Math.PI / 60f;
+	/** time to respawn **/
+	public static final int RESPAWN_TIME = 5 * 60;
+	/** time to between shots **/
+	public static final int RELOAD_TIME = 1 * 60;
+
+	/** circle deaths **/
+	private int deaths = 0;
+	/** circle kills **/
+	private int kills = 0;
+	/** timer for shooting **/
+	private int shootTimer = RELOAD_TIME;
+	/** timer for respawns **/
+	private int respawnTimer = RESPAWN_TIME;
 
 	// Constructors
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Circle copy constructor
 	 * @param x x pos
@@ -28,6 +41,8 @@ public class Circle extends Sprite
 	public Circle(Circle c)
 	{
 		super(c);
+		this.shootTimer = c.shootTimer;
+		this.respawnTimer = c.respawnTimer;
 	}
 
 	/**
@@ -61,67 +76,70 @@ public class Circle extends Sprite
 
 	// Overridden methods
 	// -----------------------------------------------------------------------
-	
+
 	@Override
-	public void paint(Graphics g)
+	public final void paint(Graphics g)
 	{
-		// @formatter:off
-		g.setColor(getColor());
-		// paint circle
-		g.fillOval(
-				(int) (getPosition().getX() - getSize().getX() / 2),
-				(int) (getPosition().getY() - getSize().getX() / 2),
-				(int) getSize().getX(), (int) getSize().getY());
-
-		// paint direction visualizer (color declared is inverted)
-		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
-		g.fillOval(
-				(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2) - 5,
-				(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2) - 5,
-				(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
-		// @formatter:on
-
-		if (Main.DEBUG) super.paint(g);
+		if (isAlive())
+		{
+			// @formatter:off
+			g.setColor(getColor());
+			// paint circle
+			g.fillOval(
+					(int) (getPosition().getX() - getSize().getX() / 2),
+					(int) (getPosition().getY() - getSize().getX() / 2),
+					(int) getSize().getX(), (int) getSize().getY());
+	
+			// paint direction visualizer (color declared is inverted)
+			g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
+			g.fillOval(
+					(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2) - 5,
+					(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2) - 5,
+					(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
+			// @formatter:on
+	
+				if (Main.DEBUG)
+					super.paint(g);
+		}
 	}
-
-	int i = 0;
 
 	@Override
 	public void update()
 	{
-		// slide on left and right walls
-		if (getPosition().getX() - getSize().getX() / 2 < 0)
-			setPosition(getPosition().setX(getSize().getX() / 2));
-		else if (getPosition().getX() + getSize().getX() / 2 > getWorld().getSize().getX())
-			setPosition(getPosition().setX(getWorld().getSize().getX() - getSize().getX() / 2));
-
-		// slide on top and bottom walls
-		if (getPosition().getY() - getSize().getX() / 2 < 0)
-			setPosition(getPosition().setY(getSize().getX() / 2));
-		else if (getPosition().getY() + getSize().getX() / 2 > getWorld().getSize().getY())
-			setPosition(getPosition().setY(getWorld().getSize().getY() - getSize().getY() / 2));
-
-		// update position
-		setPosition(getPosition().add(getVelocity()));
-
-		// test change in velocity and shooting
-		setVelocity(new Vector2(2f, (float) (getVelocity().angle() + Math.PI / 500), true));
-		if (i % 60 == 0)
+		if (isAlive())
 		{
+			super.update();
+			// update position
+			setPosition(getPosition().add(getVelocity()));
+
+			// test change in velocity and shooting
+			setVelocity(new Vector2(2f, (float) (getVelocity().angle() + Math.PI / 500), true));
 			shoot();
 		}
-		i++;
+		else
+		{
+			respawn();
+		}
+		updateCounters();
 	}
 
 	@Override
-	public void collide(Sprite s)
+	public final void collide(Sprite s)
 	{
-		// @formatter:off
 		// die when hit by projectile (not own projectile)
-		if (s instanceof Projectile && !((Projectile) s).isOwner(this)) setAlive(false);
+		if (s instanceof Projectile && !((Projectile) s).isOwner(this))
+		{
+			kill();
+			deaths++;
+		}
 		// slide on all other objects
-		else if (!(s instanceof Projectile)) slide(s);
-		// @formatter:on
+		else if (s instanceof Circle)
+		{
+			if (((Circle) s).isAlive())
+				slide(s);
+		}
+		else if (!(s instanceof Projectile))
+			slide(s);
 	}
 
 	@Override
@@ -130,21 +148,76 @@ public class Circle extends Sprite
 		return new Circle(this);
 	}
 
+	@Override
+	public String toString()
+	{
+		return super.toString() + "[" + kills + ", " + deaths + "]";
+	}
+	
 	// instance methods
 	// ----------------------------------------------------------------------
+
+	public void kill()
+	{
+		respawnTimer = RESPAWN_TIME;
+		setAlive(false);
+	}
 	
+	private final void respawn()
+	{
+		if (respawnTimer == 0)
+		{
+			setAlive(true);
+			respawnTimer = RESPAWN_TIME;
+		}
+	}
+
+	private final void updateCounters()
+	{
+		if (shootTimer > 0)
+			shootTimer--;
+		if (respawnTimer > 0)
+			respawnTimer--;
+	}
+
 	/**
 	 * The shoot method generates a projectile in an attempt to destroy other
 	 * circles.
 	 */
-	public void shoot()
+	protected final void shoot()
 	{
-		// generate a new projectile in front of the circle traveling faster in
-		// the same direction
-		getWorld().generateObject(new Projectile(
-				(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
-				(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
-				getVelocity(), this, getWorld()));
+		if (shootTimer == 0)
+		{
+			// generate a new projectile in front of the circle traveling faster
+			// in the same direction
+			getWorld().generateObject(new Projectile(
+					(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
+					(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
+					getVelocity(), this, getWorld()));
+			shootTimer = RELOAD_TIME;
+		}
 	}
 
+	// Getters and Setters
+	// -------------------------------------------------------
+
+	public int getDeaths()
+	{
+		return deaths;
+	}
+
+	public void setDeaths(int deaths)
+	{
+		this.deaths = deaths;
+	}
+
+	public int getKills()
+	{
+		return kills;
+	}
+
+	public void setKills(int kills)
+	{
+		this.kills = kills;
+	}
 }
