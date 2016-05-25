@@ -18,20 +18,20 @@ public class World
 	private Vector2 size;
 	/** sprites in the plane of existence **/
 	private ArrayList<Sprite> sprites;
-	/** Host applet **/
-	private Main main;
+	/** Host mainApplet **/
+	private MainApplet mainApplet;
 
 	// Constructors
 	// ---------------------------------------------------------
-	
+
 	/**
 	 * 2-Argument World Constructor
-	 * @param main host applet
+	 * @param mainApplet host mainApplet
 	 * @param size size of world
 	 */
-	public World(Main main, Vector2 size)
+	public World(MainApplet mainApplet, Vector2 size)
 	{
-		this.main = main; // shallow copy
+		this.mainApplet = mainApplet; // shallow copy
 		this.size = size.copy(); 
 		
 		// initialize game objects
@@ -61,13 +61,13 @@ public class World
 						(int) (Math.random() * (size.getX() - spriteSize.getX()) + spriteSize.getX() / 2),
 						(int) (Math.random() * (size.getY() - spriteSize.getY()) + spriteSize.getY() / 2));
 				sprites.add(new Obstacle(spriteSize, position, new Color(0, 0, 0), this));
-//				if (Main.DEBUG)
+//				if (MainApplet.DEBUG)
 //					System.out.println("Obstacle made");
 			}
-//			if (Main.DEBUG)
+//			if (MainApplet.DEBUG)
 //				System.out.println("remaking");
 		} while (checkCollisions());
-//		if (Main.DEBUG)
+//		if (MainApplet.DEBUG)
 //			System.out.println("Done");
 		// generate test Circles
 		sprites.add(new Circle(100, 100, this));
@@ -80,7 +80,7 @@ public class World
 		// System.out.println(requestInView(sprites.get(sprites.size() -
 		// 2).getPosition(), sprites.get(sprites.size() - 2).getVelocity(),
 		// (float) Math.PI / 2));
-		// main.setGameState(GameState.PAUSED);
+		// mainApplet.setGameState(GameState.PAUSED);
 	}
 
 	/**
@@ -165,7 +165,8 @@ public class World
 	public boolean colliding(Sprite A, Sprite B)
 	{
 		// @formatter:off
-		return colliding(A.getPosition().getX() - A.getSize().getX() / 2, A.getPosition().getY() - A.getSize().getY() / 2,
+		return colliding(
+				A.getPosition().getX() - A.getSize().getX() / 2, A.getPosition().getY() - A.getSize().getY() / 2,
 				A.getPosition().getX() + A.getSize().getX() / 2, A.getPosition().getY() + A.getSize().getY() / 2,
 				B.getPosition().getX() - B.getSize().getX() / 2, B.getPosition().getY() - B.getSize().getY() / 2,
 				B.getPosition().getX() + B.getSize().getX() / 2, B.getPosition().getY() + B.getSize().getY() / 2);
@@ -193,8 +194,28 @@ public class World
 	// Getters and Setters
 	// ---------------------------------------------
 	
+	protected MainApplet getMainApplet()
+	{
+		return mainApplet;
+	}
+
+	protected void setMainApplet(MainApplet mainApplet)
+	{
+		this.mainApplet = mainApplet;
+	}
+	
 	public Vector2 getSize()
 	{
 		return size.copy();
+	}
+
+	public ArrayList<Sprite> getSprites()
+	{
+		return sprites;
+	}
+
+	public void setSprites(ArrayList<Sprite> sprites)
+	{
+		this.sprites = sprites;
 	}
 }

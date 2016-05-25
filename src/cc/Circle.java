@@ -3,6 +3,7 @@ package cc;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import cc.Main.GameState;
 import lib.Vector2;
 
 /**
@@ -11,7 +12,7 @@ import lib.Vector2;
  * @version 0.1
  * @see Sprite
  */
-public class Circle extends Sprite
+public class Circle extends Sprite implements Comparable<Circle>
 {
 	/** maximum rate of change in the direction of velocity **/
 	public static final float MAX_TURNING_ANGLE = (float) Math.PI / 60f;
@@ -20,6 +21,10 @@ public class Circle extends Sprite
 	/** time to between shots **/
 	public static final int RELOAD_TIME = 1 * 60;
 
+	/** circle accuracy **/
+	private float accuracy = 1;
+	/** circle shots fired **/
+	private int shotsFired = 0;
 	/** circle deaths **/
 	private int deaths = 0;
 	/** circle kills **/
@@ -120,6 +125,7 @@ public class Circle extends Sprite
 		{
 			respawn();
 		}
+		calcStats();
 		updateCounters();
 	}
 
@@ -130,7 +136,6 @@ public class Circle extends Sprite
 		if (s instanceof Projectile && !((Projectile) s).isOwner(this))
 		{
 			kill();
-			deaths++;
 		}
 		// slide on all other objects
 		else if (s instanceof Circle)
@@ -151,7 +156,13 @@ public class Circle extends Sprite
 	@Override
 	public String toString()
 	{
-		return super.toString() + "[" + kills + ", " + deaths + "]";
+		return super.toString() + " [" + kills + ", " + deaths + ", " + String.format("%.2f", accuracy) + "]";
+	}
+	
+	@Override
+	public int compareTo(Circle c)
+	{
+		return kills - c.kills - deaths + c.deaths;
 	}
 	
 	// instance methods
@@ -160,6 +171,7 @@ public class Circle extends Sprite
 	public void kill()
 	{
 		respawnTimer = RESPAWN_TIME;
+		deaths++;
 		setAlive(false);
 	}
 	
@@ -170,6 +182,11 @@ public class Circle extends Sprite
 			setAlive(true);
 			respawnTimer = RESPAWN_TIME;
 		}
+	}
+	
+	private void calcStats()
+	{
+		accuracy = (float) kills / shotsFired;
 	}
 
 	private final void updateCounters()
@@ -195,6 +212,7 @@ public class Circle extends Sprite
 					(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
 					getVelocity(), this, getWorld()));
 			shootTimer = RELOAD_TIME;
+			shotsFired++;
 		}
 	}
 
@@ -219,5 +237,25 @@ public class Circle extends Sprite
 	public void setKills(int kills)
 	{
 		this.kills = kills;
+	}
+
+	public float getAccuracy()
+	{
+		return accuracy;
+	}
+
+	public void setAccuracy(float accuracy)
+	{
+		this.accuracy = accuracy;
+	}
+
+	public int getShotsFired()
+	{
+		return shotsFired;
+	}
+
+	public void setShotsFired(int shotsFired)
+	{
+		this.shotsFired = shotsFired;
 	}
 }
