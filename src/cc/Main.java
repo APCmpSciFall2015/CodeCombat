@@ -15,11 +15,13 @@ public class Main implements Serializable
 	public static boolean DEBUG = false;
 	/** frame rate of applet set to 60 fps **/
 	public static final long frameRate = 1000 / 60;
+
 	/** GameState enum */
 	public static enum GameState
 	{
 		MENU, PLAY, PAUSED, OVER;
 	}
+
 	/** Serializable id **/
 	private static final long serialVersionUID = 3206847208968227199L;
 	/** width of applet **/
@@ -28,7 +30,6 @@ public class Main implements Serializable
 	public static int worldHeight = 600;
 	/** JFrame to hold applet **/
 	private static JFrame frame;
-	
 
 	// Initialization of JFrame
 	public static void main(String[] args)
@@ -37,4 +38,3 @@ public class Main implements Serializable
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }
-	

@@ -4,7 +4,6 @@ import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -14,22 +13,22 @@ import lib.Vector2;
 
 public class MainApplet extends Applet implements Runnable, KeyListener
 {
+	/** serializable id **/
+	private static final long serialVersionUID = -2598013920892210921L;
+	/** ticks executed **/
 	private long ticks = 0;
 	/** plane of existence help by the applet **/
 	private World world;
 	/** UI for overlay and other user interaction **/
 	private UI ui;
-
-	
+	/** overlay stats? **/
 	private boolean displayStatsOverlay = false;
 	/** color of background **/
 	private Color backgroundColor = Color.GRAY;
 	/** instance of self **/
 	public static MainApplet main;
 	/** Thread to run on **/
-	private Thread thread = new Thread(this);
-	/** Graphics to double buffer with **/
-	private Graphics gg;
+	private Thread thread;
 	/** Image to double buffer with **/
 	private BufferedImage bi;
 
@@ -58,6 +57,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	@Override
 	public void start()
 	{
+		thread = new Thread(this);
 		thread.setDaemon(true);
 		thread.start();
 	}
