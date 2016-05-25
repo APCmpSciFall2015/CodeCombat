@@ -75,12 +75,47 @@ public class World
 		sprites.add(new Circle(300, 300, this));
 		sprites.add(new Circle(400, 400, this));
 		sprites.add(new Circle(500, 500, Color.RED, this));
+			
+		
 
 		// test requestInView method
 		// System.out.println(requestInView(sprites.get(sprites.size() -
 		// 2).getPosition(), sprites.get(sprites.size() - 2).getVelocity(),
 		// (float) Math.PI / 2));
 		// mainApplet.setGameState(GameState.PAUSED);
+	}
+	
+	public void spawn()
+	{
+		boolean willCollide = false;
+		Circle c = new Circle(0, 0, this);
+		do 
+		{
+			int count = 0;
+			int x = (int) ((int) Math.random() * getSize().getX());
+			int y = (int) ((int) Math.random() * getSize().getY());
+			Vector2 position = new Vector2(x, y);
+			c.setPosition(position);
+		
+			while(count < sprites.size() && !willCollide)
+			{
+				System.out.println(count);
+				if(colliding(sprites.get(count), c))
+				{
+					willCollide = true;
+				}
+				count++;
+			}
+			if(!willCollide)
+			{
+				sprites.add(c);
+			}
+		} while(willCollide);
+	}
+	
+	public void spawn(Circle c)
+	{
+		
 	}
 
 	/**
