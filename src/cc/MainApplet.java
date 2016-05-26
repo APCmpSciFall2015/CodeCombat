@@ -97,6 +97,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	public void paint(Graphics g)
 	{
 		world.paint(g);
+		
 		if (gameState.equals(GameState.PAUSED)) ui.drawPauseScreen(g);
 		if(displayStatsOverlay) ui.drawFullStatsOverlay(g);
 	}

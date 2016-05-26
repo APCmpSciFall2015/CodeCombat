@@ -3,6 +3,9 @@ package cc;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 public class MainFrame extends JFrame
@@ -32,9 +35,29 @@ public class MainFrame extends JFrame
 		this.add(panel);
 		applet.requestFocus();
 		
+		//menuBar
+		JMenuBar menubar = new JMenuBar();
+		this.setJMenuBar(menubar);
+				
+		JMenu file = new JMenu("File");
+		menubar.add(file);
+		JMenuItem exit = new JMenuItem("Exit");
+		file.add(exit);
+				
+		JMenu help = new JMenu("Help");
+		menubar.add(help);
+		JMenuItem test = new JMenuItem("This is a test");
+		file.add(test);
+		
 		// build window and display
 		this.pack();
 		this.setVisible(true);
+		
+		
+		
+		
+		
+		
 	}
 
 }
