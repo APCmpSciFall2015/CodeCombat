@@ -20,6 +20,11 @@ public class World
 	private ArrayList<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
+	
+	public static enum SpriteType
+	{
+		CIRCLE, OBSTACLE, PROJECTILE
+	}
 
 	// Constructors
 	// ---------------------------------------------------------
@@ -36,48 +41,15 @@ public class World
 
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
-		do
+		int numberOfObstacles = (int) (Math.random() * 20 + 30);
+		for(int x = 0; x < numberOfObstacles; x++)
 		{
-			sprites = new ArrayList<Sprite>();
-			int numberOfObstacles = (int) (Math.random() * 20 + 30);
-			for (int i = 0; i < numberOfObstacles; i++)
-			{
-				Vector2 spriteSize = new Vector2(0, 0);
-				switch ((int) (Math.random() * 3))
-				{
-				case 0:
-					spriteSize = new Vector2(10, 60);
-					break;
-				case 1:
-					spriteSize = new Vector2(60, 10);
-					break;
-				case 2:
-					spriteSize = new Vector2(30, 30);
-					break;
-				default:
-					break;
-				}
-				Vector2 position = new Vector2(
-						(int) (Math.random() * (size.getX() - spriteSize.getX()) + spriteSize.getX() / 2),
-						(int) (Math.random() * (size.getY() - spriteSize.getY()) + spriteSize.getY() / 2));
-				sprites.add(new Obstacle(spriteSize, position, new Color(0, 0, 0), this));
-				//				if (MainApplet.DEBUG)
-				//					System.out.println("Obstacle made");
-			}
-			//			if (MainApplet.DEBUG)
-			//				System.out.println("remaking");
-		} while (checkCollisions());
-		//		if (MainApplet.DEBUG)
-		//			System.out.println("Done");
-		// generate test Circles
-		//		sprites.add(new Circle(100, 100, this));
-		//		sprites.add(new Circle(200, 200, this));
-		//		sprites.add(new Circle(300, 300, this));
-		//		sprites.add(new Circle(400, 400, this));
-		//		sprites.add(new Circle(500, 500, Color.RED, this));
+			spawn(SpriteType.OBSTACLE);
+		}
+		
 		for(int x = 0; x < 5; x++)
 		{
-			spawn();
+			spawn(SpriteType.CIRCLE);
 		}
 
 
@@ -92,26 +64,54 @@ public class World
 	/**
 	 * spawns a circle in the world
 	 */
-	public void spawn()
+	public void spawn(SpriteType type)
 	{
 		boolean willCollide = false;
-		Circle c = new Circle(0, 0, this);
+		Sprite s = new Circle(0, 0, this);
+		switch(type)
+		{
+		case CIRCLE:
+			s = new Circle(0, 0, this);
+			break;
+		case OBSTACLE:
+			Vector2 spriteSize = new Vector2(0, 0);
+			Vector2 position = new Vector2(0, 0);
+			switch ((int) (Math.random() * 3))
+			{
+			case 0:
+				spriteSize = new Vector2(10, 60);
+				break;
+			case 1:
+				spriteSize = new Vector2(60, 10);
+				break;
+			case 2:
+				spriteSize = new Vector2(30, 30);
+				break;
+			default:
+				break;
+			}
+			s = new Obstacle(spriteSize, position, new Color(0, 0, 0), this);
+			break;
+			
+			default:	
+			break;
+		}
 		do 
 		{
-			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
-			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
+			int x = (int) (Math.random() * (getSize().getX() + 1));
+			int y = (int) (Math.random() * (getSize().getY() + 1));
 			Vector2 position = new Vector2(x, y);
-			c.setPosition(position);
-			willCollide = colliding(c);
+			s.setPosition(position);
+			willCollide = colliding(s);
 		} while(willCollide);
-		sprites.add(c);
+		sprites.add(s);
 	}
 
 	/**
 	 * respawns a circle in the world in a random location
 	 * @param respawn the circle to respawn
 	 */
-	public void spawn(Circle respawn)
+	public void spawn(Sprite respawn)
 	{
 		boolean willCollide = false;
 		do
