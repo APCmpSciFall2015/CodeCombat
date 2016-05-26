@@ -8,17 +8,14 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-public class UI
-{
+public class UI {
 	private MainApplet main;
 
-	public UI(MainApplet main)
-	{
+	public UI(MainApplet main) {
 		this.main = main;
 	}
 
-	public void drawPauseScreen(Graphics g)
-	{
+	public void drawPauseScreen(Graphics g) {
 		String s = "Paused";
 
 		// setup font
@@ -27,8 +24,10 @@ public class UI
 		FontMetrics fm = g.getFontMetrics();
 
 		// setup placement
-		int x = main.getWidth() / 2 - fm.stringWidth(s) / 2;
-		int y = main.getWidth() / 2 - fm.getHeight() * 2;
+		int width = (int) main.getWorld().getSize().getX();
+		int height = (int) main.getWorld().getSize().getY();
+		int x = width / 2 - fm.stringWidth(s) / 2;
+		int y = height / 2 - fm.getHeight() / 2;
 
 		// draw paused message
 		g.setColor(Color.CYAN);
@@ -37,25 +36,18 @@ public class UI
 		g.drawString(s, x, y);
 	}
 
-	public void drawFullStatsOverlay(Graphics g)
-	{
+	public void drawFullStatsOverlay(Graphics g) {
 		// gather stats data
 		LinkedList<Circle> circles = new LinkedList<Circle>();
 		int numProjectiles = 0;
 		int numObstacles = 0;
 
-		for (Sprite s : main.getWorld().getSprites())
-		{
-			if (s instanceof Circle)
-			{
+		for (Sprite s : main.getWorld().getSprites()) {
+			if (s instanceof Circle) {
 				circles.add((Circle) s);
-			}
-			else if (s instanceof Obstacle)
-			{
+			} else if (s instanceof Obstacle) {
 				numObstacles++;
-			}
-			else
-			{
+			} else {
 				numProjectiles++;
 			}
 		}
@@ -74,8 +66,7 @@ public class UI
 
 		// draw background
 		g.setColor(new Color(55, 55, 55, 230));
-		g.fillRect(width / 8, height / 8, width * 3 / 4,
-				height * 3 / 4);
+		g.fillRect(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
 		g.setColor(Color.RED);
 		g.drawString("Full Stats", width / 8 + lineHeight / 2, height / 8 + lineHeight);
 
@@ -86,8 +77,7 @@ public class UI
 		g.drawString("================", x, y);
 		y += lineHeight;
 		ListIterator<Circle> iter = circles.listIterator(circles.size());
-		while (iter.hasPrevious())
-		{
+		while (iter.hasPrevious()) {
 			Circle c = iter.previous();
 			g.setColor(c.getColor());
 			g.drawString("" + c.getId() + ": " + c.getKills() + "|" + c.getDeaths() + "|"
@@ -96,20 +86,21 @@ public class UI
 		}
 
 		// overlay data about existing objects
-		y = width / 8 + lineHeight * 2;
-		x = width - width / 2;
-		g.setColor(Color.RED);
-		g.drawString("Total Ticks: " + main.getTicks(), x, y);
-		y += lineHeight;
-		g.drawString("Time Elapsed: " + main.getTicks() / 60 + " sec", x, y);
-		y += lineHeight;
-		g.drawString("Total Sprites: " + main.getWorld().getSprites().size(), x, y);
-		y += lineHeight;
-		g.drawString("Circles: " + circles.size(), x, y);
-		y += lineHeight;
-		g.drawString("Projectiles: " + numProjectiles, x, y);
-		y += lineHeight;
-		g.drawString("Obstacles: " + numObstacles, x, y);
-
+		if (Main.DEBUG) {
+			y = width / 8 + lineHeight * 2;
+			x = width - width / 2;
+			g.setColor(Color.RED);
+			g.drawString("Total Ticks: " + main.getTicks(), x, y);
+			y += lineHeight;
+			g.drawString("Time Elapsed: " + main.getTicks() / 60 + " sec", x, y);
+			y += lineHeight;
+			g.drawString("Total Sprites: " + main.getWorld().getSprites().size(), x, y);
+			y += lineHeight;
+			g.drawString("Circles: " + circles.size(), x, y);
+			y += lineHeight;
+			g.drawString("Projectiles: " + numProjectiles, x, y);
+			y += lineHeight;
+			g.drawString("Obstacles: " + numObstacles, x, y);
+		}
 	}
 }
