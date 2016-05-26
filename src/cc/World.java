@@ -2,7 +2,7 @@ package cc;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.util.Vector;
 
 import lib.Vector2;
 
@@ -17,7 +17,7 @@ public class World
 	/** size of world **/
 	private Vector2 size;
 	/** sprites in the plane of existence **/
-	private ArrayList<Sprite> sprites;
+	private Vector<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
 	
@@ -40,7 +40,7 @@ public class World
 		this.size = size.copy(); 
 
 		// initialize game objects
-		sprites = new ArrayList<Sprite>();
+		sprites = new Vector<Sprite>();
 		int numberOfObstacles = (int) (Math.random() * 20 + 30);
 		for(int x = 0; x < numberOfObstacles; x++)
 		{
@@ -67,11 +67,11 @@ public class World
 	public void spawn(SpriteType type)
 	{
 		boolean willCollide = false;
-		Sprite s = new Circle(0, 0, this);
+		Sprite s = new Circle(this);
 		switch(type)
 		{
 		case CIRCLE:
-			s = new Circle(0, 0, this);
+			s = new Circle(this);
 			break;
 		case OBSTACLE:
 			Vector2 spriteSize = new Vector2(0, 0);
@@ -126,6 +126,24 @@ public class World
 	}
 
 	/**
+	 * respawns a circle in the world in a random location
+	 * @param respawn the circle to respawn
+	 */
+	public void spawn(Circle respawn)
+	{
+		boolean willCollide = false;
+		do
+		{
+			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
+			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
+			Vector2 position = new Vector2(x, y);
+			respawn.setPosition(position);
+			willCollide = colliding(respawn);
+		}while(willCollide);
+		respawn.setAlive(true);
+	}
+
+	/**
 	 * The update method updates the state of the world and all its sprites.
 	 */
 	public void update()
@@ -140,9 +158,9 @@ public class World
 		checkCollisions();
 	}
 
-	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
+	public Vector<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
 	{
-		ArrayList<Sprite> observed = new ArrayList<Sprite>();
+		Vector<Sprite> observed = new Vector<Sprite>();
 		for (Sprite s : sprites)
 		{
 			if (Math.abs(face.angle() - Vector2.sub(s.getPosition(), position).angle()) < Math.abs(fieldOfView / 2))
@@ -276,14 +294,13 @@ public class World
 		return size.copy();
 	}
 
-	public ArrayList<Sprite> getSprites()
+	public Vector<Sprite> getSprites()
 	{
 		return sprites;
 	}
 
-	public void setSprites(ArrayList<Sprite> sprites)
+	public void setSprites(Vector<Sprite> sprites)
 	{
 		this.sprites = sprites;
 	}
 }
-
