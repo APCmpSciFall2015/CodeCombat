@@ -20,6 +20,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public static final int RESPAWN_TIME = 5 * 60;
 	/** time to between shots **/
 	public static final int RELOAD_TIME = 1 * 60;
+	public static final int RADIUS = 20;
 
 	/** circle accuracy **/
 	private float accuracy = 1;
@@ -51,33 +52,20 @@ public class Circle extends Sprite implements Comparable<Circle>
 		this.respawnTimer = c.respawnTimer;
 	}
 
-	/**
-	 * 3-Argument Circle constructor
-	 * @param x x pos
-	 * @param y y pos
-	 * @param world plane of existence
-	 */
-	public Circle(float x, float y, World world)
+	public Circle(World world)
 	{
-		// @formatter:off
-		super(
-				new Vector2(40, 40), // size
-				new Vector2(x, y), new Vector2(1, 0, true), new Vector2(0, 0), // pos, vel, acc
-				new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)), // random color
-				world);
-		// @formatter:on
+		super(new Vector2(RADIUS * 2, RADIUS * 2),
+				new Vector2((float)((Math.random() * (world.getSize().getX()) - (2*RADIUS)))+ RADIUS,(float)(((Math.random() * (world.getSize().getY()) - (2*RADIUS)))+ RADIUS)),
+				new Vector2(1, (float) (Math.random() * Math.PI * 2), true),
+				new Vector2(0, 0),
+				new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)),
+				world
+				);
 	}
 
-	/**
-	 * 4-Argument Circle constructor
-	 * @param x x pos
-	 * @param y y pos
-	 * @param color color
-	 * @param world plane of existence
-	 */
-	public Circle(float x, float y, Color color, World world)
+	public Circle(Vector2 position, Vector2 direction, Color color, World world)
 	{
-		super(new Vector2(40, 40), new Vector2(x, y), new Vector2(1, 0, true), new Vector2(0, 0), color, world);
+		super(new Vector2(RADIUS / 2, RADIUS / 2), position, direction.normalize(), new Vector2(0, 0), color, world);
 	}
 
 	// Overridden methods

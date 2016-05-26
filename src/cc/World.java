@@ -21,7 +21,7 @@ public class World
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
 
-	// Constructors
+	// Constructors 
 	// ---------------------------------------------------------
 
 	/**
@@ -94,17 +94,25 @@ public class World
 	 */
 	public void spawn()
 	{
-		boolean willCollide = false;
-		Circle c = new Circle(0, 0, this);
-		do 
-		{
-			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
-			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
-			Vector2 position = new Vector2(x, y);
-			c.setPosition(position);
-			willCollide = colliding(c);
-		} while(willCollide);
+		Circle c;
+		do{
+			c = new Circle(this);
+		} while (colliding(c));
 		sprites.add(c);
+		
+		
+		
+//		boolean willCollide = false;
+//		Circle c = new Circle(0, 0, this);
+//		do 
+//		{
+//			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
+//			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
+//			Vector2 position = new Vector2(x, y);
+//			c.setPosition(position);
+//			willCollide = colliding(c);
+//		} while(willCollide);
+//		sprites.add(c);
 	}
 
 	/**
