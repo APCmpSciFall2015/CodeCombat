@@ -20,6 +20,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public static final int RESPAWN_TIME = 5 * 60;
 	/** time to between shots **/
 	public static final int RELOAD_TIME = 1 * 60;
+	/** radius of circle **/
 	public static final int RADIUS = 20;
 
 	/** circle accuracy **/
@@ -92,8 +93,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 					(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
 			// @formatter:on
 	
-				if (Main.DEBUG)
-					super.paint(g);
+			super.paint(g);
 		}
 	}
 
@@ -151,7 +151,10 @@ public class Circle extends Sprite implements Comparable<Circle>
 	@Override
 	public int compareTo(Circle c)
 	{
-		return kills - c.kills - deaths + c.deaths;
+		if (c.kills > kills) return 1; else if (c.kills < kills) return -1;
+		if (c.deaths < deaths) return 1; else if (c.deaths > deaths) return -1;
+		if (c.accuracy > accuracy) return 1; else if (c.accuracy < accuracy) return -1;
+		return 0;
 	}
 	
 	// instance methods
@@ -168,7 +171,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		if (respawnTimer == 0)
 		{
-			getWorld().spawn(this);
+			getWorld().respawn(this);
 			respawnTimer = RESPAWN_TIME;
 		}
 	}

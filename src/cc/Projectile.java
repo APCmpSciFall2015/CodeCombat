@@ -46,6 +46,7 @@ public class Projectile extends Sprite
 	@Override
 	public void paint(Graphics g)
 	{	
+		super.paint(g);
 		// @formatter:off
 		// paint circle for projectile
 		g.setColor(getColor());

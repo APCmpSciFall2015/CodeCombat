@@ -20,10 +20,10 @@ public class World
 	private Vector<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
-	
+
 	public static enum SpriteType
 	{
-		CIRCLE, OBSTACLE, PROJECTILE
+		CIRCLE, OBSTACLE, PROJECTILE, SHIELD
 	}
 
 	// Constructors
@@ -37,17 +37,17 @@ public class World
 	public World(MainApplet mainApplet, Vector2 size)
 	{
 		this.mainApplet = mainApplet; // shallow copy
-		this.size = size.copy(); 
+		this.size = size.copy();
 
 		// initialize game objects
 		sprites = new Vector<Sprite>();
 		int numberOfObstacles = (int) (Math.random() * 20 + 30);
-		for(int x = 0; x < numberOfObstacles; x++)
+		for (int x = 0; x < numberOfObstacles; x++)
 		{
 			spawn(SpriteType.OBSTACLE);
 		}
-		
-		for(int x = 0; x < 5; x++)
+
+		for (int x = 0; x < 5; x++)
 		{
 			spawn(SpriteType.CIRCLE);
 		}
@@ -64,44 +64,35 @@ public class World
 	 */
 	public void spawn(SpriteType type)
 	{
-		boolean willCollide = false;
-		Sprite s = new Circle(this);
-		switch(type)
+		Sprite s;
+
+		switch (type)
 		{
 		case CIRCLE:
 			s = new Circle(this);
 			break;
 		case OBSTACLE:
-			Vector2 spriteSize = new Vector2(0, 0);
-			Vector2 position = new Vector2(0, 0);
-			switch ((int) (Math.random() * 3))
-			{
-			case 0:
-				spriteSize = new Vector2(10, 60);
-				break;
-			case 1:
-				spriteSize = new Vector2(60, 10);
-				break;
-			case 2:
-				spriteSize = new Vector2(30, 30);
-				break;
-			default:
-				break;
-			}
-			s = new Obstacle(spriteSize, position, new Color(0, 0, 0), this);
+			s = new Obstacle(this);
 			break;
-			
-			default:	
+		case SHIELD:
+			s = new Shield(this);
 			break;
+		default:
+			System.err.println("Invalid Sprite Type");
+			return;
 		}
-		do 
+
+		do
 		{
-			int x = (int) (Math.random() * (getSize().getX() + 1));
-			int y = (int) (Math.random() * (getSize().getY() + 1));
-			Vector2 position = new Vector2(x, y);
-			s.setPosition(position);
-			willCollide = colliding(s);
-		} while(willCollide);
+			// correct position to avoid collision
+			// @formatter:off 
+			s.setPosition(new Vector2(
+					(float) (Math.random() * (getSize().getX() - s.getSize().getX()) + s.getSize().getX() / 2),
+					(float) (Math.random() * (getSize().getY() - s.getSize().getY()) + s.getSize().getY() / 2)
+					));
+			// @formatter:on
+		} while (colliding(s));
+
 		sprites.add(s);
 	}
 
@@ -109,19 +100,31 @@ public class World
 	 * respawns a circle in the world in a random location
 	 * @param respawn the circle to respawn
 	 */
-	public void spawn(Sprite respawn)
+	public void respawn(Sprite s)
 	{
-		boolean willCollide = false;
 		do
 		{
-			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
-			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
-			Vector2 position = new Vector2(x, y);
-			respawn.setPosition(position);
-			willCollide = colliding(respawn);
-		}while(willCollide);
-		respawn.setAlive(true);
+			s.setPosition(new Vector2(
+					(float) ((Math.random() * (size.getX()) - (s.getSize().getX()))) + s.getSize().getX() / 2,
+					(float) (((Math.random() * (size.getY()) - (s.getSize().getY()))) + s.getSize().getY() / 2)));
+		} while (colliding(s));
+		s.setAlive(true);
+		;
 	}
+
+	// public void spawn(Sprite respawn)
+	// {
+	// boolean willCollide = false;
+	// do
+	// {
+	// int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
+	// int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
+	// Vector2 position = new Vector2(x, y);
+	// respawn.setPosition(position);
+	// willCollide = colliding(respawn);
+	// }while(willCollide);
+	// respawn.setAlive(true);
+	// }
 
 	/**
 	 * The update method updates the state of the world and all its sprites.
@@ -132,8 +135,7 @@ public class World
 		{
 			if (sprites.get(i).getExistence())
 				sprites.get(i).update();
-			else
-				sprites.remove(i);
+			else sprites.remove(i);
 		}
 		checkCollisions();
 	}
@@ -194,26 +196,21 @@ public class World
 		}
 		return collisions;
 	}
-	
+
 	/**
-	 * Checks to see if a sprite will collide with any other sprites in the world using an
-	 * Axis-Aligned Bounding-Box
+	 * Checks to see if a sprite will collide with any other sprites in the
+	 * world using an Axis-Aligned Bounding-Box
 	 * @param sprite the sprite to check against the world
 	 * @return true, if there is a collision
 	 */
 	public boolean colliding(Sprite sprite)
 	{
-		int count = 0;
-		boolean willCollide = false;
-		while(count < sprites.size() && !willCollide)
+		for (Sprite s : sprites)
 		{
-			if(colliding(sprites.get(count), sprite))
-			{
-				willCollide = true;
-			}
-			count++;
+			if (colliding(s, sprite))
+				return true;
 		}
-		return willCollide;
+		return false;
 	}
 
 	/**
@@ -225,7 +222,7 @@ public class World
 	 */
 	public boolean colliding(Sprite A, Sprite B)
 	{
-		if(A == B) //if the sprites are the same
+		if (A == B) // if the sprites are the same
 		{
 			return false;
 		}
