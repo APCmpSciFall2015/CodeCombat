@@ -75,6 +75,7 @@ public class World
 		sprites.add(new Circle(300, 300, this));
 		sprites.add(new Circle(400, 400, this));
 		sprites.add(new Circle(500, 500, Color.RED, this));
+		sprites.add(new Shield(200, 400, this));
 
 		// test requestInView method
 		// System.out.println(requestInView(sprites.get(sprites.size() -

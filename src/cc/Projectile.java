@@ -98,7 +98,7 @@ public class Projectile extends Sprite
 	 * @param c Circle to check
 	 * @return is owner circle?
 	 */
-	public boolean isOwner(Circle c)
+	public boolean isOwner(Sprite c)
 	{
 		return this.c.getId() == c.getId();
 	}

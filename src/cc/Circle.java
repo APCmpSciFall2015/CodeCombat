@@ -143,7 +143,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 			if (((Circle) s).isAlive())
 				slide(s);
 		}
-		else if (!(s instanceof Projectile))
+		else if (!(s instanceof Projectile || s instanceof Shield))
 			slide(s);
 	}
 
