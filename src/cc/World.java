@@ -52,13 +52,11 @@ public class World
 			spawn(SpriteType.CIRCLE);
 		}
 
-
-
-		// test requestInView method
-		// System.out.println(requestInView(sprites.get(sprites.size() -
-		// 2).getPosition(), sprites.get(sprites.size() - 2).getVelocity(),
-		// (float) Math.PI / 2));
-		// mainApplet.setGameState(GameState.PAUSED);
+		sprites.add(new Shield(this));
+		sprites.add(new Shield(this));
+		sprites.add(new Shield(this));
+		sprites.add(new Shield(this));
+		sprites.add(new Shield(this));
 	}
 
 	/**
@@ -112,24 +110,6 @@ public class World
 	 * @param respawn the circle to respawn
 	 */
 	public void spawn(Sprite respawn)
-	{
-		boolean willCollide = false;
-		do
-		{
-			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
-			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
-			Vector2 position = new Vector2(x, y);
-			respawn.setPosition(position);
-			willCollide = colliding(respawn);
-		}while(willCollide);
-		respawn.setAlive(true);
-	}
-
-	/**
-	 * respawns a circle in the world in a random location
-	 * @param respawn the circle to respawn
-	 */
-	public void spawn(Circle respawn)
 	{
 		boolean willCollide = false;
 		do
