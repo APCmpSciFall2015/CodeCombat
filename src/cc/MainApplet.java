@@ -2,11 +2,18 @@ package cc;
 
 import java.applet.Applet;
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 import cc.Main.GameState;
 import lib.Vector2;
@@ -52,6 +59,8 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 			main = this;
 		world = new World(this, new Vector2(Main.worldWidth, Main.worldHeight));
 		ui = new UI(this);
+		
+	
 	}
 
 	@Override

@@ -1,8 +1,17 @@
 package cc;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.Serializable;
+
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 /**
  * The Main class is the host applet for the game.
@@ -30,11 +39,36 @@ public class Main implements Serializable
 	public static int worldHeight = 600;
 	/** JFrame to hold applet **/
 	private static JFrame frame;
+	
+	
+
 
 	// Initialization of JFrame
 	public static void main(String[] args)
 	{
 		frame = new MainFrame("Code Combat", new Dimension(worldWidth, worldHeight), new MainApplet());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setup the menu
+		//Menu menu = new Menu();
+		//frame.setJMenuBar(menu.createMenuBar());
+		
+		JMenuBar menuBar;
+		JMenu menu;
+		JCheckBoxMenuItem cbMenuItem;
+		
+		menuBar = new JMenuBar();
+		
+		menu = new JMenu("Game Controls");
+		menuBar.add(menu);
+		
+		cbMenuItem = new JCheckBoxMenuItem("Pause");
+		//cbMenuItem.addActionListener(this);
+		menu.add(cbMenuItem);
+		
+		cbMenuItem = new JCheckBoxMenuItem("Debug");
+		//cbMenuItem.addActionListener(this);
+		menu.add(cbMenuItem);
+		frame.setJMenuBar(menuBar);
 	}
+
 }
