@@ -42,21 +42,16 @@ public class World
 		// initialize game objects
 		sprites = new Vector<Sprite>();
 		int numberOfObstacles = (int) (Math.random() * 20 + 30);
-		for (int x = 0; x < numberOfObstacles; x++)
+		for (int i = 0; i < numberOfObstacles; i++)
 		{
 			spawn(SpriteType.OBSTACLE);
 		}
 
-		for (int x = 0; x < 5; x++)
+		for (int i = 0; i < 5; i++)
 		{
 			spawn(SpriteType.CIRCLE);
+			spawn(SpriteType.SHIELD);
 		}
-
-		sprites.add(new Shield(this));
-		sprites.add(new Shield(this));
-		sprites.add(new Shield(this));
-		sprites.add(new Shield(this));
-		sprites.add(new Shield(this));
 	}
 
 	/**
@@ -111,20 +106,6 @@ public class World
 		s.setAlive(true);
 		;
 	}
-
-	// public void spawn(Sprite respawn)
-	// {
-	// boolean willCollide = false;
-	// do
-	// {
-	// int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
-	// int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
-	// Vector2 position = new Vector2(x, y);
-	// respawn.setPosition(position);
-	// willCollide = colliding(respawn);
-	// }while(willCollide);
-	// respawn.setAlive(true);
-	// }
 
 	/**
 	 * The update method updates the state of the world and all its sprites.
