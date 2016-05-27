@@ -12,10 +12,12 @@ import lib.Vector2;
  */
 public class Shield extends Sprite
 {
+	public static final int RESPAWN_TIME = 5 * 60;
 	/** whether or not the shield has found its mama duck **/
 	private boolean unbound;
 	/** shield's mama duck **/
 	private Sprite owner;
+	private int respawnTimer;
 
 	/**
 	 * Shield copy constructor
@@ -49,6 +51,7 @@ public class Shield extends Sprite
 	@Override
 	public void update()
 	{
+		if(isAlive()){
 		// look for mama duck
 		if (unbound)
 		{
@@ -58,6 +61,15 @@ public class Shield extends Sprite
 			Vector2 previousVelocity = getVelocity();
 			setVelocity(getVelocity().add(getAcceleration()).normalize());
 			setPosition(getPosition().add(getVelocity().add(previousVelocity).div(2)));
+		}
+	}
+		else
+		{
+			respawnTimer ++;
+			if(respawnTimer < 0){
+				this.setAlive(true);
+			}
+					
 		}
 	}
 
@@ -75,7 +87,7 @@ public class Shield extends Sprite
 					(int) (getPosition().getY() - getSize().getX() / 2),
 					(int) getSize().getX(), (int) getSize().getY());
 		}
-		// paint the shield as a circle around the master (mama duck)
+		// paint the shield (duckling) as a circle around the master (mama duck)
 		else
 		{
 			// @formatter:off
@@ -116,7 +128,9 @@ public class Shield extends Sprite
 		{
 			if (s instanceof Projectile && !((Projectile) s).isOwner(owner))
 			{
-				this.setExistence(false);
+				this.setAlive(false);
+				unbound = true;
+				respawnTimer = RESPAWN_TIME;
 			}
 		}
 	}
