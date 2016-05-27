@@ -77,8 +77,8 @@ public class UI {
 		g.drawString("================", x, y);
 		y += lineHeight;
 		ListIterator<Circle> iter = circles.listIterator(circles.size());
-		while (iter.hasPrevious()) {
-			Circle c = iter.previous();
+		for(Circle c : circles)
+		{
 			g.setColor(c.getColor());
 			g.drawString("" + c.getId() + ": " + c.getKills() + "|" + c.getDeaths() + "|"
 					+ String.format("%.2f", c.getAccuracy()) + " " + c.isAlive(), x, y);

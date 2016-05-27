@@ -9,7 +9,7 @@ public class Projectile extends Sprite
 	/** maximum speed of a projectile **/
 	private static final float PROJECTILE_SPEED = 5;
 	/** owner circle **/
-	private Circle c;
+	private Circle owner;
 
 	// Constructors
 	// --------------------------------------------------------------
@@ -36,7 +36,7 @@ public class Projectile extends Sprite
 				new Vector2(PROJECTILE_SPEED, velocity.angle(), true), // vel
 				new Vector2(0, 0), // acc
 				c.getColor(), world);
-		this.c = c; // intentional shallow copy
+		this.owner = c; // intentional shallow copy
 		// @formatter:on
 	}
 
@@ -46,6 +46,7 @@ public class Projectile extends Sprite
 	@Override
 	public void paint(Graphics g)
 	{	
+		super.paint(g);
 		// @formatter:off
 		// paint circle for projectile
 		g.setColor(getColor());
@@ -79,10 +80,10 @@ public class Projectile extends Sprite
 	public void collide(Sprite s)
 	{
 		// @formatter:off
-		if (s.getId() != c.getId()) 
+		if (s.getId() != owner.getId() && !(s instanceof Shield && ((Shield) s).isOwner(owner)))
 		{
 				setExistence(false);
-				if(s instanceof Circle) c.setKills(c.getKills() + 1);
+				if(s instanceof Circle) owner.setKills(owner.getKills() + 1);
 		}
 		// @formatter:on
 	}
@@ -98,8 +99,8 @@ public class Projectile extends Sprite
 	 * @param c Circle to check
 	 * @return is owner circle?
 	 */
-	public boolean isOwner(Circle c)
+	public boolean isOwner(Sprite c)
 	{
-		return this.c.getId() == c.getId();
+		return owner.getId() == c.getId();
 	}
 }

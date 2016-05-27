@@ -57,7 +57,7 @@ public abstract class Sprite
 		this.alive = s.alive;
 		this.existence = s.existence;
 	}
-	
+
 	/**
 	 * 7-Argument Sprite Constructor
 	 * @param width width
@@ -137,19 +137,23 @@ public abstract class Sprite
 			break;
 		}
 
-//		if (Main.DEBUG)
-//		{
-//			System.out.println("collision");
-//			System.out.println(direction);
-//			System.out.println(
-//					s.getPosition().getX() + s.getSize().getX() / 2 - (getPosition().getX() - getSize().getX() / 2));
-//			System.out.println(
-//					getPosition().getX() + getSize().getX() / 2 - (s.getPosition().getX() - s.getSize().getX() / 2));
-//			System.out.println(
-//					s.getPosition().getY() + s.getSize().getY() / 2 - (getPosition().getY() - getSize().getY() / 2));
-//			System.out.println(
-//					getPosition().getY() + getSize().getY() / 2 - (s.getPosition().getY() - s.getSize().getY() / 2));
-//		}
+		// if (Main.DEBUG)
+		// {
+		// System.out.println("collision");
+		// System.out.println(direction);
+		// System.out.println(
+		// s.getPosition().getX() + s.getSize().getX() / 2 -
+		// (getPosition().getX() - getSize().getX() / 2));
+		// System.out.println(
+		// getPosition().getX() + getSize().getX() / 2 - (s.getPosition().getX()
+		// - s.getSize().getX() / 2));
+		// System.out.println(
+		// s.getPosition().getY() + s.getSize().getY() / 2 -
+		// (getPosition().getY() - getSize().getY() / 2));
+		// System.out.println(
+		// getPosition().getY() + getSize().getY() / 2 - (s.getPosition().getY()
+		// - s.getSize().getY() / 2));
+		// }
 
 	}
 
@@ -185,27 +189,30 @@ public abstract class Sprite
 			setVelocity(getVelocity().setX(-getVelocity().getX()));
 		}
 	}
-	
+
 	/**
 	 * The paint method draws the sprite
 	 * @param g Graphics to paint on
 	 */
 	public void paint(Graphics g)
 	{
-		// draw AABB
-		g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
-		g.drawRect(
-				(int) (getPosition().getX() - getSize().getX() / 2),
-				(int) (getPosition().getY() - getSize().getY() / 2),
-				(int) getSize().getX(), (int) getSize().getY());
-		
-		// draw text data
-		Font font = new Font("Serif", Font.PLAIN, 12);
-		g.setColor(this.color);
-		g.setFont(font);
-		g.drawString("" + this, (int) (getPosition().getX() - getSize().getX() / 1.5), (int) (getPosition().getY() - getSize().getY() / 1.5));
+		if (Main.DEBUG)
+		{
+			// draw AABB
+			g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
+			g.drawRect((int) (getPosition().getX() - getSize().getX() / 2),
+					(int) (getPosition().getY() - getSize().getY() / 2), (int) getSize().getX(),
+					(int) getSize().getY());
+
+			// draw text data
+			Font font = new Font("Serif", Font.PLAIN, 12);
+			g.setColor(this.color);
+			g.setFont(font);
+			g.drawString("" + this, (int) (getPosition().getX() - getSize().getX() / 1.5),
+					(int) (getPosition().getY() - getSize().getY() / 1.5));
+		}
 	}
-	
+
 	/**
 	 * The update method updates the condition of the sprite.
 	 */
@@ -242,13 +249,13 @@ public abstract class Sprite
 
 	// Overridden methods
 	// ----------------------------------------------------
-	
+
 	@Override
 	public String toString()
 	{
 		return (this.getClass() + ": " + id).substring(9);
 	}
-	
+
 	// Getters and setters
 	// -----------------------------------------------------
 
@@ -326,7 +333,7 @@ public abstract class Sprite
 	{
 		return id;
 	}
-	
+
 	protected void setId(int id)
 	{
 		this.id = id;
