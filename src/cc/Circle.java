@@ -27,6 +27,8 @@ public class Circle extends Sprite implements Comparable<Circle>
 	private float accuracy = 1;
 	/** circle shots fired **/
 	private int shotsFired = 0;
+	/** circle hits **/
+	private int hits = 0;
 	/** circle deaths **/
 	private int deaths = 0;
 	/** circle kills **/
@@ -159,7 +161,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	
 	// instance methods
 	// ----------------------------------------------------------------------
-
+	
 	public void kill()
 	{
 		respawnTimer = RESPAWN_TIME;
@@ -178,7 +180,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	
 	private void calcStats()
 	{
-		accuracy = (float) kills / shotsFired;
+		accuracy = (float) hits / shotsFired;
 	}
 
 	private final void updateCounters()
@@ -249,5 +251,17 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public void setShotsFired(int shotsFired)
 	{
 		this.shotsFired = shotsFired;
+	}
+
+	
+	public int getHits()
+	{
+		return hits;
+	}
+
+	
+	public void setHits(int hits)
+	{
+		this.hits = hits;
 	}
 }

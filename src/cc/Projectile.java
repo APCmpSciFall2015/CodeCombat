@@ -13,12 +13,12 @@ public class Projectile extends Sprite
 
 	// Constructors
 	// --------------------------------------------------------------
-	
+
 	public Projectile(Projectile p)
 	{
 		super(p);
 	}
-	
+
 	/**
 	 * 5-Argument Projectile Constructor
 	 * @param x x pos
@@ -42,10 +42,10 @@ public class Projectile extends Sprite
 
 	// Overridden methods
 	// -----------------------------------------------------------------
-	
+
 	@Override
 	public void paint(Graphics g)
-	{	
+	{
 		super.paint(g);
 		// @formatter:off
 		// paint circle for projectile
@@ -55,9 +55,9 @@ public class Projectile extends Sprite
 				(int) (getPosition().getY() - getSize().getY() / 2),
 				(int) getSize().getX(), (int) getSize().getY());
 		// @formatter:on
-		
-		
-		if(Main.DEBUG) super.paint(g);
+
+		if (Main.DEBUG)
+			super.paint(g);
 	}
 
 	@Override
@@ -83,11 +83,19 @@ public class Projectile extends Sprite
 		if (s.getId() != owner.getId() && !(s instanceof Shield && ((Shield) s).isOwner(owner)))
 		{
 				setExistence(false);
-				if(s instanceof Circle) owner.setKills(owner.getKills() + 1);
+				if(s instanceof Circle) 
+				{
+					owner.setKills(owner.getKills() + 1);
+					owner.setHits(owner.getHits() + 1);
+				}
+				else if (s instanceof Shield && !((Shield) s).isUnbound())
+				{
+					owner.setHits(owner.getHits() + 1);
+				}
 		}
 		// @formatter:on
 	}
-	
+
 	@Override
 	public Sprite copy()
 	{
@@ -95,7 +103,8 @@ public class Projectile extends Sprite
 	}
 
 	/**
-	 * The isOwner method tells whether the given circle is the owner of the projectile
+	 * The isOwner method tells whether the given circle is the owner of the
+	 * projectile
 	 * @param c Circle to check
 	 * @return is owner circle?
 	 */
