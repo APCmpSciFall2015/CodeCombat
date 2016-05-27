@@ -8,6 +8,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
 import cc.Main.GameState;
 import lib.Vector2;
 
@@ -105,6 +109,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	@Override
 	public void run()
 	{
+			
 		while (!gameState.equals(GameState.OVER))
 		{
 			if (gameState.equals(GameState.PLAY))
