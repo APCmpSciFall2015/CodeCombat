@@ -12,11 +12,15 @@ import lib.Vector2;
  */
 public class Shield extends Sprite
 {
+	/** time for duck to respawn **/
 	public static final int RESPAWN_TIME = 5 * 60;
+	/** radius of duck **/
+	public static final int RADIUS = 10;
 	/** whether or not the shield has found its mama duck **/
 	private boolean unbound;
 	/** shield's mama duck **/
 	private Sprite owner;
+	/** time for duck's respawn **/
 	private int respawnTimer;
 
 	/**
@@ -51,34 +55,35 @@ public class Shield extends Sprite
 	@Override
 	public void update()
 	{
-		if(isAlive()){
-		// look for mama duck
-		if (unbound)
+		if (isAlive())
 		{
-			super.update();
-			// update position (move in circle)
-			setAcceleration(new Vector2(1f / 30f, (float) (getVelocity().angle() + Math.PI / 2), true));
-			Vector2 previousVelocity = getVelocity();
-			setVelocity(getVelocity().add(getAcceleration()).normalize());
-			setPosition(getPosition().add(getVelocity().add(previousVelocity).div(2)));
+			// look for mama duck
+			if (unbound)
+			{
+				super.update();
+				// update position (move in circle)
+				setAcceleration(new Vector2(1f / 30f, (float) (getVelocity().angle() + Math.PI / 2), true));
+				Vector2 previousVelocity = getVelocity();
+				setVelocity(getVelocity().add(getAcceleration()).normalize());
+				setPosition(getPosition().add(getVelocity().add(previousVelocity).div(2)));
+			}
 		}
-	}
 		else
 		{
-			respawnTimer ++;
-			if(respawnTimer < 0){
-				this.setAlive(true);
-			}
-					
+			respawnTimer--;
+			respawn();
 		}
 	}
 
-	public final void paint(Graphics g)
+	public void paint(Graphics g)
 	{
 		super.paint(g);
-		// paint the sad little duck looking for its mama
-		if (unbound)
+
+		if (isAlive())
 		{
+			// paint the sad little duck looking for its mama
+			if (unbound)
+			{
 			// @formatter:off
 			g.setColor(Color.CYAN);
 			// paint circle
@@ -86,18 +91,19 @@ public class Shield extends Sprite
 					(int) (getPosition().getX() - getSize().getX() / 2),
 					(int) (getPosition().getY() - getSize().getX() / 2),
 					(int) getSize().getX(), (int) getSize().getY());
-		}
-		// paint the shield (duckling) as a circle around the master (mama duck)
-		else
-		{
-			// @formatter:off
-			g.setColor(Color.CYAN);
-			// paint circle
-			g.drawOval(
-					(int) (getPosition().getX() - getSize().getX() / 2),
-					(int) (getPosition().getY() - getSize().getX() / 2),
-					(int) getSize().getX(), (int) getSize().getY());
-			// @formatter:on
+			}
+			// paint the shield (duckling) as a circle around the master (mama duck)
+			else
+			{
+				// @formatter:off
+				g.setColor(Color.CYAN);
+				// paint circle
+				g.drawOval(
+						(int) (getPosition().getX() - getSize().getX() / 2),
+						(int) (getPosition().getY() - getSize().getX() / 2),
+						(int) getSize().getX(), (int) getSize().getY());
+				// @formatter:on
+			}
 		}
 	}
 
@@ -129,9 +135,19 @@ public class Shield extends Sprite
 			if (s instanceof Projectile && !((Projectile) s).isOwner(owner))
 			{
 				this.setAlive(false);
+				setSize(new Vector2(10, 10));
 				unbound = true;
 				respawnTimer = RESPAWN_TIME;
 			}
+		}
+	}
+
+	private final void respawn()
+	{
+		if (respawnTimer == 0)
+		{
+			getWorld().respawn(this);
+			respawnTimer = RESPAWN_TIME;
 		}
 	}
 
@@ -160,7 +176,7 @@ public class Shield extends Sprite
 	{
 		if (owner != null)
 			return owner.copy();
-												return null;
+		return null;
 	}
 
 	public void setOwner(Sprite owner)
