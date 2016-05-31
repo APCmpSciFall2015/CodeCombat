@@ -10,7 +10,7 @@ public abstract class Mind
 	private ArrayList<Sprite> inView;
 	
 	
-	public Mind(Circle circle)
+	public Mind(Circle circle, float variance)
 	{
 		this.circle = circle;
 	}
@@ -25,8 +25,31 @@ public abstract class Mind
 		inView = circle.requestInView();
 	}
 	
-	public final void turn()
+	public final void turn(float deltaTheta)
 	{
-		
+		circle.turn(deltaTheta);
+	}
+
+	// Getters and Setters
+	// ---------------------------------------------
+	
+	public Random getRandom()
+	{
+		return random;
+	}
+
+	public void setRandom(Random random)
+	{
+		this.random = random;
+	}
+
+	public ArrayList<Sprite> getInView()
+	{
+		return inView;
+	}
+
+	public void setInView(ArrayList<Sprite> inView)
+	{
+		this.inView = inView;
 	}
 }
