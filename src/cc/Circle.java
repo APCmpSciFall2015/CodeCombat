@@ -2,6 +2,7 @@ package cc;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 import cc.Main.GameState;
 import lib.Vector2;
@@ -14,6 +15,8 @@ import lib.Vector2;
  */
 public class Circle extends Sprite implements Comparable<Circle>
 {
+	public static final float SPEED = 1;
+	public static final float FOV = (float) Math.PI / 4f;
 	/** maximum rate of change in the direction of velocity **/
 	public static final float MAX_TURNING_ANGLE = (float) Math.PI / 60f;
 	/** time to respawn **/
@@ -35,7 +38,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 	private int shootTimer = RELOAD_TIME;
 	/** timer for respawns **/
 	private int respawnTimer = RESPAWN_TIME;
-	
 
 	// Constructors
 	// --------------------------------------------------------------------
@@ -56,17 +58,17 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public Circle(World world)
 	{
 		super(new Vector2(RADIUS * 2, RADIUS * 2),
-				new Vector2((float)((Math.random() * (world.getSize().getX()) - (2*RADIUS)))+ RADIUS,(float)(((Math.random() * (world.getSize().getY()) - (2*RADIUS)))+ RADIUS)),
-				new Vector2(1, (float) (Math.random() * Math.PI * 2), true),
-				new Vector2(0, 0),
+				new Vector2((float) ((Math.random() * (world.getSize().getX()) - (2 * RADIUS))) + RADIUS,
+						(float) (((Math.random() * (world.getSize().getY()) - (2 * RADIUS))) + RADIUS)),
+				new Vector2(SPEED, (float) (Math.random() * Math.PI * 2), true), new Vector2(0, 0),
 				new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)),
-				world
-				);
+				world);
 	}
 
 	public Circle(Vector2 position, Vector2 direction, Color color, World world)
 	{
-		super(new Vector2(RADIUS / 2, RADIUS / 2), position, direction.normalize(), new Vector2(0, 0), color, world);
+		super(new Vector2(RADIUS / 2, RADIUS / 2), position, direction.normalize().mult(SPEED), new Vector2(0, 0),
+				color, world);
 	}
 
 	// Overridden methods
@@ -92,7 +94,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 					(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2) - 5,
 					(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
 			// @formatter:on
-	
+
 			super.paint(g);
 		}
 	}
@@ -133,7 +135,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 				slide(s);
 		}
 		else if (!(s instanceof Projectile || s instanceof Shield))
+		{
 			slide(s);
+		}
 	}
 
 	@Override
@@ -147,16 +151,18 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		return super.toString() + " [" + kills + ", " + deaths + ", " + String.format("%.2f", accuracy) + "]";
 	}
-	
+
 	@Override
 	public int compareTo(Circle c)
 	{
+		// @formatter:off
 		if (c.kills > kills) return 1; else if (c.kills < kills) return -1;
 		if (c.deaths < deaths) return 1; else if (c.deaths > deaths) return -1;
 		if (c.accuracy > accuracy) return 1; else if (c.accuracy < accuracy) return -1;
 		return 0;
+		// @formatter:on
 	}
-	
+
 	// instance methods
 	// ----------------------------------------------------------------------
 
@@ -166,7 +172,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 		deaths++;
 		setAlive(false);
 	}
-	
+
 	private final void respawn()
 	{
 		if (respawnTimer == 0)
@@ -175,7 +181,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 			respawnTimer = RESPAWN_TIME;
 		}
 	}
-	
+
 	private void calcStats()
 	{
 		accuracy = (float) kills / shotsFired;
@@ -183,17 +189,32 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	private final void updateCounters()
 	{
-		if (shootTimer > 0)
-			shootTimer--;
-		if (respawnTimer > 0)
-			respawnTimer--;
+		// @formatter:off
+		if (shootTimer > 0) shootTimer--;
+		if (respawnTimer > 0) respawnTimer--;
+		// @formatter:on
+	}
+
+	public final ArrayList<Sprite> requestInView()
+	{
+		return getWorld().requestInView(this.getPosition(), this.getVelocity(), FOV);
+	}
+
+	public final void turn(float deltaTheta)
+	{
+		// truncate to interval [-MAX_TURNING_ANGLE, MAX_TURNING_ANGLE]
+		if(deltaTheta < -MAX_TURNING_ANGLE) deltaTheta = -MAX_TURNING_ANGLE;
+		else if(deltaTheta > MAX_TURNING_ANGLE) deltaTheta = MAX_TURNING_ANGLE;
+
+		// adjust angle of velocity vector (aka turn)
+		setVelocity(new Vector2(SPEED, getVelocity().angle() + deltaTheta));
 	}
 
 	/**
 	 * The shoot method generates a projectile in an attempt to destroy other
 	 * circles.
 	 */
-	protected final void shoot()
+	public final void shoot()
 	{
 		if (shootTimer == 0)
 		{

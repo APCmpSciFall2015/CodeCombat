@@ -1,8 +1,7 @@
 package cc;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import lib.Vector2;
 
@@ -17,7 +16,7 @@ public class World
 	/** size of world **/
 	private Vector2 size;
 	/** sprites in the plane of existence **/
-	private Vector<Sprite> sprites;
+	private ArrayList<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
 
@@ -40,7 +39,7 @@ public class World
 		this.size = size.copy();
 
 		// initialize game objects
-		sprites = new Vector<Sprite>();
+		sprites = new ArrayList<Sprite>();
 		int numberOfObstacles = (int) (Math.random() * 20 + 30);
 		for (int i = 0; i < numberOfObstacles; i++)
 		{
@@ -121,9 +120,9 @@ public class World
 		checkCollisions();
 	}
 
-	public Vector<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
+	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
 	{
-		Vector<Sprite> observed = new Vector<Sprite>();
+		ArrayList<Sprite> observed = new ArrayList<Sprite>();
 		for (Sprite s : sprites)
 		{
 			if (Math.abs(face.angle() - Vector2.sub(s.getPosition(), position).angle()) < Math.abs(fieldOfView / 2))
@@ -252,12 +251,12 @@ public class World
 		return size.copy();
 	}
 
-	public Vector<Sprite> getSprites()
+	public ArrayList<Sprite> getSprites()
 	{
 		return sprites;
 	}
 
-	public void setSprites(Vector<Sprite> sprites)
+	public void setSprites(ArrayList<Sprite> sprites)
 	{
 		this.sprites = sprites;
 	}
