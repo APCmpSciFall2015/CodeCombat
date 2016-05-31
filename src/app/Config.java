@@ -45,7 +45,6 @@ public class Config
 	
 	public void save(File f)
 	{
-		
 		try
 		{
 			FileWriter fw = new FileWriter(f);

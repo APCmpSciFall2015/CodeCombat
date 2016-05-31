@@ -26,33 +26,44 @@ public class TestBot extends Mind
 	@Override
 	public void think()
 	{
-		ArrayList<Sprite> inView = requestInView();
-		Sprite target = null;
-		for (Sprite s : inView)
+		if(isAlive())
 		{
-			if (s instanceof Circle)
+			ArrayList<Sprite> inView = requestInView();
+			Sprite target = null;
+			for (Sprite s : inView)
 			{
-				if(target != null && s.getPosition().dist(getPosition()) < target.getPosition().dist(getPosition()))
+				if (s instanceof Circle)
 				{
-					target = s;
-				}
-				else if (target == null);
-				{
-					target = s;
+					if(target != null && s.getPosition().dist(getPosition()) < target.getPosition().dist(getPosition()))
+					{
+						target = s;
+					}
+					else if (target == null);
+					{
+						target = s;
+					}
 				}
 			}
-		}
-		
-		
-		if(target != null && new Vector2(target.getPosition().sub(getPosition())).angle() - getVelocity().angle() < 0)
-		{
-			turn(-Circle.MAX_TURNING_ANGLE / 4);
+			
+	
+			if(target != null)
+			{
+				Vector2 direction = target.getPosition().sub(getEyePosition());
+				Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
+				Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
+				turn((float) (Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag()))));
+			}
+			else
+			{
+				turn((float) Circle.MAX_TURNING_ANGLE / 3);
+			}
+	
+			if(target != null) shoot();
 		}
 		else
 		{
-			turn(Circle.MAX_TURNING_ANGLE / 4);
+			getStats();
 		}
-		if(target != null) shoot();
 	}
 	
 	@Override

@@ -84,6 +84,12 @@ public abstract class Mind
 		return circle.getPosition().add(noise());
 	}
 
+	public Vector2 getEyePosition()
+	{
+		return circle.getEyePosition().add(noise());
+	}
+	
+	
 	public Vector2 getVelocity()
 	{
 		return circle.getVelocity().add(noise());

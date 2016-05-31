@@ -269,10 +269,10 @@ public class Circle extends Sprite implements Comparable<Circle>
 		{
 			// get sprites in FOV from location of eyes
 			inView = getWorld().requestInView(
-											new Vector2(
-												getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2,
-												getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
-											getVelocity(), FOV);
+						new Vector2(
+							getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2,
+							getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
+						getVelocity(), FOV);
 			// remove self
 			for (int i = inView.size() - 1; i > 0; i--)
 			{
@@ -312,6 +312,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 					getVelocity(), this, getWorld()));
 			shootTimer = RELOAD_TIME;
 			shotsFired++;
+			totalShotsFired++;
 		}
 	}
 
