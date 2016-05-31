@@ -4,8 +4,8 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
-import bots.Mind;
 import bots.TestBot;
+import cc.Main.GameState;
 import lib.Vector2;
 
 /**
@@ -18,6 +18,8 @@ public class World
 {
 	/** size of world **/
 	private Vector2 size;
+	/** ticks executed **/
+	private long ticks = 0;
 	/** sprites in the plane of existence **/
 	private ArrayList<Sprite> sprites;
 	/** Host mainApplet **/
@@ -122,17 +124,21 @@ public class World
 			else sprites.remove(i);
 		}
 		checkCollisions();
+		ticks++;
 	}
 
 	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
 	{
 		ArrayList<Sprite> observed = new ArrayList<Sprite>();
+		Vector2 direction;
 		for (Sprite s : sprites)
 		{
-			if (s.getExistence() && s.isAlive() && Math.abs(face.angle() - Vector2.sub(s.getPosition(), position).angle()) < Math.abs(fieldOfView / 2))
+			direction = s.getPosition().sub(position);
+			// angle between vectors: theta = acos (a dot b / (mag a * mag b)
+			// https://en.wikipedia.org/wiki/Dot_product
+			if (s.getExistence() && s.isAlive() && Math.abs(Math.acos(direction.dot(face) / (face.mag() * direction.mag()))) < Math.abs(fieldOfView / 2))
 				observed.add(s.copy());
 		}
-
 		return observed;
 	}
 
@@ -263,5 +269,15 @@ public class World
 	public void setSprites(ArrayList<Sprite> sprites)
 	{
 		this.sprites = sprites;
+	}
+	
+	public long getTicks()
+	{
+		return ticks;
+	}
+
+	public void setTicks(long ticks)
+	{
+		this.ticks = ticks;
 	}
 }

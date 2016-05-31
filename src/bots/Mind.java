@@ -32,8 +32,8 @@ public abstract class Mind
 
 	public final Vector2 noise()
 	{
-		return new Vector2(0, 0);
-		//return new Vector2((float) random.nextGaussian(), (float) random.nextGaussian());
+		//return new Vector2(0, 0);
+		return new Vector2((float) random.nextGaussian(), (float) random.nextGaussian());
 	}
 
 	public final void shoot()
@@ -44,10 +44,9 @@ public abstract class Mind
 	public final ArrayList<Sprite> requestInView()
 	{
 		ArrayList<Sprite> inView = circle.requestInView();
-		for (int i = inView.size() - 1; i > 0; i--)
+		for (Sprite s : inView)
 		{
-			inView.get(i).getPosition().add(noise());
-			if (inView.get(i).equals(circle)) inView.remove(i);
+			s.getPosition().add(noise());
 		}
 		return inView;
 	}

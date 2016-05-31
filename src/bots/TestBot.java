@@ -44,17 +44,16 @@ public class TestBot extends Mind
 			}
 		}
 		
-		if(target != null && new Vector2(target.getPosition().sub(getPosition())).angle() - getVelocity().angle() > 0)
+		
+		if(target != null && new Vector2(target.getPosition().sub(getPosition())).angle() - getVelocity().angle() < 0)
 		{
-			turn(Circle.MAX_TURNING_ANGLE);
-			System.out.println("right");
+			turn(-Circle.MAX_TURNING_ANGLE / 4);
 		}
 		else
 		{
-			turn(-Circle.MAX_TURNING_ANGLE);
-			System.out.println("left");
+			turn(Circle.MAX_TURNING_ANGLE / 4);
 		}
 		
-		shoot();
+		if(target != null) shoot();
 	}
 }

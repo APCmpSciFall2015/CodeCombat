@@ -42,6 +42,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	private int shootTimer = RELOAD_TIME;
 	/** timer for respawns **/
 	private int respawnTimer = RESPAWN_TIME;
+	private Vector2 eyes;
 
 	// Constructors
 	// --------------------------------------------------------------------
@@ -84,6 +85,8 @@ public class Circle extends Sprite implements Comparable<Circle>
 		if (isAlive())
 		{
 			// @formatter:off
+			
+			
 			g.setColor(getColor());
 			// paint circle
 			g.fillOval(
@@ -91,11 +94,17 @@ public class Circle extends Sprite implements Comparable<Circle>
 					(int) (getPosition().getY() - getSize().getX() / 2),
 					(int) getSize().getX(), (int) getSize().getY());
 	
+			// paint FOV visualizer
+			Vector2 left = new Vector2(getWorld().getSize().mag(), getVelocity().angle() + FOV / 2, true);
+			Vector2 right = new Vector2(getWorld().getSize().mag(), getVelocity().angle() - FOV / 2, true);
+			g.drawLine((int) eyes.getX(), (int) eyes.getY(), (int) (eyes.getX() + left.getX()), (int) (eyes.getY() + left.getY()));
+			g.drawLine((int) eyes.getX(), (int) eyes.getY(), (int) (eyes.getX() + right.getX()), (int) (eyes.getY() + right.getY()));
+			
 			// paint direction visualizer (color declared is inverted)
 			g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
 			g.fillOval(
-					(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2) - 5,
-					(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2) - 5,
+					(int) eyes.getX() - RADIUS / 4,
+					(int) eyes.getY() - RADIUS / 4,
 					(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
 			// @formatter:on
 
@@ -108,17 +117,20 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		if (isAlive())
 		{
+			eyes = new Vector2(
+					(getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
+					(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2)
+					);
 			if (mind != null)
 				mind.think();
 			else
 			{
-				
 
 				// test change in velocity and shooting
 				turn((float) -Math.PI / 500);
 				shoot();
 			}
-			
+
 			// update position
 			setPosition(getPosition().add(getVelocity()));
 			super.update();
@@ -208,13 +220,20 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	public final ArrayList<Sprite> requestInView()
 	{
-		ArrayList<Sprite> arr = getWorld().requestInView(this.getPosition(), this.getVelocity(), FOV);
-		for(Sprite s : arr)
+		// @formatter:off
+		// get sprites in FOV from location of eyes
+		ArrayList<Sprite> inView = getWorld().requestInView(
+										new Vector2(
+											getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2,
+											getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
+										getVelocity(), FOV);
+		// remove self
+		for (int i = inView.size() - 1; i > 0; i--)
 		{
-			System.out.println("\t" + s.getId());
+			if(inView.get(i).getId() == getId()) inView.remove(i); 
 		}
-		System.out.println();
-		return arr;
+		return inView;
+		// @formatter:on
 	}
 
 	public final void turn(float deltaTheta)
@@ -310,4 +329,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		this.mind = mind;
 	}
+	
+	
 }

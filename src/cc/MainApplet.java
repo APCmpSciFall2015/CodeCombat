@@ -15,8 +15,6 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 {
 	/** serializable id **/
 	private static final long serialVersionUID = -2598013920892210921L;
-	/** ticks executed **/
-	private long ticks = 0;
 	/** plane of existence help by the applet **/
 	private World world;
 	/** UI for overlay and other user interaction **/
@@ -80,7 +78,6 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	@Override
 	public void update(Graphics g)
 	{
-		ticks++;
 		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(), BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g2 = bi.createGraphics();
 
@@ -250,15 +247,5 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	public void setWorld(World world)
 	{
 		this.world = world;
-	}
-
-	public long getTicks()
-	{
-		return ticks;
-	}
-
-	public void setTicks(long ticks)
-	{
-		this.ticks = ticks;
 	}
 }

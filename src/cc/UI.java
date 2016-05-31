@@ -90,9 +90,9 @@ public class UI {
 			y = width / 8 + lineHeight * 2;
 			x = width - width / 2;
 			g.setColor(Color.RED);
-			g.drawString("Total Ticks: " + main.getTicks(), x, y);
+			g.drawString("Total Ticks: " + main.getWorld().getTicks(), x, y);
 			y += lineHeight;
-			g.drawString("Time Elapsed: " + main.getTicks() / 60 + " sec", x, y);
+			g.drawString("Time Elapsed: " + main.getWorld().getTicks() / 60 + " sec", x, y);
 			y += lineHeight;
 			g.drawString("Total Sprites: " + main.getWorld().getSprites().size(), x, y);
 			y += lineHeight;
