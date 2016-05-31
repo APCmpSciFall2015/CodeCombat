@@ -34,8 +34,10 @@ public class Main implements Serializable
 	// Initialization of JFrame
 	public static void main(String[] args)
 	{
-		frame = new MainFrame("Code Combat", new Dimension(Integer.parseInt(config.get("worldWidth")), Integer.parseInt(config.get("worldHeight"))), new MainApplet());
-		System.out.println(Integer.parseInt(config.get("worldHeight")));
+		frame = new MainFrame("Code Combat", new Dimension(
+					Integer.parseInt(config.get("worldWidth")),
+					Integer.parseInt(config.get("worldHeight"))),
+				new MainApplet());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }
