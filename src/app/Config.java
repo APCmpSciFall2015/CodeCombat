@@ -43,15 +43,16 @@ public class Config
 	
 	public void save(File f)
 	{
-		FileWriter fw;
+		
 		try
 		{
-			fw = new FileWriter(f);
+			FileWriter fw = new FileWriter(f);
 		
 			for(Entry<String, String> entry : properties.entrySet())
 			{
-				fw.write(entry.getKey() + "=" + entry.getValue() + "\n");
+				fw.write("" + entry.getKey() + "=" + entry.getValue() + "\n");
 			}
+			fw.close();
 		}
 		catch (IOException e)
 		{

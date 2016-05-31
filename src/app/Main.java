@@ -14,7 +14,8 @@ import world.World;
  */
 public class Main implements Serializable
 {
-	public static Config config = new Config(new File("./res/config.txt"));
+	public static final File CONFIG_FILE = new File("./res/config.txt");
+	public static Config config = new Config(CONFIG_FILE);
 	/** debug mode enabled? **/
 	public static boolean debug = Boolean.parseBoolean(config.get("debug"));
 	/** frame rate of applet set to 60 fps **/
@@ -39,5 +40,13 @@ public class Main implements Serializable
 					Integer.parseInt(config.get("worldHeight"))),
 				new MainApplet());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		    public void run() {
+		    	System.out.println("save config");
+		    	config.save(CONFIG_FILE);
+		    }
+		}));
 	}
 }

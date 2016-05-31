@@ -1,10 +1,10 @@
-debug=false
 frameRate=16
-worldWidth=800
-worldHeight=600
 circleRadius=20
-circleRespawnTime=300
-circleReloadTime=60
+worldWidth=800
+debug=false
 circleFOV=1.0471975512
+worldHeight=600
 circleMaxTurningAngle=0.05235987755
 circleSpeed=2
+circleReloadTime=60
+circleRespawnTime=300
