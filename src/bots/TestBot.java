@@ -52,7 +52,6 @@ public class TestBot extends Mind
 		{
 			turn(Circle.MAX_TURNING_ANGLE / 4);
 		}
-		
 		if(target != null) shoot();
 	}
 	

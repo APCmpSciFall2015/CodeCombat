@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -47,11 +49,17 @@ public class Config
 		try
 		{
 			FileWriter fw = new FileWriter(f);
-		
+			
+			// put entries in order
+			LinkedList<String> entries = new LinkedList<String>();
 			for(Entry<String, String> entry : properties.entrySet())
-			{
-				fw.write("" + entry.getKey() + "=" + entry.getValue() + "\n");
-			}
+				entries.add(entry.getKey() + "=" + entry.getValue() + "\n");
+			Collections.sort(entries);
+			
+			
+			// write to file
+			for(String s : entries)
+				fw.write(s);
 			fw.close();
 		}
 		catch (IOException e)

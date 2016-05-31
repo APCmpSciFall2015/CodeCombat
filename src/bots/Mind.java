@@ -74,6 +74,11 @@ public abstract class Mind
 	// Getters and Setters
 	// ---------------------------------------------
 
+	public boolean isAlive()
+	{
+		return circle.isAlive();
+	}
+	
 	public Vector2 getPosition()
 	{
 		return circle.getPosition().add(noise());
