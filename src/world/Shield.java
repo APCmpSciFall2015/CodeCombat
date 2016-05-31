@@ -1,4 +1,4 @@
-package cc;
+package world;
 
 import java.awt.Color;
 import java.awt.Graphics;

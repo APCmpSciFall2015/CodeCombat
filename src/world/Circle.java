@@ -1,4 +1,4 @@
-package cc;
+package world;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -15,8 +15,10 @@ import lib.Vector2;
  */
 public class Circle extends Sprite implements Comparable<Circle>
 {
+	/** Speed of Circles **/
 	public static final float SPEED = 2f;
-	public static final float FOV = (float) Math.PI / 4f;
+	/** Field of View of Circle **/
+	public static final float FOV = (float) Math.PI / 3f;
 	/** maximum rate of change in the direction of velocity **/
 	public static final float MAX_TURNING_ANGLE = (float) Math.PI / 60f;
 	/** time to respawn **/
@@ -25,25 +27,53 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public static final int RELOAD_TIME = 1 * 60;
 	/** radius of circle **/
 	public static final int RADIUS = 20;
-
-	/** Mind to control circle bot **/
-	private Mind mind = null;
-	/** circle accuracy **/
+	
+	// Circle stats
+	// ------------------------------------------
+	
+	/** circle accuracy during existence**/
+	private float totalAccuracy = 0;
+	/** circle accuracy during life **/
 	private float accuracy = 1;
-	/** circle shots fired **/
+	/** circle shots fired during existence**/
+	private int totalShotsFired = 0;
+	/** circle shots fired during life **/
 	private int shotsFired = 0;
-	/** circle hits **/
+	/** circle hits during existence**/
+	private int totalHits = 0;
+	/** circle hits during life **/
 	private int hits = 0;
 	/** circle deaths **/
 	private int deaths = 0;
-	/** circle kills **/
+	/** circle kills during existence **/
+	private int totalKills = 0;
+	/** circle kills during life **/
 	private int kills = 0;
+	/** circle ticks alive **/
+	private int ticksAlive = 0;
+	/** shields acquired during existence **/
+	private int totalShieldsAcquired = 0;
+	/** shields acquired during life **/
+	private int shieldsAcquired = 0;
+	/** obstacle collisions during existence **/
+	private int totalObstacleCollisions = 0;
+	/** obstacle collisions during life **/
+	private int obstacleCollisions = 0;
+	/** wall collisions during existence **/
+	private int totalWallCollisions = 0;
+	/** wall collisions during life **/
+	private int wallCollisions;
+	
+	
 	/** timer for shooting **/
 	private int shootTimer = RELOAD_TIME;
 	/** timer for respawns **/
 	private int respawnTimer = RESPAWN_TIME;
-	private Vector2 eyes;
-
+	/** location of Circle's eyes**/
+	private Vector2 eyePosition;
+	/** Mind to control circle bot **/
+	private Mind mind = null;
+	
 	// Constructors
 	// --------------------------------------------------------------------
 
@@ -97,14 +127,14 @@ public class Circle extends Sprite implements Comparable<Circle>
 			// paint FOV visualizer
 			Vector2 left = new Vector2(getWorld().getSize().mag(), getVelocity().angle() + FOV / 2, true);
 			Vector2 right = new Vector2(getWorld().getSize().mag(), getVelocity().angle() - FOV / 2, true);
-			g.drawLine((int) eyes.getX(), (int) eyes.getY(), (int) (eyes.getX() + left.getX()), (int) (eyes.getY() + left.getY()));
-			g.drawLine((int) eyes.getX(), (int) eyes.getY(), (int) (eyes.getX() + right.getX()), (int) (eyes.getY() + right.getY()));
+			g.drawLine((int) eyePosition.getX(), (int) eyePosition.getY(), (int) (eyePosition.getX() + left.getX()), (int) (eyePosition.getY() + left.getY()));
+			g.drawLine((int) eyePosition.getX(), (int) eyePosition.getY(), (int) (eyePosition.getX() + right.getX()), (int) (eyePosition.getY() + right.getY()));
 			
 			// paint direction visualizer (color declared is inverted)
 			g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
 			g.fillOval(
-					(int) eyes.getX() - RADIUS / 4,
-					(int) eyes.getY() - RADIUS / 4,
+					(int) eyePosition.getX() - RADIUS / 4,
+					(int) eyePosition.getY() - RADIUS / 4,
 					(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
 			// @formatter:on
 
@@ -117,7 +147,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		if (isAlive())
 		{
-			eyes = new Vector2(
+			eyePosition = new Vector2(
 					(getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
 					(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2)
 					);
@@ -172,7 +202,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	@Override
 	public String toString()
 	{
-		return super.toString() + " [" + kills + ", " + deaths + ", " + String.format("%.2f", accuracy) + "]";
+		return mind + ": " + getId() + " [" + kills + ", " + deaths + ", " + String.format("%.2f", accuracy) + "] " + isAlive();
 	}
 
 	@Override
@@ -270,24 +300,14 @@ public class Circle extends Sprite implements Comparable<Circle>
 	// Getters and Setters
 	// -------------------------------------------------------
 
-	public int getDeaths()
+	public float getTotalAccuracy()
 	{
-		return deaths;
+		return totalAccuracy;
 	}
 
-	public void setDeaths(int deaths)
+	public void setTotalAccuracy(float totalAccuracy)
 	{
-		this.deaths = deaths;
-	}
-
-	public int getKills()
-	{
-		return kills;
-	}
-
-	public void setKills(int kills)
-	{
-		this.kills = kills;
+		this.totalAccuracy = totalAccuracy;
 	}
 
 	public float getAccuracy()
@@ -300,6 +320,16 @@ public class Circle extends Sprite implements Comparable<Circle>
 		this.accuracy = accuracy;
 	}
 
+	public int getTotalShotsFired()
+	{
+		return totalShotsFired;
+	}
+
+	public void setTotalShotsFired(int totalShotsFired)
+	{
+		this.totalShotsFired = totalShotsFired;
+	}
+
 	public int getShotsFired()
 	{
 		return shotsFired;
@@ -308,6 +338,16 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public void setShotsFired(int shotsFired)
 	{
 		this.shotsFired = shotsFired;
+	}
+
+	public int getTotalHits()
+	{
+		return totalHits;
+	}
+
+	public void setTotalHits(int totalHits)
+	{
+		this.totalHits = totalHits;
 	}
 
 	public int getHits()
@@ -320,6 +360,126 @@ public class Circle extends Sprite implements Comparable<Circle>
 		this.hits = hits;
 	}
 
+	public int getDeaths()
+	{
+		return deaths;
+	}
+
+	public void setDeaths(int deaths)
+	{
+		this.deaths = deaths;
+	}
+
+	public int getTotalKills()
+	{
+		return totalKills;
+	}
+
+	public void setTotalKills(int totalKills)
+	{
+		this.totalKills = totalKills;
+	}
+
+	public int getKills()
+	{
+		return kills;
+	}
+
+	public void setKills(int kills)
+	{
+		this.kills = kills;
+	}
+
+	public int getTicksAlive()
+	{
+		return ticksAlive;
+	}
+
+	public void setTicksAlive(int ticksAlive)
+	{
+		this.ticksAlive = ticksAlive;
+	}
+
+	public int getTotalShieldsAcquired()
+	{
+		return totalShieldsAcquired;
+	}
+
+	public void setTotalShieldsAcquired(int totalShieldsAcquired)
+	{
+		this.totalShieldsAcquired = totalShieldsAcquired;
+	}
+
+	public int getShieldsAcquired()
+	{
+		return shieldsAcquired;
+	}
+
+	public void setShieldsAcquired(int shieldsAcquired)
+	{
+		this.shieldsAcquired = shieldsAcquired;
+	}
+
+	public int getTotalObstacleCollisions()
+	{
+		return totalObstacleCollisions;
+	}
+
+	public void setTotalObstacleCollisions(int totalObstacleCollisions)
+	{
+		this.totalObstacleCollisions = totalObstacleCollisions;
+	}
+
+	public int getObstacleCollisions()
+	{
+		return obstacleCollisions;
+	}
+
+	public void setObstacleCollisions(int obstaclesCollisions)
+	{
+		this.obstacleCollisions = obstaclesCollisions;
+	}
+
+	public int getTotalWallCollisions()
+	{
+		return totalWallCollisions;
+	}
+
+	public void setTotalWallCollisions(int totalWallCollisions)
+	{
+		this.totalWallCollisions = totalWallCollisions;
+	}
+
+	public int getWallCollisions()
+	{
+		return wallCollisions;
+	}
+
+	public void setWallCollisions(int wallCollisions)
+	{
+		this.wallCollisions = wallCollisions;
+	}
+
+	public int getShootTimer()
+	{
+		return shootTimer;
+	}
+
+	public void setShootTimer(int shootTimer)
+	{
+		this.shootTimer = shootTimer;
+	}
+
+	public int getRespawnTimer()
+	{
+		return respawnTimer;
+	}
+
+	public void setRespawnTimer(int respawnTimer)
+	{
+		this.respawnTimer = respawnTimer;
+	}
+
 	public Mind getMind()
 	{
 		return mind;
@@ -330,5 +490,14 @@ public class Circle extends Sprite implements Comparable<Circle>
 		this.mind = mind;
 	}
 	
+	public Vector2 getEyePosition()
+	{
+		return eyePosition.copy();
+	}
+
+	public void setEyePosition(Vector2 eyePosition)
+	{
+		this.eyePosition = eyePosition.copy();
+	}
 	
 }

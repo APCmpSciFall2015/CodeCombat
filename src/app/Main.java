@@ -1,8 +1,10 @@
-package cc;
+package app;
 
 import java.awt.Dimension;
 import java.io.Serializable;
 import javax.swing.JFrame;
+
+import world.World;
 
 /**
  * The Main class is the host applet for the game.

@@ -3,14 +3,18 @@ package bots;
 import java.util.ArrayList;
 import java.util.Random;
 
-import cc.Circle;
-import cc.Sprite;
 import lib.Vector2;
+import world.Circle;
+import world.CircleStats;
+import world.Sprite;
 
 public abstract class Mind
 {
+	private static Random random = new Random();
+	
 	private Circle circle;
-	private Random random;
+	private float variance;
+	private float mean;
 
 	// Constructors
 	// ------------------------------------------
@@ -18,13 +22,15 @@ public abstract class Mind
 	public Mind(Mind m)
 	{
 		this.circle = (Circle) m.circle.copy();
-		this.random = m.random;
+		this.variance = m.variance;
+		this.mean = m.mean;
 	}
 
-	public Mind(Circle c, Random r)
+	public Mind(Circle c, float variance, float mean)
 	{
 		this.circle = c;
-		this.random = r;
+		this.variance = variance;
+		this.mean = mean;
 	}
 
 	// Instance Methods
@@ -32,8 +38,7 @@ public abstract class Mind
 
 	public final Vector2 noise()
 	{
-		//return new Vector2(0, 0);
-		return new Vector2((float) random.nextGaussian(), (float) random.nextGaussian());
+		return new Vector2((float) random.nextGaussian() * variance + mean, (float) random.nextGaussian() * variance + mean);
 	}
 
 	public final void shoot()
@@ -74,5 +79,10 @@ public abstract class Mind
 	public Vector2 getVelocity()
 	{
 		return circle.getVelocity().add(noise());
+	}
+
+	public CircleStats getStats()
+	{
+		return new CircleStats(circle);
 	}
 }

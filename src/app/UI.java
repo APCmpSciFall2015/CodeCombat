@@ -1,4 +1,4 @@
-package cc;
+package app;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,6 +7,10 @@ import java.awt.Graphics;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.ListIterator;
+
+import world.Circle;
+import world.Obstacle;
+import world.Sprite;
 
 public class UI {
 	private MainApplet main;
@@ -72,7 +76,7 @@ public class UI {
 
 		// display circle data
 		x += lineHeight;
-		g.drawString("id: k|d|a alive?", x, y);
+		g.drawString("mind: id: k|d|a alive?", x, y);
 		y += lineHeight;
 		g.drawString("================", x, y);
 		y += lineHeight;
@@ -80,8 +84,7 @@ public class UI {
 		for(Circle c : circles)
 		{
 			g.setColor(c.getColor());
-			g.drawString("" + c.getId() + ": " + c.getKills() + "|" + c.getDeaths() + "|"
-					+ String.format("%.2f", c.getAccuracy()) + " " + c.isAlive(), x, y);
+			g.drawString("" + c, x, y);
 			y += lineHeight;
 		}
 

@@ -1,11 +1,10 @@
-package cc;
+package world;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Random;
 
-import bots.TestBot;
-import cc.Main.GameState;
+import app.MainApplet;
+import bots.*;
 import lib.Vector2;
 
 /**
@@ -16,6 +15,9 @@ import lib.Vector2;
  */
 public class World
 {
+	public static final float VARIANCE = 20f;
+	public static final float MEAN = 0f;
+	public static final int NUM_OBSTACLES = 15;
 	/** size of world **/
 	private Vector2 size;
 	/** ticks executed **/
@@ -45,8 +47,7 @@ public class World
 
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
-		int numberOfObstacles = 5;//(int) (Math.random() * 20 + 30);
-		for (int i = 0; i < numberOfObstacles; i++)
+		for (int i = 0; i < NUM_OBSTACLES; i++)
 		{
 			spawn(SpriteType.OBSTACLE);
 		}
@@ -56,7 +57,8 @@ public class World
 			spawn(SpriteType.SHIELD);
 			spawn(SpriteType.CIRCLE);
 		}
-		((Circle) sprites.get(sprites.size() - 1)).setMind(new TestBot(((Circle) sprites.get(sprites.size() - 1)), new Random()));
+		((Circle) sprites.get(sprites.size() - 1))
+				.setMind(new TestBot(((Circle) sprites.get(sprites.size() - 1)), 20, 0));
 	}
 
 	/**
@@ -129,17 +131,17 @@ public class World
 
 	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
 	{
-		ArrayList<Sprite> observed = new ArrayList<Sprite>();
-		Vector2 direction;
+		ArrayList<Sprite> inView = new ArrayList<Sprite>();
 		for (Sprite s : sprites)
 		{
-			direction = s.getPosition().sub(position);
+			Vector2 direction = s.getPosition().sub(position);
 			// angle between vectors: theta = acos (a dot b / (mag a * mag b)
 			// https://en.wikipedia.org/wiki/Dot_product
-			if (s.getExistence() && s.isAlive() && Math.abs(Math.acos(direction.dot(face) / (face.mag() * direction.mag()))) < Math.abs(fieldOfView / 2))
-				observed.add(s.copy());
+			if (s.getExistence() && s.isAlive() && Math
+					.abs(Math.acos(direction.dot(face) / (face.mag() * direction.mag()))) < Math.abs(fieldOfView / 2))
+				inView.add(s.copy());
 		}
-		return observed;
+		return inView;
 	}
 
 	/**
@@ -270,7 +272,7 @@ public class World
 	{
 		this.sprites = sprites;
 	}
-	
+
 	public long getTicks()
 	{
 		return ticks;

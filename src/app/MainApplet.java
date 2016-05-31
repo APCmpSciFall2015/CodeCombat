@@ -1,4 +1,4 @@
-package cc;
+package app;
 
 import java.applet.Applet;
 import java.awt.Color;
@@ -8,8 +8,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
-import cc.Main.GameState;
+import app.Main.GameState;
 import lib.Vector2;
+import world.World;
 
 public class MainApplet extends Applet implements Runnable, KeyListener
 {
@@ -44,7 +45,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		setBackground(backgroundColor);
 		addKeyListener(this);
 		setFocusTraversalKeysEnabled(false);
-		
+
 		// initialize instance variables
 		if (main == null)
 			main = this;
@@ -78,7 +79,8 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	@Override
 	public void update(Graphics g)
 	{
-		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(), BufferedImage.TYPE_4BYTE_ABGR);
+		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
+				BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g2 = bi.createGraphics();
 
 		// paint world
@@ -94,8 +96,10 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	public void paint(Graphics g)
 	{
 		world.paint(g);
-		if (gameState.equals(GameState.PAUSED)) ui.drawPauseScreen(g);
-		if(displayStatsOverlay) ui.drawFullStatsOverlay(g);
+		if (gameState.equals(GameState.PAUSED))
+			ui.drawPauseScreen(g);
+		if (displayStatsOverlay)
+			ui.drawFullStatsOverlay(g);
 	}
 
 	@Override
@@ -103,20 +107,24 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	{
 		while (!gameState.equals(GameState.OVER))
 		{
+			long start = System.currentTimeMillis();
 			if (gameState.equals(GameState.PLAY))
 			{
 				world.update();
-			}	
+			}
 			repaint();
 
 			// sleep for rest of frame time
-			try
+			while (System.currentTimeMillis() - start < Main.frameRate)
 			{
-				Thread.sleep(Main.frameRate);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
+				try
+				{
+					Thread.sleep(1);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -166,20 +174,24 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		if (e.getKeyChar() == 'p') togglePause();
-		if (e.getKeyChar() == 'd') Main.DEBUG = !Main.DEBUG;
+		if (e.getKeyChar() == 'p')
+			togglePause();
+		if (e.getKeyChar() == 'd')
+			Main.DEBUG = !Main.DEBUG;
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		if(e.getKeyChar() == '\t') displayStatsOverlay = true;
+		if (e.getKeyChar() == '\t')
+			displayStatsOverlay = true;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		if(e.getKeyChar() == '\t') displayStatsOverlay = false;
+		if (e.getKeyChar() == '\t')
+			displayStatsOverlay = false;
 	}
 
 	// Getters and Setters

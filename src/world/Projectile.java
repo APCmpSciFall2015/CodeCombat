@@ -1,7 +1,8 @@
-package cc;
+package world;
 
 import java.awt.Graphics;
 
+import app.Main;
 import lib.Vector2;
 
 public class Projectile extends Sprite

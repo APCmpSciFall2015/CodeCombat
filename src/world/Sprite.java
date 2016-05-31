@@ -1,9 +1,10 @@
-package cc;
+package world;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import app.Main;
 import lib.Vector2;
 
 /**
@@ -44,6 +45,10 @@ public abstract class Sprite
 	// Constructors
 	// --------------------------------------------------
 
+	/**
+	 * Sprite Copy Constructor
+	 * @param s Sprite to copy
+	 */
 	protected Sprite(Sprite s)
 	{
 		this.id = s.id;
@@ -253,7 +258,7 @@ public abstract class Sprite
 	@Override
 	public String toString()
 	{
-		return (this.getClass() + ": " + id).substring(9);
+		return (this.getClass() + ": " + id).substring(12);
 	}
 
 	@Override

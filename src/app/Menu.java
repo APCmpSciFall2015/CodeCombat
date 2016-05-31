@@ -1,4 +1,4 @@
-package cc;
+package app;
 
 public class Menu
 {

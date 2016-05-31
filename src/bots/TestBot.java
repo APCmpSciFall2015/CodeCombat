@@ -1,11 +1,10 @@
 package bots;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-import cc.Circle;
-import cc.Sprite;
 import lib.Vector2;
+import world.Circle;
+import world.Sprite;
 
 public class TestBot extends Mind
 {
@@ -14,9 +13,9 @@ public class TestBot extends Mind
 		super(t);
 	}
 
-	public TestBot(Circle c, Random r)
+	public TestBot(Circle c, float variance, float mean)
 	{
-		super(c, r);
+		super(c, variance, mean);
 	}
 
 	public Mind copy()
@@ -55,5 +54,11 @@ public class TestBot extends Mind
 		}
 		
 		if(target != null) shoot();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "TestBot";
 	}
 }
