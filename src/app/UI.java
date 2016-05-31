@@ -89,7 +89,7 @@ public class UI {
 		}
 
 		// overlay data about existing objects
-		if (Main.DEBUG) {
+		if (Main.debug) {
 			y = width / 8 + lineHeight * 2;
 			x = width - width / 2;
 			g.setColor(Color.RED);

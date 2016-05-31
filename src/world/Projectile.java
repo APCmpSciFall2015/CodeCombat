@@ -57,7 +57,7 @@ public class Projectile extends Sprite
 				(int) getSize().getX(), (int) getSize().getY());
 		// @formatter:on
 
-		if (Main.DEBUG)
+		if (Main.debug)
 			super.paint(g);
 	}
 
@@ -88,10 +88,13 @@ public class Projectile extends Sprite
 				{
 					owner.setKills(owner.getKills() + 1);
 					owner.setHits(owner.getHits() + 1);
+					owner.setTotalHits(owner.getTotalHits() + 1);
+					owner.setTotalKills(owner.getTotalHits() + 1);
 				}
 				else if (s instanceof Shield && !((Shield) s).isUnbound())
 				{
 					owner.setHits(owner.getHits() + 1);
+					owner.setTotalHits(owner.getTotalHits() + 1);
 				}
 		}
 		// @formatter:on

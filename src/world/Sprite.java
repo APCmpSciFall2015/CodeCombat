@@ -201,7 +201,7 @@ public abstract class Sprite
 	 */
 	public void paint(Graphics g)
 	{
-		if (Main.DEBUG)
+		if (Main.debug)
 		{
 			// draw AABB
 			g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
@@ -218,22 +218,33 @@ public abstract class Sprite
 		}
 	}
 
-	/**
-	 * The update method updates the condition of the sprite.
-	 */
-	public void update()
+	public boolean slideWalls()
 	{
+		boolean slid = false;
 		// slide on left and right walls
 		if (getPosition().getX() - getSize().getX() / 2 < 0)
+		{
 			setPosition(getPosition().setX(getSize().getX() / 2));
+			slid = true;
+		}
 		else if (getPosition().getX() + getSize().getX() / 2 > getWorld().getSize().getX())
+		{
 			setPosition(getPosition().setX(getWorld().getSize().getX() - getSize().getX() / 2));
-
+			slid = true;
+		}
+		
 		// slide on top and bottom walls
 		if (getPosition().getY() - getSize().getX() / 2 < 0)
+		{
 			setPosition(getPosition().setY(getSize().getX() / 2));
+			slid = true;
+		}
 		else if (getPosition().getY() + getSize().getX() / 2 > getWorld().getSize().getY())
+		{
 			setPosition(getPosition().setY(getWorld().getSize().getY() - getSize().getY() / 2));
+			slid = true;
+		}
+		return slid;
 	}
 
 	// Abstract methods
@@ -245,6 +256,12 @@ public abstract class Sprite
 	 */
 	public abstract Sprite copy();
 
+	
+	/**
+	 * The update method updates the condition of the sprite.
+	 */
+	public abstract void update();
+	
 	/**
 	 * The collide method defines collision behavior for the sprite upon
 	 * collision with another sprite.
@@ -266,7 +283,7 @@ public abstract class Sprite
 	{
 		return o instanceof Sprite && this.id == ((Sprite) o).id;
 	}
-	
+
 	// Getters and setters
 	// -----------------------------------------------------
 

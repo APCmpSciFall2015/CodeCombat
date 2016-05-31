@@ -1,6 +1,7 @@
 package app;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.io.Serializable;
 import javax.swing.JFrame;
 
@@ -13,10 +14,11 @@ import world.World;
  */
 public class Main implements Serializable
 {
+	public static Config config = new Config(new File("./res/config.txt"));
 	/** debug mode enabled? **/
-	public static boolean DEBUG = false;
+	public static boolean debug = Boolean.parseBoolean(config.get("debug"));
 	/** frame rate of applet set to 60 fps **/
-	public static final long frameRate = 1000 / 60;
+	public static final long frameRate = Integer.parseInt(config.get("frameRate"));
 
 	/** GameState enum */
 	public static enum GameState
@@ -26,17 +28,14 @@ public class Main implements Serializable
 
 	/** Serializable id **/
 	private static final long serialVersionUID = 3206847208968227199L;
-	/** width of applet **/
-	public static int worldWidth = 800;
-	/** height of applet **/
-	public static int worldHeight = 600;
 	/** JFrame to hold applet **/
 	private static JFrame frame;
 
 	// Initialization of JFrame
 	public static void main(String[] args)
 	{
-		frame = new MainFrame("Code Combat", new Dimension(worldWidth, worldHeight), new MainApplet());
+		frame = new MainFrame("Code Combat", new Dimension(Integer.parseInt(config.get("worldWidth")), Integer.parseInt(config.get("worldHeight"))), new MainApplet());
+		System.out.println(Integer.parseInt(config.get("worldHeight")));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

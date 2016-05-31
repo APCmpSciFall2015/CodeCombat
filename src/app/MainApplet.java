@@ -2,6 +2,7 @@ package app;
 
 import java.applet.Applet;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -16,6 +17,10 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 {
 	/** serializable id **/
 	private static final long serialVersionUID = -2598013920892210921L;
+
+	private final Dimension size = new Dimension(
+			Integer.parseInt(Main.config.get("worldWidth")),
+			Integer.parseInt(Main.config.get("worldWidth")));
 	/** plane of existence help by the applet **/
 	private World world;
 	/** UI for overlay and other user interaction **/
@@ -41,7 +46,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	public void init()
 	{
 		// setup the window
-		setSize(Main.worldWidth, Main.worldHeight);
+		setSize(size);
 		setBackground(backgroundColor);
 		addKeyListener(this);
 		setFocusTraversalKeysEnabled(false);
@@ -49,7 +54,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		// initialize instance variables
 		if (main == null)
 			main = this;
-		world = new World(this, new Vector2(Main.worldWidth, Main.worldHeight));
+		world = new World(this, new Vector2((float) getSize().getWidth(), (float) getSize().getHeight()));
 		ui = new UI(this);
 	}
 
@@ -137,7 +142,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	 */
 	public void restart()
 	{
-		world = new World(main, new Vector2(Main.worldWidth, Main.worldHeight));
+		world = new World(main, new Vector2((float) size.getWidth(), (float) size.getHeight()));
 	}
 
 	/**
@@ -177,7 +182,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		if (e.getKeyChar() == 'p')
 			togglePause();
 		if (e.getKeyChar() == 'd')
-			Main.DEBUG = !Main.DEBUG;
+			Main.debug = !Main.debug;
 	}
 
 	@Override

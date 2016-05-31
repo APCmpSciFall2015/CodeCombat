@@ -60,7 +60,6 @@ public class Shield extends Sprite
 			// look for mama duck
 			if (unbound)
 			{
-				super.update();
 				// update position (move in circle)
 				setAcceleration(new Vector2(1f / 30f, (float) (getVelocity().angle() + Math.PI / 2), true));
 				Vector2 previousVelocity = getVelocity();
@@ -125,6 +124,8 @@ public class Shield extends Sprite
 		else if (unbound && s instanceof Circle)
 		{
 			setOwner(s);
+			((Circle) owner).setShieldsAcquired(((Circle) owner).getShieldsAcquired() + 1);
+			((Circle) owner).setTotalShieldsAcquired(((Circle) owner).getTotalShieldsAcquired() + 1);
 			unbound = false;
 			setSize(new Vector2(60, 60));
 			setPosition(s.getPosition());

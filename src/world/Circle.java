@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import app.Main;
 import bots.Mind;
 import lib.Vector2;
 
@@ -16,17 +17,17 @@ import lib.Vector2;
 public class Circle extends Sprite implements Comparable<Circle>
 {
 	/** Speed of Circles **/
-	public static final float SPEED = 2f;
+	public static final float SPEED = Float.parseFloat(Main.config.get("circleSpeed"));
 	/** Field of View of Circle **/
-	public static final float FOV = (float) Math.PI / 3f;
+	public static final float FOV = Float.parseFloat(Main.config.get("circleFOV"));
 	/** maximum rate of change in the direction of velocity **/
-	public static final float MAX_TURNING_ANGLE = (float) Math.PI / 60f;
+	public static final float MAX_TURNING_ANGLE = Float.parseFloat(Main.config.get("circleMaxTurningAngle"));
 	/** time to respawn **/
-	public static final int RESPAWN_TIME = 5 * 60;
+	public static final int RESPAWN_TIME = Integer.parseInt(Main.config.get("circleRespawnTime"));
 	/** time to between shots **/
-	public static final int RELOAD_TIME = 1 * 60;
+	public static final int RELOAD_TIME = Integer.parseInt(Main.config.get("circleReloadTime"));
 	/** radius of circle **/
-	public static final int RADIUS = 20;
+	public static final int RADIUS = Integer.parseInt(Main.config.get("circleRadius"));
 	
 	// Circle stats
 	// ------------------------------------------
@@ -163,7 +164,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 			// update position
 			setPosition(getPosition().add(getVelocity()));
-			super.update();
+			slideWalls();
 		}
 		else
 		{
@@ -230,6 +231,15 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		if (respawnTimer == 0)
 		{
+			accuracy = 1;
+			shotsFired = 0;
+			hits = 0;
+			totalKills = 0;
+			kills = 0;
+			ticksAlive = 0;
+			shieldsAcquired = 0;
+			obstacleCollisions = 0;
+			wallCollisions = 0;
 			getWorld().respawn(this);
 			respawnTimer = RESPAWN_TIME;
 		}
@@ -237,7 +247,8 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	private void calcStats()
 	{
-		accuracy = (float) hits / shotsFired;
+		if(shotsFired > 0) accuracy = (float) hits / shotsFired;
+		if(totalShotsFired > 0) totalAccuracy = (float) totalHits / totalShotsFired;
 	}
 
 	private final void updateCounters()
@@ -245,6 +256,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 		// @formatter:off
 		if (shootTimer > 0) shootTimer--;
 		if (respawnTimer > 0) respawnTimer--;
+		if (isAlive()) ticksAlive++;
 		// @formatter:on
 	}
 
