@@ -2,7 +2,10 @@ package cc;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Random;
 
+import bots.Mind;
+import bots.TestBot;
 import lib.Vector2;
 
 /**
@@ -40,7 +43,7 @@ public class World
 
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
-		int numberOfObstacles = (int) (Math.random() * 20 + 30);
+		int numberOfObstacles = 5;//(int) (Math.random() * 20 + 30);
 		for (int i = 0; i < numberOfObstacles; i++)
 		{
 			spawn(SpriteType.OBSTACLE);
@@ -48,9 +51,10 @@ public class World
 
 		for (int i = 0; i < 5; i++)
 		{
-			spawn(SpriteType.CIRCLE);
 			spawn(SpriteType.SHIELD);
+			spawn(SpriteType.CIRCLE);
 		}
+		((Circle) sprites.get(sprites.size() - 1)).setMind(new TestBot(((Circle) sprites.get(sprites.size() - 1)), new Random()));
 	}
 
 	/**
@@ -125,7 +129,7 @@ public class World
 		ArrayList<Sprite> observed = new ArrayList<Sprite>();
 		for (Sprite s : sprites)
 		{
-			if (Math.abs(face.angle() - Vector2.sub(s.getPosition(), position).angle()) < Math.abs(fieldOfView / 2))
+			if (s.getExistence() && s.isAlive() && Math.abs(face.angle() - Vector2.sub(s.getPosition(), position).angle()) < Math.abs(fieldOfView / 2))
 				observed.add(s.copy());
 		}
 

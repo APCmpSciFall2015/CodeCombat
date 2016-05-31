@@ -256,6 +256,12 @@ public abstract class Sprite
 		return (this.getClass() + ": " + id).substring(9);
 	}
 
+	@Override
+	public boolean equals(Object o)
+	{
+		return o instanceof Sprite && this.id == ((Sprite) o).id;
+	}
+	
 	// Getters and setters
 	// -----------------------------------------------------
 

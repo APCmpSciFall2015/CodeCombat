@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import cc.Main.GameState;
+import bots.Mind;
 import lib.Vector2;
 
 /**
@@ -15,7 +15,7 @@ import lib.Vector2;
  */
 public class Circle extends Sprite implements Comparable<Circle>
 {
-	public static final float SPEED = 1;
+	public static final float SPEED = 2f;
 	public static final float FOV = (float) Math.PI / 4f;
 	/** maximum rate of change in the direction of velocity **/
 	public static final float MAX_TURNING_ANGLE = (float) Math.PI / 60f;
@@ -26,6 +26,8 @@ public class Circle extends Sprite implements Comparable<Circle>
 	/** radius of circle **/
 	public static final int RADIUS = 20;
 
+	/** Mind to control circle bot **/
+	private Mind mind = null;
 	/** circle accuracy **/
 	private float accuracy = 1;
 	/** circle shots fired **/
@@ -67,7 +69,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 				world);
 	}
 
-	public Circle(Vector2 position, Vector2 direction, Color color, World world)
+	public Circle(Vector2 position, Vector2 direction, Color color, World world, Mind mind)
 	{
 		super(new Vector2(RADIUS / 2, RADIUS / 2), position, direction.normalize().mult(SPEED), new Vector2(0, 0),
 				color, world);
@@ -106,13 +108,20 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		if (isAlive())
 		{
-			super.update();
+			if (mind != null)
+				mind.think();
+			else
+			{
+				
+
+				// test change in velocity and shooting
+				turn((float) -Math.PI / 500);
+				shoot();
+			}
+			
 			// update position
 			setPosition(getPosition().add(getVelocity()));
-
-			// test change in velocity and shooting
-			setVelocity(new Vector2(2f, (float) (getVelocity().angle() + Math.PI / 500), true));
-			shoot();
+			super.update();
 		}
 		else
 		{
@@ -199,17 +208,25 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	public final ArrayList<Sprite> requestInView()
 	{
-		return getWorld().requestInView(this.getPosition(), this.getVelocity(), FOV);
+		ArrayList<Sprite> arr = getWorld().requestInView(this.getPosition(), this.getVelocity(), FOV);
+		for(Sprite s : arr)
+		{
+			System.out.println("\t" + s.getId());
+		}
+		System.out.println();
+		return arr;
 	}
 
 	public final void turn(float deltaTheta)
 	{
 		// truncate to interval [-MAX_TURNING_ANGLE, MAX_TURNING_ANGLE]
-		if(deltaTheta < -MAX_TURNING_ANGLE) deltaTheta = -MAX_TURNING_ANGLE;
-		else if(deltaTheta > MAX_TURNING_ANGLE) deltaTheta = MAX_TURNING_ANGLE;
+		if (deltaTheta < -MAX_TURNING_ANGLE)
+			deltaTheta = -MAX_TURNING_ANGLE;
+		else if (deltaTheta > MAX_TURNING_ANGLE)
+			deltaTheta = MAX_TURNING_ANGLE;
 
 		// adjust angle of velocity vector (aka turn)
-		setVelocity(new Vector2(SPEED, getVelocity().angle() + deltaTheta));
+		setVelocity(new Vector2(SPEED, getVelocity().angle() + deltaTheta, true));
 	}
 
 	/**
@@ -282,5 +299,15 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public void setHits(int hits)
 	{
 		this.hits = hits;
+	}
+
+	public Mind getMind()
+	{
+		return mind;
+	}
+
+	public void setMind(Mind mind)
+	{
+		this.mind = mind;
 	}
 }
