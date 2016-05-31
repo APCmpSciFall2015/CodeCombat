@@ -7,7 +7,7 @@ import lib.Vector2;
 
 public class Obstacle extends Sprite
 {
-	public static final float[][] sizes = { { 10, 60 }, { 60, 10 }, { 30, 30 } };
+	public static final float[][] SIZES = { { 10, 60 }, { 60, 10 }, { 30, 30 } };
 
 	/**
 	 * Obstacle Copy Constructor
@@ -21,7 +21,7 @@ public class Obstacle extends Sprite
 	public Obstacle(World world)
 	{
 		// @formatter:off
-		super(new Vector2(sizes[(int) (Math.random() * sizes.length)]),
+		super(new Vector2(SIZES[(int) (Math.random() * SIZES.length)]),
 				new Vector2(0, 0),
 				new Vector2(1, (float) (Math.random() * Math.PI * 2), true),
 				new Vector2(0, 0),

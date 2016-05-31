@@ -3,6 +3,7 @@ package world;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import app.Main;
 import lib.Vector2;
 
 /**
@@ -13,9 +14,9 @@ import lib.Vector2;
 public class Shield extends Sprite
 {
 	/** time for duck to respawn **/
-	public static final int RESPAWN_TIME = 5 * 60;
+	public static final int RESPAWN_TIME = Integer.parseInt(Main.config.get("shieldRespawnTime"));
 	/** radius of duck **/
-	public static final int RADIUS = 10;
+	public static final int RADIUS = Integer.parseInt(Main.config.get("shieldRadius"));
 	/** whether or not the shield has found its mama duck **/
 	private boolean unbound;
 	/** shield's mama duck **/

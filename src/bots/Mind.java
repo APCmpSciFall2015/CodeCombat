@@ -43,7 +43,7 @@ public abstract class Mind
 
 	public final void shoot()
 	{
-		circle.shoot();
+		if(circle.isAlive()) circle.shoot();
 	}
 
 	public final ArrayList<Sprite> requestInView()
@@ -58,7 +58,7 @@ public abstract class Mind
 
 	public final void turn(float deltaTheta)
 	{
-		circle.turn(deltaTheta);
+		if(circle.isAlive()) circle.turn(deltaTheta);
 	}
 
 	// Abstract Methods

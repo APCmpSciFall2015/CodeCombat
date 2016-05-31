@@ -28,19 +28,19 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public static final int RELOAD_TIME = Integer.parseInt(Main.config.get("circleReloadTime"));
 	/** radius of circle **/
 	public static final int RADIUS = Integer.parseInt(Main.config.get("circleRadius"));
-	
+
 	// Circle stats
 	// ------------------------------------------
-	
-	/** circle accuracy during existence**/
+
+	/** circle accuracy during existence **/
 	private float totalAccuracy = 0;
 	/** circle accuracy during life **/
 	private float accuracy = 1;
-	/** circle shots fired during existence**/
+	/** circle shots fired during existence **/
 	private int totalShotsFired = 0;
 	/** circle shots fired during life **/
 	private int shotsFired = 0;
-	/** circle hits during existence**/
+	/** circle hits during existence **/
 	private int totalHits = 0;
 	/** circle hits during life **/
 	private int hits = 0;
@@ -64,17 +64,16 @@ public class Circle extends Sprite implements Comparable<Circle>
 	private int totalWallCollisions = 0;
 	/** wall collisions during life **/
 	private int wallCollisions;
-	
-	
+
 	/** timer for shooting **/
 	private int shootTimer = RELOAD_TIME;
 	/** timer for respawns **/
 	private int respawnTimer = RESPAWN_TIME;
-	/** location of Circle's eyes**/
+	/** location of Circle's eyes **/
 	private Vector2 eyePosition;
 	/** Mind to control circle bot **/
 	private Mind mind = null;
-	
+
 	// Constructors
 	// --------------------------------------------------------------------
 
@@ -146,17 +145,16 @@ public class Circle extends Sprite implements Comparable<Circle>
 	@Override
 	public void update()
 	{
+		if (mind != null)
+			mind.think();
+
 		if (isAlive())
 		{
-			eyePosition = new Vector2(
-					(getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
-					(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2)
-					);
-			if (mind != null)
-				mind.think();
-			else
-			{
+			eyePosition = new Vector2((getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
+					(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
 
+			if (mind == null)
+			{
 				// test change in velocity and shooting
 				turn((float) -Math.PI / 500);
 				shoot();
@@ -203,7 +201,8 @@ public class Circle extends Sprite implements Comparable<Circle>
 	@Override
 	public String toString()
 	{
-		return mind + ": " + getId() + " [" + kills + ", " + deaths + ", " + String.format("%.2f", accuracy) + "] " + isAlive();
+		return mind + ": " + getId() + " [" + kills + ", " + deaths + ", " + String.format("%.2f", accuracy) + "] "
+				+ isAlive();
 	}
 
 	@Override
@@ -247,8 +246,10 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	private void calcStats()
 	{
-		if(shotsFired > 0) accuracy = (float) hits / shotsFired;
-		if(totalShotsFired > 0) totalAccuracy = (float) totalHits / totalShotsFired;
+		if (shotsFired > 0)
+			accuracy = (float) hits / shotsFired;
+		if (totalShotsFired > 0)
+			totalAccuracy = (float) totalHits / totalShotsFired;
 	}
 
 	private final void updateCounters()
@@ -263,16 +264,20 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public final ArrayList<Sprite> requestInView()
 	{
 		// @formatter:off
-		// get sprites in FOV from location of eyes
-		ArrayList<Sprite> inView = getWorld().requestInView(
-										new Vector2(
-											getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2,
-											getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
-										getVelocity(), FOV);
-		// remove self
-		for (int i = inView.size() - 1; i > 0; i--)
+		ArrayList<Sprite> inView = new ArrayList<Sprite>();
+		if(isAlive())
 		{
-			if(inView.get(i).getId() == getId()) inView.remove(i); 
+			// get sprites in FOV from location of eyes
+			inView = getWorld().requestInView(
+											new Vector2(
+												getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2,
+												getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
+											getVelocity(), FOV);
+			// remove self
+			for (int i = inView.size() - 1; i > 0; i--)
+			{
+				if(inView.get(i).getId() == getId()) inView.remove(i); 
+			}			
 		}
 		return inView;
 		// @formatter:on
@@ -501,7 +506,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		this.mind = mind;
 	}
-	
+
 	public Vector2 getEyePosition()
 	{
 		return eyePosition.copy();
@@ -511,5 +516,5 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		this.eyePosition = eyePosition.copy();
 	}
-	
+
 }

@@ -8,7 +8,8 @@ import lib.Vector2;
 public class Projectile extends Sprite
 {
 	/** maximum speed of a projectile **/
-	private static final float PROJECTILE_SPEED = 5;
+	private static final float SPEED = Integer.parseInt(Main.config.get("projectileSpeed"));
+	private static final float RADIUS = Integer.parseInt(Main.config.get("projectileRadius"));
 	/** owner circle **/
 	private Circle owner;
 
@@ -32,9 +33,9 @@ public class Projectile extends Sprite
 	{
 		// @formatter:off
 		super(
-				new Vector2(10, 10), //size
+				new Vector2(RADIUS, RADIUS), //size
 				new Vector2(x, y), // pos
-				new Vector2(PROJECTILE_SPEED, velocity.angle(), true), // vel
+				new Vector2(SPEED, velocity.angle(), true), // vel
 				new Vector2(0, 0), // acc
 				c.getColor(), world);
 		this.owner = c; // intentional shallow copy
