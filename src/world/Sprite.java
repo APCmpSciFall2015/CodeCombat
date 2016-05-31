@@ -16,7 +16,7 @@ import lib.Vector2;
 public abstract class Sprite
 {
 	/** maximum velocity of sprites **/
-	public static final float MAX_VELOCITY = Float.parseFloat(Main.config.get("spriteMaxVelocity"));
+	public static final float MAX_VELOCITY = Float.parseFloat(Main.CONFIG.get("spriteMaxVelocity"));
 	/** running id count of sprites **/
 	protected static int idCount = 0;
 

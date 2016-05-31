@@ -19,8 +19,8 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	private static final long serialVersionUID = -2598013920892210921L;
 
 	private final Dimension size = new Dimension(
-			Integer.parseInt(Main.config.get("worldWidth")),
-			Integer.parseInt(Main.config.get("worldHeight")));
+			Integer.parseInt(Main.CONFIG.get("worldWidth")),
+			Integer.parseInt(Main.CONFIG.get("worldHeight")));
 	/** plane of existence help by the applet **/
 	private World world;
 	/** UI for overlay and other user interaction **/

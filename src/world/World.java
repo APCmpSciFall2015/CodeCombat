@@ -3,6 +3,7 @@ package world;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import app.Main;
 import app.MainApplet;
 import bots.*;
 import lib.Vector2;
@@ -15,9 +16,12 @@ import lib.Vector2;
  */
 public class World
 {
-	public static final float VARIANCE = 20f;
-	public static final float MEAN = 0f;
-	public static final int NUM_OBSTACLES = 15;
+	/** variance (standard deviation) of gaussian noise in measurements **/
+	public static final float NOISE_VARIANCE = Float.parseFloat(Main.CONFIG.get("worldNoiseVariance"));
+	/** mean of gaussian noise in measurements **/
+	public static final float NOISE_MEAN = Float.parseFloat(Main.CONFIG.get("worldNoiseMean"));
+	/** Number of obstacles **/
+	public static final int NUM_OBSTACLES = Integer.parseInt(Main.CONFIG.get("worldNumObstacles"));
 	/** size of world **/
 	private Vector2 size;
 	/** ticks executed **/

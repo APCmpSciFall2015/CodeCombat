@@ -8,8 +8,8 @@ import lib.Vector2;
 public class Projectile extends Sprite
 {
 	/** maximum speed of a projectile **/
-	private static final float SPEED = Integer.parseInt(Main.config.get("projectileSpeed"));
-	private static final float RADIUS = Integer.parseInt(Main.config.get("projectileRadius"));
+	private static final float SPEED = Integer.parseInt(Main.CONFIG.get("projectileSpeed"));
+	private static final float RADIUS = Integer.parseInt(Main.CONFIG.get("projectileRadius"));
 	/** owner circle **/
 	private Circle owner;
 
@@ -92,7 +92,7 @@ public class Projectile extends Sprite
 					owner.setTotalHits(owner.getTotalHits() + 1);
 					owner.setTotalKills(owner.getTotalHits() + 1);
 				}
-				else if (s instanceof Shield && !((Shield) s).isUnbound())
+				else if (s instanceof Shield)
 				{
 					owner.setHits(owner.getHits() + 1);
 					owner.setTotalHits(owner.getTotalHits() + 1);

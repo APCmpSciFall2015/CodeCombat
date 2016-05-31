@@ -14,9 +14,9 @@ import lib.Vector2;
 public class Shield extends Sprite
 {
 	/** time for duck to respawn **/
-	public static final int RESPAWN_TIME = Integer.parseInt(Main.config.get("shieldRespawnTime"));
+	public static final int RESPAWN_TIME = Integer.parseInt(Main.CONFIG.get("shieldRespawnTime"));
 	/** radius of duck **/
-	public static final int RADIUS = Integer.parseInt(Main.config.get("shieldRadius"));
+	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("shieldRadius"));
 	/** whether or not the shield has found its mama duck **/
 	private boolean unbound;
 	/** shield's mama duck **/
@@ -62,7 +62,7 @@ public class Shield extends Sprite
 			if (unbound)
 			{
 				// update position (move in circle)
-				setAcceleration(new Vector2(1f / 30f, (float) (getVelocity().angle() + Math.PI / 2), true));
+				setAcceleration(new Vector2(1f / 60f, (float) (getVelocity().angle() + Math.PI / 2), true));
 				Vector2 previousVelocity = getVelocity();
 				setVelocity(getVelocity().add(getAcceleration()).normalize());
 				setPosition(getPosition().add(getVelocity().add(previousVelocity).div(2)));
@@ -131,12 +131,17 @@ public class Shield extends Sprite
 			setSize(new Vector2(60, 60));
 			setPosition(s.getPosition());
 		}
+		else if (unbound && s instanceof Projectile)
+		{
+			setAlive(false);
+		}
+		
 		// run in circle (also like a little ducky)
 		if (!unbound)
 		{
 			if (s instanceof Projectile && !((Projectile) s).isOwner(owner))
 			{
-				this.setAlive(false);
+				setAlive(false);
 				setSize(new Vector2(10, 10));
 				unbound = true;
 				respawnTimer = RESPAWN_TIME;

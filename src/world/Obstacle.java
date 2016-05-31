@@ -2,13 +2,15 @@ package world;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.List;
 
+import app.Main;
+import lib.Parser;
 import lib.Vector2;
 
 public class Obstacle extends Sprite
 {
-	public static final float[][] SIZES = { { 10, 60 }, { 60, 10 }, { 30, 30 } };
-
+	public static final List<List<Float>> SIZES = Parser.parse2DImmutableFloatArray(Main.CONFIG.get("obstacleSizes"));
 	/**
 	 * Obstacle Copy Constructor
 	 * @param o
@@ -21,7 +23,7 @@ public class Obstacle extends Sprite
 	public Obstacle(World world)
 	{
 		// @formatter:off
-		super(new Vector2(SIZES[(int) (Math.random() * SIZES.length)]),
+		super(new Vector2(SIZES.get((int) (Math.random() * SIZES.size())).toArray(new Float[2])),
 				new Vector2(0, 0),
 				new Vector2(1, (float) (Math.random() * Math.PI * 2), true),
 				new Vector2(0, 0),

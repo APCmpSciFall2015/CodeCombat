@@ -58,7 +58,10 @@ public abstract class Mind
 
 	public final void turn(float deltaTheta)
 	{
-		if(circle.isAlive()) circle.turn(deltaTheta);
+		if (circle.isAlive())
+		{
+			circle.turn(deltaTheta);
+		}
 	}
 
 	// Abstract Methods

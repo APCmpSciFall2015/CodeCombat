@@ -17,17 +17,17 @@ import lib.Vector2;
 public class Circle extends Sprite implements Comparable<Circle>
 {
 	/** Speed of Circles **/
-	public static final float SPEED = Float.parseFloat(Main.config.get("circleSpeed"));
+	public static final float SPEED = Float.parseFloat(Main.CONFIG.get("circleSpeed"));
 	/** Field of View of Circle **/
-	public static final float FOV = Float.parseFloat(Main.config.get("circleFOV"));
+	public static final float FOV = Float.parseFloat(Main.CONFIG.get("circleFOV"));
 	/** maximum rate of change in the direction of velocity **/
-	public static final float MAX_TURNING_ANGLE = Float.parseFloat(Main.config.get("circleMaxTurningAngle"));
+	public static final float MAX_TURNING_ANGLE = Float.parseFloat(Main.CONFIG.get("circleMaxTurningAngle"));
 	/** time to respawn **/
-	public static final int RESPAWN_TIME = Integer.parseInt(Main.config.get("circleRespawnTime"));
+	public static final int RESPAWN_TIME = Integer.parseInt(Main.CONFIG.get("circleRespawnTime"));
 	/** time to between shots **/
-	public static final int RELOAD_TIME = Integer.parseInt(Main.config.get("circleReloadTime"));
+	public static final int RELOAD_TIME = Integer.parseInt(Main.CONFIG.get("circleReloadTime"));
 	/** radius of circle **/
-	public static final int RADIUS = Integer.parseInt(Main.config.get("circleRadius"));
+	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("circleRadius"));
 
 	// Circle stats
 	// ------------------------------------------
@@ -292,6 +292,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 			deltaTheta = MAX_TURNING_ANGLE;
 
 		// adjust angle of velocity vector (aka turn)
+//		System.out.println(deltaTheta);
 		setVelocity(new Vector2(SPEED, getVelocity().angle() + deltaTheta, true));
 	}
 
@@ -499,11 +500,13 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	public Mind getMind()
 	{
-		return mind;
+		// intentional shallow copy minds copy circles
+		return mind; 
 	}
 
 	public void setMind(Mind mind)
 	{
+		// intentional shallow copy minds copy circles
 		this.mind = mind;
 	}
 

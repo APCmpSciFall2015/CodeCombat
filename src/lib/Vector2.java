@@ -26,12 +26,22 @@ public class Vector2
 
 	/**
 	 * 1-Argument Vector2 Constructor
-	 * @param vector vector as float array [x,y]
+	 * @param floats vector as Float array [x,y]
 	 */
-	public Vector2(float[] vector)
+	public Vector2(Float[] arr)
 	{
-		this.x = vector[0];
-		this.y = vector[1];
+		this.x = arr[0];
+		this.y = arr[1];
+	}
+	
+	/**
+	 * 1-Argument Vector2 Constructor
+	 * @param floats vector as float array [x,y]
+	 */
+	public Vector2(float[] arr)
+	{
+		this.x = arr[0];
+		this.y = arr[1];
 	}
 	
 	/**
