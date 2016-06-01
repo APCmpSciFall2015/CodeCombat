@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -50,23 +51,28 @@ public class MainFrame extends JFrame implements ActionListener
 		menuItem.addActionListener((ActionListener) this);
 		menu.add(menuItem);
 		
+		JCheckBoxMenuItem cbItem = new JCheckBoxMenuItem("Pause");
+		cbItem.addActionListener((ActionListener) this);
+		menu.add(cbItem);
+		
 		menu = new JMenu("Help");
 		menuBar.add(menu);
-		
-		
-	
 		
 		// build window and display
 		this.pack();
 		this.setVisible(true);
 	}
 
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch(((JMenuItem) e.getSource()).getText())
 		{
 		case "Exit":
-		
+			System.exit(0);
+			break;
+		case "Pause":
+			
 			break;
 			default:
 				break;
