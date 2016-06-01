@@ -136,9 +136,8 @@ public class World
 	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
 	{
 		ArrayList<Sprite> inView = new ArrayList<Sprite>();
-		for (int i = 0; i < sprites.size(); i++)
+		for (Sprite s : sprites)
 		{
-			Sprite s = sprites.get(i);
 			Vector2 direction = s.getPosition().sub(position);
 			// angle between vectors: theta = acos (a dot b / (mag a * mag b)
 			// https://en.wikipedia.org/wiki/Dot_product
@@ -155,9 +154,9 @@ public class World
 	 */
 	public void paint(Graphics g)
 	{
-		for (int i = 0; i < sprites.size(); i++)
+		for (Sprite s : sprites)
 		{
-			sprites.get(i).paint(g);
+			s.paint(g);
 		}
 	}
 
