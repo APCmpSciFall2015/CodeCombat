@@ -99,13 +99,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	@Override
 	public void paint(Graphics g)
 	{
-		try 
-		{
-			world.paint(g);
-		} catch (ConcurrentModificationException e)
-		{
-			// pass (skip the frame)
-		}
+		world.paint(g);
 		if (gameState.equals(GameState.PAUSED))
 			ui.drawPauseScreen(g);
 		if (displayFullStatsOverlay)
