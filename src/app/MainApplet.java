@@ -83,7 +83,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	 */
 	@Override
 	public void update(Graphics g)
-	{
+	{		
 		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
 				BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g2 = bi.createGraphics();

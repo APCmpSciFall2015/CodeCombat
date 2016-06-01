@@ -75,7 +75,7 @@ public class World
 		switch (type)
 		{
 		case CIRCLE:
-			s = new Circle(this);
+			s = new Circle(this, null);
 			break;
 		case OBSTACLE:
 			s = new Obstacle(this);
@@ -136,8 +136,9 @@ public class World
 	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
 	{
 		ArrayList<Sprite> inView = new ArrayList<Sprite>();
-		for (Sprite s : sprites)
+		for (int i = 0; i < sprites.size(); i++)
 		{
+			Sprite s = sprites.get(i);
 			Vector2 direction = s.getPosition().sub(position);
 			// angle between vectors: theta = acos (a dot b / (mag a * mag b)
 			// https://en.wikipedia.org/wiki/Dot_product
@@ -154,9 +155,9 @@ public class World
 	 */
 	public void paint(Graphics g)
 	{
-		for (Sprite s : sprites)
+		for (int i = 0; i < sprites.size(); i++)
 		{
-			s.paint(g);
+			sprites.get(i).paint(g);
 		}
 	}
 

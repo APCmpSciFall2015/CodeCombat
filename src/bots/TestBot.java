@@ -55,7 +55,7 @@ public class TestBot extends Mind
 			}
 			else
 			{
-				turn((float) Circle.MAX_TURNING_ANGLE / 3);
+				turn((float) Circle.MAX_TURNING_ANGLE);
 			}
 	
 			if(target != null) shoot();

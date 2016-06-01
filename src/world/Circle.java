@@ -72,7 +72,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	/** location of Circle's eyes **/
 	private Vector2 eyePosition;
 	/** Mind to control circle bot **/
-	private Mind mind = null;
+	private Mind mind;
 
 	// Constructors
 	// --------------------------------------------------------------------
@@ -88,9 +88,11 @@ public class Circle extends Sprite implements Comparable<Circle>
 		super(c);
 		this.shootTimer = c.shootTimer;
 		this.respawnTimer = c.respawnTimer;
+		this.mind = c.mind;
+		this.eyePosition = c.getEyePosition();
 	}
 
-	public Circle(World world)
+	public Circle(World world, Mind mind)
 	{
 		super(new Vector2(RADIUS * 2, RADIUS * 2),
 				new Vector2((float) ((Math.random() * (world.getSize().getX()) - (2 * RADIUS))) + RADIUS,
@@ -98,12 +100,18 @@ public class Circle extends Sprite implements Comparable<Circle>
 				new Vector2(SPEED, (float) (Math.random() * Math.PI * 2), true), new Vector2(0, 0),
 				new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)),
 				world);
+		this.mind = mind;
+		this.eyePosition = new Vector2((getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
+				(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
 	}
 
 	public Circle(Vector2 position, Vector2 direction, Color color, World world, Mind mind)
 	{
 		super(new Vector2(RADIUS / 2, RADIUS / 2), position, direction.normalize().mult(SPEED), new Vector2(0, 0),
 				color, world);
+		this.mind = mind;
+		new Vector2((getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
+				(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
 	}
 
 	// Overridden methods
@@ -115,8 +123,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 		if (isAlive())
 		{
 			// @formatter:off
-			
-			
 			g.setColor(getColor());
 			// paint circle
 			g.fillOval(
@@ -127,8 +133,12 @@ public class Circle extends Sprite implements Comparable<Circle>
 			// paint FOV visualizer
 			Vector2 left = new Vector2(getWorld().getSize().mag(), getVelocity().angle() + FOV / 2, true);
 			Vector2 right = new Vector2(getWorld().getSize().mag(), getVelocity().angle() - FOV / 2, true);
-			g.drawLine((int) eyePosition.getX(), (int) eyePosition.getY(), (int) (eyePosition.getX() + left.getX()), (int) (eyePosition.getY() + left.getY()));
-			g.drawLine((int) eyePosition.getX(), (int) eyePosition.getY(), (int) (eyePosition.getX() + right.getX()), (int) (eyePosition.getY() + right.getY()));
+			g.drawLine((int) eyePosition.getX(), (int) eyePosition.getY(),
+					(int) (eyePosition.getX() + left.getX()),
+					(int) (eyePosition.getY() + left.getY()));
+			g.drawLine((int) eyePosition.getX(), (int) eyePosition.getY(),
+					(int) (eyePosition.getX() + right.getX()),
+					(int) (eyePosition.getY() + right.getY()));
 			
 			// paint direction visualizer (color declared is inverted)
 			g.setColor(new Color(255 - getColor().getRed(), 255 - getColor().getGreen(), 255 - getColor().getBlue()));
@@ -137,7 +147,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 					(int) eyePosition.getY() - RADIUS / 4,
 					(int) (getSize().getX() / 4), (int) (getSize().getY() / 4));
 			// @formatter:on
-
 			super.paint(g);
 		}
 	}

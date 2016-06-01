@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Parser
 {
-	// the parser will do constants my way
+	// the parser will do constants my way, the real way
 	public static List<List<Float>> parse2DImmutableFloatArray(String s)
 	{
 		List<List<Float>> output = new ArrayList<List<Float>>();
