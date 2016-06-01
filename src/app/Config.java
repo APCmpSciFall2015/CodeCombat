@@ -36,6 +36,7 @@ public class Config
 				int div = line.indexOf('=');
 				properties.put(line.substring(0, div), line.substring(div + 1));
 			}
+			System.out.println("loaded config data from file: " + f);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -60,6 +61,7 @@ public class Config
 			for(String s : entries)
 				fw.write(s);
 			fw.close();
+			System.out.println("wrote config data to file: " + f);
 		}
 		catch (IOException e)
 		{

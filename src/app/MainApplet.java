@@ -34,6 +34,8 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	private Thread thread;
 	/** Image to double buffer with **/
 	private BufferedImage bi;
+	/** The frame the applet is contained **/
+	private MainFrame frame;
 
 	/** GameState */
 	private GameState gameState = GameState.PLAY;
@@ -153,6 +155,14 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		gameState = GameState.PAUSED;
 		// Open menu
 	}
+	
+	/**
+	 * The resume method sets the gameState enum to PLAY and resumes the game
+	 */
+	public void resume()
+	{
+		gameState = GameState.PLAY;
+	}
 
 	/**
 	 * The end method sets the gameState enum to MENU and returns the game to
@@ -182,6 +192,8 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 			togglePause();
 		if (e.getKeyChar() == 'd')
 			Main.debug = !Main.debug;
+		
+		frame.updateMenu();
 	}
 
 	@Override
@@ -263,5 +275,15 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	public void setWorld(World world)
 	{
 		this.world = world;
+	}
+	
+	public MainFrame getFrame()
+	{
+		return frame;
+	}
+	
+	public void setFrame(MainFrame frame)
+	{
+		this.frame = frame;
 	}
 }
