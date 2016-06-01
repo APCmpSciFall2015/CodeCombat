@@ -1,8 +1,12 @@
 package app;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.lang.management.ManagementFactory;
+
 import javax.swing.JFrame;
 
 import world.World;
@@ -21,11 +25,14 @@ public class Main implements Serializable
 	private static final long serialVersionUID = 3206847208968227199L;
 	/** JFrame to hold applet **/
 	private static JFrame frame;	
-	
 	/** debug mode enabled? **/
 	public static boolean debug = Boolean.parseBoolean(CONFIG.get("debug"));
 	/** frame rate of applet set to 60 fps **/
-	public static final long frameRate = Integer.parseInt(CONFIG.get("frameRate"));
+	public static final long FRAME_RATE = Integer.parseInt(CONFIG.get("frameRate"));
+	/** world width **/
+	public static final int worldWidth = Integer.parseInt(CONFIG.get("worldWidth"));
+	/** world height **/
+	public static final int worldHeight = Integer.parseInt(CONFIG.get("worldHeight"));
 	/** GameState enum */
 	public static enum GameState
 	{
@@ -35,12 +42,10 @@ public class Main implements Serializable
 	// Initialization of JFrame
 	public static void main(String[] args)
 	{
-		frame = new MainFrame("Code Combat", new Dimension(
-					Integer.parseInt(CONFIG.get("worldWidth")),
-					Integer.parseInt(CONFIG.get("worldHeight"))),
-				new MainApplet());
+		frame = new MainFrame("Code Combat", 
+					new Dimension(worldWidth, worldHeight),
+					new MainApplet());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 		    public void run() {
@@ -49,3 +54,4 @@ public class Main implements Serializable
 		}));
 	}
 }
+

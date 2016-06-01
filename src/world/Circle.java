@@ -210,8 +210,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	@Override
 	public String toString()
 	{
-		return mind + ": " + getId() + " [" + kills + ", " + deaths + ", " + String.format("%.2f", accuracy) + "] "
-				+ isAlive();
+		return mind + ": " + getId() + "(" + isAlive() + ")";
 	}
 
 	@Override

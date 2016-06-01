@@ -17,16 +17,14 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 {
 	/** serializable id **/
 	private static final long serialVersionUID = -2598013920892210921L;
-
-	private final Dimension size = new Dimension(
-			Integer.parseInt(Main.CONFIG.get("worldWidth")),
-			Integer.parseInt(Main.CONFIG.get("worldHeight")));
+	/** size of Applet **/
+	private final Dimension size = new Dimension(Main.worldWidth, Main.worldHeight);
 	/** plane of existence help by the applet **/
 	private World world;
 	/** UI for overlay and other user interaction **/
 	private UI ui;
 	/** overlay stats? **/
-	private boolean displayStatsOverlay = false;
+	private boolean displayFullStatsOverlay = false;
 	/** color of background **/
 	private Color backgroundColor = Color.GRAY;
 	/** instance of self **/
@@ -83,7 +81,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	 */
 	@Override
 	public void update(Graphics g)
-	{		
+	{
 		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
 				BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g2 = bi.createGraphics();
@@ -103,7 +101,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		world.paint(g);
 		if (gameState.equals(GameState.PAUSED))
 			ui.drawPauseScreen(g);
-		if (displayStatsOverlay)
+		if (displayFullStatsOverlay)
 			ui.drawFullStatsOverlay(g);
 	}
 
@@ -120,7 +118,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 			repaint();
 
 			// sleep for rest of frame time
-			while (System.currentTimeMillis() - start < Main.frameRate)
+			while (System.currentTimeMillis() - start < Main.FRAME_RATE)
 			{
 				try
 				{
@@ -189,14 +187,14 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	public void keyPressed(KeyEvent e)
 	{
 		if (e.getKeyChar() == '\t')
-			displayStatsOverlay = true;
+			displayFullStatsOverlay = true;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
 		if (e.getKeyChar() == '\t')
-			displayStatsOverlay = false;
+			displayFullStatsOverlay = false;
 	}
 
 	// Getters and Setters
