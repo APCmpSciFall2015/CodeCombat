@@ -77,10 +77,9 @@ public class Shield extends Sprite
 
 	public void paint(Graphics g)
 	{
-		super.paint(g);
-
 		if (isAlive())
 		{
+			super.paint(g);
 			// paint the sad little duck looking for its mama
 			if (unbound)
 			{
