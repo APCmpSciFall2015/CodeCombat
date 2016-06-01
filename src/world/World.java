@@ -1,9 +1,11 @@
-package cc;
+package world;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import app.Main;
+import app.MainApplet;
+import bots.*;
 import lib.Vector2;
 
 /**
@@ -14,12 +16,25 @@ import lib.Vector2;
  */
 public class World
 {
+	/** variance (standard deviation) of gaussian noise in measurements **/
+	public static final float NOISE_VARIANCE = Float.parseFloat(Main.CONFIG.get("worldNoiseVariance"));
+	/** mean of gaussian noise in measurements **/
+	public static final float NOISE_MEAN = Float.parseFloat(Main.CONFIG.get("worldNoiseMean"));
+	/** Number of obstacles **/
+	public static final int NUM_OBSTACLES = Integer.parseInt(Main.CONFIG.get("worldNumObstacles"));
 	/** size of world **/
 	private Vector2 size;
+	/** ticks executed **/
+	private long ticks = 0;
 	/** sprites in the plane of existence **/
 	private ArrayList<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
+
+	public static enum SpriteType
+	{
+		CIRCLE, OBSTACLE, PROJECTILE, SHIELD
+	}
 
 	// Constructors
 	// ---------------------------------------------------------
@@ -32,97 +47,75 @@ public class World
 	public World(MainApplet mainApplet, Vector2 size)
 	{
 		this.mainApplet = mainApplet; // shallow copy
-		this.size = size.copy(); 
+		this.size = size.copy();
 
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
-		do
+		for (int i = 0; i < NUM_OBSTACLES; i++)
 		{
-			sprites = new ArrayList<Sprite>();
-			int numberOfObstacles = (int) (Math.random() * 20 + 30);
-			for (int i = 0; i < numberOfObstacles; i++)
-			{
-				Vector2 spriteSize = new Vector2(0, 0);
-				switch ((int) (Math.random() * 3))
-				{
-				case 0:
-					spriteSize = new Vector2(10, 60);
-					break;
-				case 1:
-					spriteSize = new Vector2(60, 10);
-					break;
-				case 2:
-					spriteSize = new Vector2(30, 30);
-					break;
-				default:
-					break;
-				}
-				Vector2 position = new Vector2(
-						(int) (Math.random() * (size.getX() - spriteSize.getX()) + spriteSize.getX() / 2),
-						(int) (Math.random() * (size.getY() - spriteSize.getY()) + spriteSize.getY() / 2));
-				sprites.add(new Obstacle(spriteSize, position, new Color(0, 0, 0), this));
-				//				if (MainApplet.DEBUG)
-				//					System.out.println("Obstacle made");
-			}
-			//			if (MainApplet.DEBUG)
-			//				System.out.println("remaking");
-		} while (checkCollisions());
-		//		if (MainApplet.DEBUG)
-		//			System.out.println("Done");
-		// generate test Circles
-		//		sprites.add(new Circle(100, 100, this));
-		//		sprites.add(new Circle(200, 200, this));
-		//		sprites.add(new Circle(300, 300, this));
-		//		sprites.add(new Circle(400, 400, this));
-		//		sprites.add(new Circle(500, 500, Color.RED, this));
-		for(int x = 0; x < 5; x++)
-		{
-			spawn();
+			spawn(SpriteType.OBSTACLE);
 		}
 
-
-
-		// test requestInView method
-		// System.out.println(requestInView(sprites.get(sprites.size() -
-		// 2).getPosition(), sprites.get(sprites.size() - 2).getVelocity(),
-		// (float) Math.PI / 2));
-		// mainApplet.setGameState(GameState.PAUSED);
+		for (int i = 0; i < 5; i++)
+		{
+			spawn(SpriteType.SHIELD);
+			spawn(SpriteType.CIRCLE);
+		}
+		((Circle) sprites.get(sprites.size() - 1))
+				.setMind(new TestBot(((Circle) sprites.get(sprites.size() - 1)), 20, 0));
 	}
 
 	/**
 	 * spawns a circle in the world
 	 */
-	public void spawn()
+	public void spawn(SpriteType type)
 	{
-		boolean willCollide = false;
-		Circle c = new Circle(0, 0, this);
-		do 
+		Sprite s;
+
+		switch (type)
 		{
-			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
-			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
-			Vector2 position = new Vector2(x, y);
-			c.setPosition(position);
-			willCollide = colliding(c);
-		} while(willCollide);
-		sprites.add(c);
+		case CIRCLE:
+			s = new Circle(this, null);
+			break;
+		case OBSTACLE:
+			s = new Obstacle(this);
+			break;
+		case SHIELD:
+			s = new Shield(this);
+			break;
+		default:
+			System.err.println("Invalid Sprite Type");
+			return;
+		}
+
+		do
+		{
+			// correct position to avoid collision
+			// @formatter:off 
+			s.setPosition(new Vector2(
+					(float) (Math.random() * (getSize().getX() - s.getSize().getX()) + s.getSize().getX() / 2),
+					(float) (Math.random() * (getSize().getY() - s.getSize().getY()) + s.getSize().getY() / 2)
+					));
+			// @formatter:on
+		} while (colliding(s));
+
+		sprites.add(s);
 	}
 
 	/**
 	 * respawns a circle in the world in a random location
 	 * @param respawn the circle to respawn
 	 */
-	public void spawn(Circle respawn)
+	public void respawn(Sprite s)
 	{
-		boolean willCollide = false;
 		do
 		{
-			int x = (int) Math.floor(Math.random() * (getSize().getX() + 1));
-			int y = (int) Math.floor(Math.random() * (getSize().getY() + 1));
-			Vector2 position = new Vector2(x, y);
-			respawn.setPosition(position);
-			willCollide = colliding(respawn);
-		}while(willCollide);
-		respawn.setAlive(true);
+			s.setPosition(new Vector2(
+					(float) ((Math.random() * (size.getX()) - (s.getSize().getX()))) + s.getSize().getX() / 2,
+					(float) (((Math.random() * (size.getY()) - (s.getSize().getY()))) + s.getSize().getY() / 2)));
+		} while (colliding(s));
+		s.setAlive(true);
+		;
 	}
 
 	/**
@@ -134,22 +127,25 @@ public class World
 		{
 			if (sprites.get(i).getExistence())
 				sprites.get(i).update();
-			else
-				sprites.remove(i);
+			else sprites.remove(i);
 		}
 		checkCollisions();
+		ticks++;
 	}
 
 	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
 	{
-		ArrayList<Sprite> observed = new ArrayList<Sprite>();
+		ArrayList<Sprite> inView = new ArrayList<Sprite>();
 		for (Sprite s : sprites)
 		{
-			if (Math.abs(face.angle() - Vector2.sub(s.getPosition(), position).angle()) < Math.abs(fieldOfView / 2))
-				observed.add(s.copy());
+			Vector2 direction = s.getPosition().sub(position);
+			// angle between vectors: theta = acos (a dot b / (mag a * mag b)
+			// https://en.wikipedia.org/wiki/Dot_product
+			if (s.getExistence() && s.isAlive() && Math
+					.abs(Math.acos(direction.dot(face) / (face.mag() * direction.mag()))) < Math.abs(fieldOfView / 2))
+				inView.add(s.copy());
 		}
-
-		return observed;
+		return inView;
 	}
 
 	/**
@@ -196,26 +192,21 @@ public class World
 		}
 		return collisions;
 	}
-	
+
 	/**
-	 * Checks to see if a sprite will collide with any other sprites in the world using an
-	 * Axis-Aligned Bounding-Box
+	 * Checks to see if a sprite will collide with any other sprites in the
+	 * world using an Axis-Aligned Bounding-Box
 	 * @param sprite the sprite to check against the world
 	 * @return true, if there is a collision
 	 */
 	public boolean colliding(Sprite sprite)
 	{
-		int count = 0;
-		boolean willCollide = false;
-		while(count < sprites.size() && !willCollide)
+		for (Sprite s : sprites)
 		{
-			if(colliding(sprites.get(count), sprite))
-			{
-				willCollide = true;
-			}
-			count++;
+			if (colliding(s, sprite))
+				return true;
 		}
-		return willCollide;
+		return false;
 	}
 
 	/**
@@ -227,7 +218,7 @@ public class World
 	 */
 	public boolean colliding(Sprite A, Sprite B)
 	{
-		if(A == B) //if the sprites are the same
+		if (A == B) // if the sprites are the same
 		{
 			return false;
 		}
@@ -285,5 +276,14 @@ public class World
 	{
 		this.sprites = sprites;
 	}
-}
 
+	public long getTicks()
+	{
+		return ticks;
+	}
+
+	public void setTicks(long ticks)
+	{
+		this.ticks = ticks;
+	}
+}

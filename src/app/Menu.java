@@ -1,4 +1,4 @@
-package cc;
+package app;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,3 +47,4 @@ public class Menu implements ActionListener, ItemListener
 	}
 	
 }
+
