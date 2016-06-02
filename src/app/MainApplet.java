@@ -283,12 +283,12 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		this.gameState = gameState;
 	}
 
-	public World getWorld()
+	protected World getWorld()
 	{
 		return world;
 	}
 
-	public void setWorld(World world)
+	protected void setWorld(World world)
 	{
 		this.world = world;
 	}

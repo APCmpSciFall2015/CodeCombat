@@ -67,7 +67,7 @@ public class UI
 		g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(
 				Math.min(getScaledFontSizeHorizontal("LeaderBoard", width / 8 - xInset, g), getScaledFontSizeVertical(rowHeight, g)),
 				g.getFont().getSize())));
-		g.drawString("LeaderBoard", x, y);
+		g.drawString("LeaderBoard", x + (colWidth - g.getFontMetrics().stringWidth("LeaderBoard") + xInset) / 2, y);
 		g.drawLine(x - width / 128, y + height / 128, x + width / 32 * 3, y + height / 128);
 		y += rowHeight;
 		

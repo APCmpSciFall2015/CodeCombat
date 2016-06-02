@@ -25,7 +25,7 @@ public class Main implements Serializable
 	private static final long serialVersionUID = 3206847208968227199L;
 	/** JFrame to hold applet **/
 	private static JFrame frame;
-	/** debug mode enabled? **/
+	/** debug mode enabled? **/	
 	public static boolean debug = Boolean.parseBoolean(CONFIG.get("debug"));
 	/** frame rate of applet set to 60 fps **/
 	public static final long FRAME_RATE = Integer.parseInt(CONFIG.get("frameRate"));
