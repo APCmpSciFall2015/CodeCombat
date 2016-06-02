@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class MainFrame extends JFrame implements ActionListener, ItemListener
@@ -23,7 +24,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	private MainApplet applet;
 	private JCheckBoxMenuItem pauseCbItem = new JCheckBoxMenuItem("Pause");
 	private JCheckBoxMenuItem debugCbItem = new JCheckBoxMenuItem("Debug");
-	
+	private String configProperty;
 	public MainFrame(String s, Dimension size, MainApplet applet)
 	{
 		super(s);
@@ -56,9 +57,76 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		menuItem.addActionListener((ActionListener) this);
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("Config");
+		JMenu config = new JMenu("Config");
+		menuItem = new JMenuItem("World Width");
 		menuItem.addActionListener((ActionListener) this);
-		menu.add(menuItem);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("World Height");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Noise Variance");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Noise Mean");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Number of Obstacles");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Obstacle Sizes");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Max Sprite Velocity");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Projectile Speed");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Projectile Radius");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Circle Respawn Time");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Circle Speed");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Circle FOV");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Circle Max Turning Angle");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Circle Reload Time");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Circle Radius");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Shield Radius");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menuItem = new JMenuItem("Shield Respawn Time");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
+		menu.add(config);
 		
 		
 		pauseCbItem.addItemListener((ItemListener) this);
@@ -78,18 +146,78 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		switch(((JMenuItem) e.getSource()).getText())
+		configProperty = null;
+		String selectedItem = ((JMenuItem) e.getSource()).getText();
+		switch(selectedItem)
 		{
 		case "Exit":
 			System.exit(0);
 			break;
-			
-		case "Config":
-			new ConstantConfigJFrame("Configure Options", new Dimension(200, 80));
-			break;
-			
+							
+			case "World Width":
+				configProperty = "worldWidth";
+				break;
+			case "World Height":
+				configProperty = "worldHeight";
+				break;
+			case "Noise Variance":
+				configProperty = "worldNoiseVariance";
+				break;
+			case "Noise Mean":
+				configProperty = "worldNoiseMean";
+				break;
+			case "Number of Obstacles":
+				configProperty = "worldNumObstacles";
+				break;
+			case "Obstacle Sizes":
+				configProperty = "obstacleSizes";
+				break;
+			case "Max Sprite Velocity":
+				configProperty = "spriteMaxVelocity";
+				break;
+			case "Projectile Speed":
+				configProperty = "projectileSpeed";
+				break;
+			case "Projectile Radius":
+				configProperty = "projectileRadius";
+				break;
+			case "Circle Respawn Time":
+				configProperty = "circleRespawnTime";
+				break;
+			case "Circle Speed":
+				configProperty = "circleSpeed";
+				break;
+			case "Circle FOV":
+				configProperty = "circleFOV";
+				break;
+			case "Circle Max Turning Angle":
+				configProperty = "circleMaxTurningAngle";
+				break;
+			case "Circle Reload Time":
+				configProperty = "circleReloadTime";
+				break;
+			case "Circle Radius":
+				configProperty = "circleRadius";
+				break;
+			case "Shield Radius":
+				configProperty = "shieldRadius";
+				break;
+			case "Shield Respawn Time":
+				configProperty = "shieldRespawnTime";
+				break;
+				
 			default:
 				break;
+		}
+		if(configProperty != null) //if a config property was selected
+		{
+			String value = (String) JOptionPane.showInputDialog(this, "You are modifying " + selectedItem + ".",
+					Main.CONFIG.get(configProperty));			
+			if(value != null)
+			{
+				Main.CONFIG.set(configProperty, value);
+				System.out.println("Config edit: " + configProperty + "=" + value);
+			}
 		}
 	}
 	
