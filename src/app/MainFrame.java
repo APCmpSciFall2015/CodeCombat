@@ -56,6 +56,10 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		menuItem.addActionListener((ActionListener) this);
 		menu.add(menuItem);
 		
+		menuItem = new JMenuItem("Config");
+		menuItem.addActionListener((ActionListener) this);
+		menu.add(menuItem);
+		
 		
 		pauseCbItem.addItemListener((ItemListener) this);
 		menu.add(pauseCbItem);
@@ -79,6 +83,11 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		case "Exit":
 			System.exit(0);
 			break;
+			
+		case "Config":
+			new SetupJFrame("Configure Options", new Dimension(200, 80));
+			break;
+			
 			default:
 				break;
 		}
