@@ -42,6 +42,55 @@ public class UI
 	}
 
 
+	public void drawStatsOverlay(Graphics g)
+	{
+		// get circles
+		LinkedList<Circle> circles = new LinkedList<Circle>();
+		for (Sprite s : mainApplet.getWorld().getSprites())
+			if (s instanceof Circle)
+				circles.add((Circle) s);
+		Collections.sort(circles);
+		
+		// setup font and offsets
+		int width = (int) mainApplet.getWorld().getSize().getX();
+		int height = (int) mainApplet.getWorld().getSize().getY();
+		int x = width / 8 * 7;
+		int y = height / 64 * 3;
+		int xInset = width / 32;
+		int rowHeight = height / 32;
+		int colWidth = width / 16;
+		
+		// draw box behind leaderboard and title
+		g.setColor(new Color(55, 55, 55, 235));
+		g.fillRect(x - width / 64, y - height / 32, width / 8, rowHeight * circles.size() * 4 / 3);
+		g.setColor(Color.RED);
+		g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(
+				Math.min(getScaledFontSizeHorizontal("LeaderBoard", width / 8 - xInset, g), getScaledFontSizeVertical(rowHeight, g)),
+				g.getFont().getSize())));
+		g.drawString("LeaderBoard", x, y);
+		g.drawLine(x - width / 128, y + height / 128, x + width / 32 * 3, y + height / 128);
+		y += rowHeight;
+		
+		// size font for circles in list
+		for(Circle c : circles)
+		{
+			String s = "" + circles.getFirst().getMind() + ": " + circles.getFirst().getId();
+			g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(
+					Math.min(getScaledFontSizeHorizontal(s, width / 8, g), getScaledFontSizeVertical(rowHeight, g)),
+					g.getFont().getSize())));
+		}
+		
+		// paint list of circles
+		g.setColor(Color.RED);
+		for(Circle c : circles)
+		{
+			g.setColor(c.getColor());
+			String s = "" + c.getMind() + ": " + c.getId();
+			g.drawString(s, x + (colWidth - g.getFontMetrics().stringWidth(s) + xInset) / 2, y);
+			y += rowHeight;
+		}
+	}
+	
 	public void drawFullStatsOverlay(Graphics g)
 	{
 		// "struct" for stats data

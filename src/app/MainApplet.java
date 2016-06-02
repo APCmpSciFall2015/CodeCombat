@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ConcurrentModificationException;
+import java.util.NoSuchElementException;
 
 import javax.swing.JApplet;
 
@@ -93,10 +94,12 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 			// paint world
 			world.paint(g2);
+			ui.drawStatsOverlay(g2);
 			if (gameState.equals(GameState.PAUSED))
 				ui.drawPauseScreen(g2);
 			if (displayFullStatsOverlay)
 				ui.drawFullStatsOverlay(g2);
+			
 
 			g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
 		}
@@ -104,6 +107,11 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		{
 			// skip the rest of the update if paint conflicts with updates
 			System.err.println("Skip rest of frame: Concurrent Modification");
+		}
+		catch (NoSuchElementException e)
+		{
+			// ditto here (caused by trying to access world's arraylist of circles whilst updating: bah humbug
+			System.err.println("Skip rest of frame: No Such Element");
 		}
 	}
 
@@ -196,9 +204,9 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		if (e.getKeyChar() == 'p')
+		if (e.getKeyChar() == 'p' || e.getKeyChar() == 'P')
 			togglePause();
-		if (e.getKeyChar() == 'd')
+		if (e.getKeyChar() == 'd' || e.getKeyChar() == 'D')
 			Main.debug = !Main.debug;
 
 		frame.updateMenu();
