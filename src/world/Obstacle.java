@@ -76,6 +76,7 @@ public class Obstacle extends Sprite
 	public void collide(Sprite s)
 	{
 		if(s == null) return;
+		if(s instanceof Obstacle) slide(s);
 	}
 
 	@Override
