@@ -10,11 +10,13 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ConcurrentModificationException;
 
+import javax.swing.JApplet;
+
 import app.Main.GameState;
 import lib.Vector2;
 import world.World;
 
-public class MainApplet extends Applet implements Runnable, KeyListener
+public class MainApplet extends JApplet implements Runnable, KeyListener
 {
 	/** serializable id **/
 	private static final long serialVersionUID = -2598013920892210921L;
@@ -77,35 +79,24 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	{
 	}
 
-	/**
-	 * The update method double buffers the contents of the screen while an
-	 * update is occurring.
-	 * @param g Graphics of screen
-	 */
 	@Override
-	public void update(Graphics g)
-	{
+	public void paint(Graphics g)
+	{				
+		// setup canvas
 		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
 				BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g2 = bi.createGraphics();
-
-		// paint world
-		g2.setColor(Color.GRAY);
+		g2.setColor(getBackground());
 		g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
-		paint(g2);
-
-		// paint the scaled image on the applet
-		g.drawImage(bi, 0, 0, getWidth(), getHeight(), null);
-	}
-
-	@Override
-	public void paint(Graphics g)
-	{
-		world.paint(g);
+		
+		// paint world
+		world.paint(g2);
 		if (gameState.equals(GameState.PAUSED))
-			ui.drawPauseScreen(g);
+			ui.drawPauseScreen(g2);
 		if (displayFullStatsOverlay)
-			ui.drawFullStatsOverlay(g);
+			ui.drawFullStatsOverlay(g2);
+		
+		g.drawImage(bi, 0, 0, null);
 	}
 
 	@Override
