@@ -74,7 +74,7 @@ public class Config
 		return properties.get(property);
 	}
 	
-	public void add(String property, String value)
+	public void set(String property, String value)
 	{
 		properties.put(property, value);
 	}

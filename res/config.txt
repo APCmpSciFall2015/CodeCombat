@@ -1,3 +1,4 @@
+World Width=null
 circleFOV=1.0471975512
 circleMaxTurningAngle=0.05235987755
 circleRadius=20

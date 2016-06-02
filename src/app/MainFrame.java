@@ -85,7 +85,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 			break;
 			
 		case "Config":
-			new SetupJFrame("Configure Options", new Dimension(200, 80));
+			new ConstantConfigJFrame("Configure Options", new Dimension(200, 80));
 			break;
 			
 			default:

@@ -14,23 +14,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class SetupJFrame extends JFrame implements ActionListener
+public class ConstantConfigJFrame extends JFrame implements ActionListener
 {
+	private static final long serialVersionUID = 2970521899937204863L;
 	private JComboBox<String> comboBox;
-	private String configOption = "";
-	public SetupJFrame(String s, Dimension size)
+	private String configProperty = "";
+
+	public ConstantConfigJFrame(String s, Dimension size)
 	{
 		super(s);
-		
+
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setPreferredSize(size);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		
+
 		JLabel prompt = new JLabel("Select a parameter to modify");
 		prompt.setAlignmentX(CENTER_ALIGNMENT);
-		
+
 		panel.add(prompt);
-		
+
 		DefaultComboBoxModel<String> options = new DefaultComboBoxModel<String>();
 		options.addElement("World Width");
 		options.addElement("World Height");
@@ -49,15 +51,15 @@ public class SetupJFrame extends JFrame implements ActionListener
 		options.addElement("Circle Radius");
 		options.addElement("Shield Radius");
 		options.addElement("Shield Respawn Time");
-		
+
 		comboBox = new JComboBox<String>(options);
 		panel.add(comboBox);
-		
+
 		JButton button = new JButton("Ok");
 		button.addActionListener((ActionListener) this);
 		button.setAlignmentX(CENTER_ALIGNMENT);
 		panel.add(button);
-		
+
 		this.add(panel);
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -65,94 +67,77 @@ public class SetupJFrame extends JFrame implements ActionListener
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		switch(((JButton) e.getSource()).getText())
+	public void actionPerformed(ActionEvent e)
+	{
+		if (((JButton) e.getSource()).getText() == "Ok")
 		{
-		case "Ok":
+			// fun with hard coded logic
 			String selectedItem = comboBox.getSelectedItem().toString();
-			switch(selectedItem)
+			switch (selectedItem)
 			{
 			case "World Width":
-				configOption = "worldWidth";
+				configProperty = "worldWidth";
 				break;
 			case "World Height":
-				configOption = "worldHeight";
+				configProperty = "worldHeight";
 				break;
 			case "Noise Variance":
-				configOption = "worldNoiseVariance";
+				configProperty = "worldNoiseVariance";
 				break;
 			case "Noise Mean":
-				configOption = "worldNoiseMean";
+				configProperty = "worldNoiseMean";
 				break;
 			case "Number of Obstacles":
-				configOption = "worldNumObstacles";
+				configProperty = "worldNumObstacles";
 				break;
 			case "Obstacle Sizes":
-				configOption = "obstacleSizes";
+				configProperty = "obstacleSizes";
 				break;
 			case "Max Sprite Velocity":
-				configOption = "spriteMaxVelocity";
+				configProperty = "spriteMaxVelocity";
 				break;
 			case "Projectile Speed":
-				configOption = "projectileSpeed";
+				configProperty = "projectileSpeed";
 				break;
 			case "Projectile Radius":
-				configOption = "projectileRadius";
+				configProperty = "projectileRadius";
 				break;
 			case "Circle Respawn Time":
-				configOption = "circleRespawnTime";
+				configProperty = "circleRespawnTime";
 				break;
 			case "Circle Speed":
-				configOption = "circleSpeed";
+				configProperty = "circleSpeed";
 				break;
 			case "Circle FOV":
-				configOption = "circleFOV";
+				configProperty = "circleFOV";
 				break;
 			case "Circle Max Turning Angle":
-				configOption = "circleMaxTurningAngle";
+				configProperty = "circleMaxTurningAngle";
 				break;
 			case "Circle Reload Time":
-				configOption = "circleReloadTime";
+				configProperty = "circleReloadTime";
 				break;
 			case "Circle Radius":
-				configOption = "circleRadius";
+				configProperty = "circleRadius";
 				break;
 			case "Shield Radius":
-				configOption = "shieldRadius";
+				configProperty = "shieldRadius";
 				break;
 			case "Shield Respawn Time":
-				configOption = "shieldRespawnTime";
+				configProperty = "shieldRespawnTime";
 				break;
-				default:
-					break;
+			default:
+				break;
 			}
-			
-			String value = (String) JOptionPane.showInputDialog(this, "You are modifying " + selectedItem + ".", Main.CONFIG.get(configOption));
-			
-			if(value != null && !configOption.equals("obstacleSizes"))
+
+			// get the value and update the config (changes take effect on restart)
+			String value = (String) JOptionPane.showInputDialog(this, "You are modifying " + selectedItem + ".",
+					Main.CONFIG.get(configProperty));			
+			if(value != null)
 			{
-				try
-				{
-					Integer.parseInt(value);
-				}
-				catch(NumberFormatException ex)
-				{
-					
-				}
+				Main.CONFIG.set(configProperty, value);
+				System.out.println("Config edit: " + configProperty + "=" + value);
 			}
-			else if(value != null)
-			{
-				
-			}
-			else
-			{
-				
-			}
-			
-		break;
-		
-		default:
-			break;
 		}
 	}
 }
