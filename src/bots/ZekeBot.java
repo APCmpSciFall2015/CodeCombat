@@ -4,16 +4,20 @@ import java.util.ArrayList;
 
 import lib.Vector2;
 import world.Circle;
+import world.Obstacle;
 import world.Sprite;
 
 public class ZekeBot extends Mind{
+	
+	private ArrayList<ArrayList<Obstacle>> obstacles;
 
 	public ZekeBot(Circle c, float variance, float mean) {
 		super(c, variance, mean);
+		obstacles = new ArrayList<ArrayList<Obstacle>>();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ZekeBot(ZekeBot zekeBot) {
+	public ZekeBot(ZekeBot zekeBot) {//this method should never be called
 		super(zekeBot);
 	}
 
@@ -40,6 +44,21 @@ public class ZekeBot extends Mind{
 					{
 						target = s;
 					}
+				}
+				if (s instanceof Obstacle){
+					
+					
+//					boolean seen = false;
+//					for (Obstacle o : obstacles){
+//						if (o.getId() == s.getId()){
+//							seen = true; 
+//							o.setPosition(o.getPosition().add(s.getPosition()).div(2));
+//							break;
+//						}
+//					}
+//					if(!seen){
+//						obstacles.add((Obstacle)s);
+//					}
 				}
 			}
 			
