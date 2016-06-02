@@ -75,6 +75,7 @@ public class Obstacle extends Sprite
 	@Override
 	public void collide(Sprite s)
 	{
+		if(s == null) return;
 	}
 
 	@Override

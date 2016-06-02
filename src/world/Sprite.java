@@ -97,6 +97,7 @@ public abstract class Sprite
 	 */
 	public void slide(Sprite s)
 	{
+		if(s == null) return;
 		int direction = 0;
 
 		// @formatter:off
@@ -169,6 +170,7 @@ public abstract class Sprite
 	 */
 	public void exchange(Sprite s)
 	{
+		if(s == null) return;
 		// this changes the velocity of this sprite... how will the other sprite
 		// get my velocity?
 		setVelocity(s.getVelocity());
@@ -181,6 +183,7 @@ public abstract class Sprite
 	 */
 	public void bounce(Sprite s)
 	{
+		if(s == null) return;
 		// bounce in X direction
 		if (getPosition().getX() < s.getPosition().getX() + s.getSize().getX() / 2
 				&& getPosition().getX() > s.getPosition().getX() - s.getSize().getX() / 2)

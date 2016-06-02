@@ -114,11 +114,20 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		while (!gameState.equals(GameState.OVER))
 		{
 			long start = System.currentTimeMillis();
-			if (gameState.equals(GameState.PLAY))
+			
+			try
 			{
-				world.update();
+				if (gameState.equals(GameState.PLAY))
+				{
+					world.update();
+				}
+				repaint();
 			}
-			repaint();
+			catch (ConcurrentModificationException e)
+			{
+				// skip the rest of the update if paint conflicts with updates
+				System.err.println("Skip rest of frame: Concurrent Modification");
+			}
 
 			// sleep for rest of frame time
 			while (System.currentTimeMillis() - start < Main.FRAME_RATE)
@@ -155,7 +164,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		gameState = GameState.PAUSED;
 		// Open menu
 	}
-	
+
 	/**
 	 * The resume method sets the gameState enum to PLAY and resumes the game
 	 */
@@ -192,7 +201,7 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 			togglePause();
 		if (e.getKeyChar() == 'd')
 			Main.debug = !Main.debug;
-		
+
 		frame.updateMenu();
 	}
 
@@ -276,12 +285,12 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	{
 		this.world = world;
 	}
-	
+
 	public MainFrame getFrame()
 	{
 		return frame;
 	}
-	
+
 	public void setFrame(MainFrame frame)
 	{
 		this.frame = frame;

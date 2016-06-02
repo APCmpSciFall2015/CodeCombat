@@ -81,6 +81,7 @@ public class Projectile extends Sprite
 	@Override
 	public void collide(Sprite s)
 	{
+		if(s == null) return;
 		// @formatter:off
 		if (s.getId() != owner.getId() && !(s instanceof Shield && ((Shield) s).isOwner(owner)))
 		{
