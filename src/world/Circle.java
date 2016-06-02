@@ -201,11 +201,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 		return new Circle(this);
 	}
 
-	@Override
-	public String toString()
-	{
-		return mind + ": " + getId() + "(" + isAlive() + ")";
-	}
+
 
 	@Override
 	public int compareTo(Circle c)
