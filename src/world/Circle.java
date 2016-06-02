@@ -207,9 +207,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public int compareTo(Circle c)
 	{
 		// @formatter:off
-		if (c.kills > kills) return 1; else if (c.kills < kills) return -1;
+		if (c.totalKills > totalKills) return 1; else if (c.totalKills < totalKills) return -1;
 		if (c.deaths < deaths) return 1; else if (c.deaths > deaths) return -1;
-		if (c.accuracy > accuracy) return 1; else if (c.accuracy < accuracy) return -1;
+		if (c.totalAccuracy > accuracy) return 1; else if (c.totalAccuracy < totalAccuracy) return -1;
 		return 0;
 		// @formatter:on
 	}
@@ -231,7 +231,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 			accuracy = 1;
 			shotsFired = 0;
 			hits = 0;
-			totalKills = 0;
 			kills = 0;
 			ticksAlive = 0;
 			shieldsAcquired = 0;

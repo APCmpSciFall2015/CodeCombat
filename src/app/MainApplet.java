@@ -1,6 +1,5 @@
 package app;
 
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -81,22 +80,31 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	@Override
 	public void paint(Graphics g)
-	{				
-		// setup canvas
-		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
-				BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D g2 = bi.createGraphics();
-		g2.setColor(getBackground());
-		g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
-		
-		// paint world
-		world.paint(g2);
-		if (gameState.equals(GameState.PAUSED))
-			ui.drawPauseScreen(g2);
-		if (displayFullStatsOverlay)
-			ui.drawFullStatsOverlay(g2);
-		
-		g.drawImage(bi, 0, 0, null);
+	{
+		try
+		{
+
+			// setup canvas
+			bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
+					BufferedImage.TYPE_4BYTE_ABGR);
+			Graphics2D g2 = bi.createGraphics();
+			g2.setColor(getBackground());
+			g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
+
+			// paint world
+			world.paint(g2);
+			if (gameState.equals(GameState.PAUSED))
+				ui.drawPauseScreen(g2);
+			if (displayFullStatsOverlay)
+				ui.drawFullStatsOverlay(g2);
+
+			g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
+		}
+		catch (ConcurrentModificationException e)
+		{
+			// skip the rest of the update if paint conflicts with updates
+			System.err.println("Skip rest of frame: Concurrent Modification");
+		}
 	}
 
 	@Override
@@ -105,7 +113,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		while (!gameState.equals(GameState.OVER))
 		{
 			long start = System.currentTimeMillis();
-			
+
 			try
 			{
 				if (gameState.equals(GameState.PLAY))
