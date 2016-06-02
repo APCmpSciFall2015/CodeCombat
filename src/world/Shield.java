@@ -47,7 +47,7 @@ public class Shield extends Sprite
 				new Vector2((int) (Math.random() * world.getSize().getX()), (int) (Math.random() * world.getSize().getY())), // pos
 				new Vector2(1, (float) (Math.random() * Math.PI * 2), true), // vel
 				new Vector2(0, 0), // acc
-				new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)), // random color
+				Color.CYAN, // random color
 				world);
 		unbound = true;
 		// @formatter:on
@@ -76,7 +76,7 @@ public class Shield extends Sprite
 	}
 
 	public void paint(Graphics g)
-	{
+	{	
 		if (isAlive())
 		{
 			super.paint(g);
@@ -115,6 +115,7 @@ public class Shield extends Sprite
 	@Override
 	public void collide(Sprite s)
 	{
+		if(s == null) return;
 		// follow master circle
 		if (!unbound && s.getId() == owner.getId())
 		{
