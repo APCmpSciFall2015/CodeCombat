@@ -109,12 +109,12 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		catch (ConcurrentModificationException e)
 		{
 			// skip the rest of the update if paint conflicts with updates
-			System.err.println("Skip rest of frame: Concurrent Modification");
+			if(Main.debug) System.err.println("Skip rest of frame: Concurrent Modification");
 		}
 		catch (NoSuchElementException e)
 		{
 			// ditto here (caused by trying to access world's arraylist of circles whilst updating: bah humbug
-			System.err.println("Skip rest of frame: No Such Element");
+			if(Main.debug) System.err.println("Skip rest of frame: No Such Element");
 		}
 	}
 
@@ -136,7 +136,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 			catch (ConcurrentModificationException e)
 			{
 				// skip the rest of the update if paint conflicts with updates
-				System.err.println("Skip rest of frame: Concurrent Modification");
+				if(Main.debug) System.err.println("Skip rest of frame: Concurrent Modification");
 			}
 
 			// sleep for rest of frame time
