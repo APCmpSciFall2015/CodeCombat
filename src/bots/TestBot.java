@@ -70,10 +70,6 @@ public class TestBot extends Mind
 			if (target != null)
 				shoot();
 		}
-		else
-		{
-			getStats();
-		}
 	}
 
 	@Override
