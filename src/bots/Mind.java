@@ -74,6 +74,16 @@ public abstract class Mind
 	// Getters and Setters
 	// ---------------------------------------------
 
+	public final int getRespawnTimer()
+	{
+		return circle.getRespawnTimer();
+	}
+	
+	public final int getShootTimer()
+	{
+		return circle.getShootTimer();
+	}
+	
 	public final boolean isAlive()
 	{
 		return circle.isAlive();
