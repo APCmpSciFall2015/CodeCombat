@@ -42,7 +42,7 @@ public class UI
 	}
 
 
-	public void drawStatsOverlay(Graphics g)
+	public void drawLeaderboard(Graphics g)
 	{
 		// get circles
 		LinkedList<Circle> circles = new LinkedList<Circle>();
