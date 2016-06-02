@@ -158,7 +158,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 			setPosition(getPosition().add(getVelocity()));
 			if(mind == null) 
 			{
-				turn (Float.NaN); shoot();
+				turn ((float) -Math.PI / 500); shoot();
 			}
 		}else
 

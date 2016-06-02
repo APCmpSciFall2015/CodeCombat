@@ -62,6 +62,8 @@ public class World
 			spawn(SpriteType.SHIELD);
 			spawn(SpriteType.CIRCLE);
 		}
+		Circle s = (Circle) sprites.get(sprites.size() - 1);
+		s.setMind(new TestBot(s, NOISE_VARIANCE, NOISE_MEAN));
 	}
 
 	/**
@@ -75,7 +77,7 @@ public class World
 		{
 		case CIRCLE:
 			s = new Circle(this);
-			((Circle) s).setMind(new TestBot((Circle) s, NOISE_VARIANCE, NOISE_MEAN));
+//			((Circle) s).setMind(new TestBot((Circle) s, NOISE_VARIANCE, NOISE_MEAN));
 			break;
 		case OBSTACLE:
 			s = new Obstacle(this);

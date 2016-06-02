@@ -50,17 +50,18 @@ public class TestBot extends Mind
 			if (target != null)
 			{
 				Vector2 direction = target.getPosition().sub(getEyePosition());
-				Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
-				Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
+				Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
+				Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
 				if(Math.acos(direction.dot(left) / (direction.mag()))
 						- Math.acos(direction.dot(right) / (direction.mag())) > 0)
 				{
-					turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag()));
+					turn((float) Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
 				}
 				else
 				{
-					turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag()));
+					turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
 				}
+				
 			}
 			else
 			{
