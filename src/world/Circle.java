@@ -296,9 +296,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 			deltaTheta = MAX_TURNING_ANGLE;
 
 		// adjust angle of velocity vector (aka turn)
-		// System.out.println(deltaTheta);
 		setVelocity(new Vector2(SPEED, getVelocity().angle() + deltaTheta, true));
-		System.out.println(getVelocity());
 	}
 
 	/**
