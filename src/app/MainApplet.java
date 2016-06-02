@@ -94,11 +94,14 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 			// paint world
 			world.paint(g2);
-			ui.drawLeaderboard(g2);
 			if (gameState.equals(GameState.PAUSED))
 				ui.drawPauseScreen(g2);
+			
 			if (displayFullStatsOverlay)
 				ui.drawFullStatsOverlay(g2);
+			
+			else
+				ui.drawLeaderboard(g2);
 			
 
 			g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
