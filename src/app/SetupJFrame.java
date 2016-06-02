@@ -128,6 +128,27 @@ public class SetupJFrame extends JFrame implements ActionListener
 			}
 			
 			String value = (String) JOptionPane.showInputDialog(this, "You are modifying " + selectedItem + ".", Main.CONFIG.get(configOption));
+			
+			if(value != null && !configOption.equals("obstacleSizes"))
+			{
+				try
+				{
+					Integer.parseInt(value);
+				}
+				catch(NumberFormatException ex)
+				{
+					
+				}
+			}
+			else if(value != null)
+			{
+				
+			}
+			else
+			{
+				
+			}
+			
 		break;
 		
 		default:
