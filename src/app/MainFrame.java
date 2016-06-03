@@ -30,6 +30,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	private JCheckBoxMenuItem pauseCbItem = new JCheckBoxMenuItem("Pause");
 	private JCheckBoxMenuItem debugCbItem = new JCheckBoxMenuItem("Debug");
 	private String configProperty;
+	private List<String> minds = lib.Parser.parseImmutableStringArray(Main.CONFIG.get("mindTypes"));
+	private List<ButtonGroup> radioButtons = new ArrayList<ButtonGroup>();
 	public MainFrame(String s, Dimension size, MainApplet applet)
 	{
 		super(s);
@@ -142,23 +144,28 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		
 		menu = new JMenu("Bot Settings");
 		
-		List<String> minds = lib.Parser.parseImmutableStringArray(Main.CONFIG.get("mindTypes"));
-		List<ButtonGroup> radioButtons = new ArrayList<ButtonGroup>();
+		menuItem = new JMenuItem("Number of Bots");
+		menuItem.addActionListener((ActionListener) this);
+		menu.add(menuItem);
+		
+		
 		
 		for(int x = 0; x < Integer.parseInt(Main.CONFIG.get("worldMaxCircles")); x++)
 		{
+			JMenu bot = new JMenu("Bot " + (x + 1));
 			radioButtons.add(new ButtonGroup());
 			JRadioButtonMenuItem radioItem = new JRadioButtonMenuItem("No Mind");
 			radioButtons.get(x).add(radioItem);
+			bot.add(radioItem);
 			for(String mind : minds)
 			{
 				radioItem = new JRadioButtonMenuItem(mind);
 				radioButtons.get(x).add(radioItem);
+				bot.add(radioItem);
 			}
+			menu.add(bot);
 		}
 		
-		menuItem = new JMenuItem("Number of Bots");
-		menu.addActionListener((ActionListener) this);
 		menuBar.add(menu);
 		
 		// build window and display
@@ -170,6 +177,10 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		configProperty = null;
+		for(int i = 0; i < radioButtons.size(); i++);
+		{
+			Main.GAME_SETTINGS.set("slot" + (i + 1), radioButtons.get(i).getSelection());
+		}
 		String selectedItem = ((JMenuItem) e.getSource()).getText();
 		switch(selectedItem)
 		{
@@ -227,6 +238,9 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 				break;
 			case "Shield Respawn Time":
 				configProperty = "shieldRespawnTime";
+				break;
+			case "Number of Bots":
+				configProperty = "worldMaxCircles";
 				break;
 				
 			default:
