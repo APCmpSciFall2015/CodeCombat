@@ -2,4 +2,4 @@ slot1=null
 slot2=null
 slot3=null
 slot4=null
-slot5=TestBot
+slot5=bots.TestBot

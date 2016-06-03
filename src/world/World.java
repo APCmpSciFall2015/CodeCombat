@@ -2,8 +2,8 @@ package world;
 
 import java.awt.Graphics;
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import lib.Config;
 
 import app.Main;
 import app.MainApplet;
@@ -34,7 +34,7 @@ public class World
 	private ArrayList<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
-	
+
 	public static enum SpriteType
 	{
 		CIRCLE, OBSTACLE, PROJECTILE, SHIELD
@@ -56,34 +56,50 @@ public class World
 	}
 
 	public void init()
-	{	
+	{
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
 		for (int i = 0; i < NUM_OBSTACLES; i++)
 		{
 			spawn(SpriteType.OBSTACLE);
 		}
-		for(int i = 0; i < NUM_SHIELDS; i++)
+		for (int i = 0; i < NUM_SHIELDS; i++)
 		{
 			spawn(SpriteType.SHIELD);
 		}
-		
-		for (int i = 0; i < MAX_CIRCLES; i++)
+
+		for (int i = 1; i <= MAX_CIRCLES; i++)
 		{
-			spawn(SpriteType.CIRCLE);
-//			sprites.get(sprites.size() - 1)
+			String slotData = Main.GAME_SETTINGS.get("slot" + i);
+			if (slotData.length() > 0)
+			{
+				Sprite s = spawn(SpriteType.CIRCLE);
+				if(!slotData.equals("null"))
+				{
+					// use magic (java reflection) to bring life to the circles
+					// It's ALIVE!!! 
+					try
+					{
+						Class c = Class.forName(slotData);
+						Constructor cons = c.getConstructor(Circle.class, float.class, float.class);
+						Mind m = (Mind) cons.newInstance((Circle) s, NOISE_VARIANCE, NOISE_MEAN);
+						((Circle) s).setMind(m);
+					}
+					catch (Exception e)
+					{
+						System.err.println("ERROR: Failed to instantiate specified class in game_settings");
+					}
+				}
+			}
 		}
-		
-		Circle s = (Circle) sprites.get(sprites.size() - 1);
-		s.setMind(new TestBot(s, NOISE_VARIANCE, NOISE_MEAN));
 	}
 
 	/**
 	 * spawns a circle in the world
 	 */
-	public void spawn(SpriteType type)
+	public Sprite spawn(SpriteType type)
 	{
-		Sprite s;
+		Sprite s = null;
 
 		switch (type)
 		{
@@ -98,10 +114,10 @@ public class World
 			break;
 		default:
 			System.err.println("Invalid Sprite Type");
-			return;
 		}
 		assignAvailablePosition(s);
 		sprites.add(s);
+		return s;
 	}
 
 	public void assignAvailablePosition(Sprite s)
