@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -31,7 +32,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	private JCheckBoxMenuItem debugCbItem = new JCheckBoxMenuItem("Debug");
 	private String configProperty;
 	private List<String> minds = lib.Parser.parseImmutableStringArray(Main.CONFIG.get("mindTypes"));
-	private List<ButtonGroup> radioButtons = new ArrayList<ButtonGroup>();
+	private List<ButtonGroup> buttonGroups = new ArrayList<ButtonGroup>();
+	private List<List<JRadioButtonMenuItem>> radioButtons = new ArrayList<List<JRadioButtonMenuItem>>();
 	public MainFrame(String s, Dimension size, MainApplet applet)
 	{
 		super(s);
@@ -152,40 +154,77 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		
 		for(int x = 0; x < Integer.parseInt(Main.CONFIG.get("worldMaxCircles")); x++)
 		{
+			radioButtons.add(new ArrayList<JRadioButtonMenuItem>());
 			JMenu bot = new JMenu("Bot " + (x + 1));
-			radioButtons.add(new ButtonGroup());
+			buttonGroups.add(new ButtonGroup());
 			JRadioButtonMenuItem radioItem = new JRadioButtonMenuItem("No Mind");
+			buttonGroups.get(x).add(radioItem);
 			radioButtons.get(x).add(radioItem);
 			bot.add(radioItem);
 			for(String mind : minds)
 			{
 				radioItem = new JRadioButtonMenuItem(mind);
-				radioButtons.get(x).add(radioItem);
+				buttonGroups.get(x).add(radioItem);
 				bot.add(radioItem);
+				radioButtons.get(x).add(radioItem);
 			}
 			menu.add(bot);
 		}
 		
 		menuBar.add(menu);
 		
+		for(int i = 0; i < buttonGroups.size(); i++)
+		{
+			if(Main.GAME_SETTINGS.get("slot" + (i+1)) == null)
+			{
+				radioButtons.get(i).get(0).setSelected(true);
+			}
+			else
+			{
+				radioButtons.get(i).get(getMindIndex(Main.GAME_SETTINGS.get("slot" + (i+1)))).setSelected(true);
+			}
+		}
+		
 		// build window and display
 		this.pack();
 		this.setVisible(true);
+	}
+	
+	public int getMindIndex(String mindName)
+	{
+		if(mindName.equals("null") || mindName.equals("No Mind"))
+		{
+			return 0;
+		}
+		else
+		{
+			for(int x = 0; x < minds.size(); x++)
+			{
+				System.out.println(mindName);
+				System.out.println(minds.get(x));
+				System.out.println(minds.get(x).indexOf(mindName));
+				if(minds.get(x).indexOf(mindName) >= 0)
+				{
+					return x;
+				}
+			}
+				return -1;
+		}
 	}
 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		configProperty = null;
-		for(int x = 0; x < radioButtons.size(); x++)
+		for(int x = 0; x < buttonGroups.size(); x++)
 		{
-			if(radioButtons.get(x).getSelection().getActionCommand().equals("No Mind"))
+			if(buttonGroups.get(x).getSelection().getActionCommand().equals("No Mind"))
 			{
 				Main.GAME_SETTINGS.set("slot" + (x + 1), null);
 			}
 			else
 			{
-				Main.GAME_SETTINGS.set("slot" + (x + 1), radioButtons.get(x).getSelection().getActionCommand());
+				Main.GAME_SETTINGS.set("slot" + (x + 1), buttonGroups.get(x).getSelection().getActionCommand());
 			}
 		}
 		String selectedItem = ((JMenuItem) e.getSource()).getText();
