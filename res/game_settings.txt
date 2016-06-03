@@ -1,1 +1,1 @@
-mindTypes={"ZekeBot","CommidBot","TestBot"}
+mindTypes={"ZekeBot","CommitBot","TestBot"}
