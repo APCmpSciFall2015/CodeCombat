@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
-
+import lib.Parser;
 import javax.swing.JFrame;
 
 import world.World;
@@ -42,6 +42,7 @@ public class Main implements Serializable
 	// Initialization of JFrame
 	public static void main(String[] args)
 	{
+		Parser.parseImmutableStringArray("{\"sally\", \"jack\", \"john\"}");
 		frame = new MainFrame("Code Combat", 
 					new Dimension(worldWidth, worldHeight),
 					new MainApplet());

@@ -30,8 +30,7 @@ public class World
 	private ArrayList<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
-	
-	
+
 	public static enum SpriteType
 	{
 		CIRCLE, OBSTACLE, PROJECTILE, SHIELD
@@ -49,7 +48,11 @@ public class World
 	{
 		this.mainApplet = mainApplet; // shallow copy
 		this.size = size.copy();
+		init();
+	}
 
+	public void init()
+	{
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
 		for (int i = 0; i < NUM_OBSTACLES; i++)
@@ -77,7 +80,8 @@ public class World
 		{
 		case CIRCLE:
 			s = new Circle(this);
-//			((Circle) s).setMind(new TestBot((Circle) s, NOISE_VARIANCE, NOISE_MEAN));
+			// ((Circle) s).setMind(new TestBot((Circle) s, NOISE_VARIANCE,
+			// NOISE_MEAN));
 			break;
 		case OBSTACLE:
 			s = new Obstacle(this);
@@ -92,7 +96,7 @@ public class World
 		assignAvailablePosition(s);
 		sprites.add(s);
 	}
-	
+
 	public void assignAvailablePosition(Sprite s)
 	{
 		// correct position to avoid collision
@@ -105,7 +109,7 @@ public class World
 		s.update();
 		// @formatter:on	
 	}
-	
+
 	/**
 	 * respawns a circle in the world in a random location
 	 * @param respawn the circle to respawn
@@ -190,7 +194,6 @@ public class World
 		}
 		return collisions;
 	}
-
 
 	public Sprite collidingWith(Sprite sprite)
 	{
