@@ -34,6 +34,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	private List<String> minds = lib.Parser.parseImmutableStringArray(Main.CONFIG.get("mindTypes"));
 	private List<ButtonGroup> buttonGroups = new ArrayList<ButtonGroup>();
 	private List<List<JRadioButtonMenuItem>> radioButtons = new ArrayList<List<JRadioButtonMenuItem>>();
+	
 	public MainFrame(String s, Dimension size, MainApplet applet)
 	{
 		super(s);
@@ -55,7 +56,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		this.add(panel);
 		applet.requestFocus();
 		
-		//menuBar
+		// menuBar
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 				
@@ -135,39 +136,55 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		menuItem.addActionListener((ActionListener) this);
 		config.add(menuItem);
 		
+		menuItem = new JMenuItem("Number of Bots");
+		menuItem.addActionListener((ActionListener) this);
+		config.add(menuItem);
+		
 		menu.add(config);
 		
-		
-		pauseCbItem.addItemListener((ItemListener) this);
+		// add pause toggle
+		pauseCbItem.addItemListener(this);
 		menu.add(pauseCbItem);
 		
-		debugCbItem.addItemListener((ItemListener) this);
+		// add debug toggle
+		debugCbItem.addItemListener(this);
 		menu.add(debugCbItem);
 		
 		menu = new JMenu("Bot Settings");
-		
-		menuItem = new JMenuItem("Number of Bots");
-		menuItem.addActionListener((ActionListener) this);
-		menu.add(menuItem);
-		
-		
-		
-		for(int x = 0; x < Integer.parseInt(Main.CONFIG.get("worldMaxCircles")); x++)
+		for(int i = 0; i < Integer.parseInt(Main.CONFIG.get("worldMaxCircles")); i++)
 		{
 			radioButtons.add(new ArrayList<JRadioButtonMenuItem>());
-			JMenu bot = new JMenu("Bot " + (x + 1));
+			JMenu bot = new JMenu("Bot " + (i + 1));
 			buttonGroups.add(new ButtonGroup());
+			
+			// add no mind
 			JRadioButtonMenuItem radioItem = new JRadioButtonMenuItem("No Mind");
-			buttonGroups.get(x).add(radioItem);
-			radioButtons.get(x).add(radioItem);
+			buttonGroups.get(i).add(radioItem);
+			radioButtons.get(i).add(radioItem);
+			radioItem.setActionCommand("null");
+			radioItem.addActionListener(this);
 			bot.add(radioItem);
+			
+			// add disabled
+			radioItem = new JRadioButtonMenuItem("Disabled");
+			buttonGroups.get(i).add(radioItem);
+			radioButtons.get(i).add(radioItem);
+			radioItem.setActionCommand("");
+			radioItem.addActionListener(this);
+			bot.add(radioItem);
+			
+			// add mind types
 			for(String mind : minds)
 			{
 				radioItem = new JRadioButtonMenuItem(mind);
-				buttonGroups.get(x).add(radioItem);
+				buttonGroups.get(i).add(radioItem);
+				radioItem.addActionListener(this);
+				radioItem.setActionCommand("bots." + mind);
+
 				bot.add(radioItem);
-				radioButtons.get(x).add(radioItem);
+				radioButtons.get(i).add(radioItem);
 			}
+			
 			menu.add(bot);
 		}
 		
@@ -175,7 +192,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		
 		for(int i = 0; i < buttonGroups.size(); i++)
 		{
-			if(Main.GAME_SETTINGS.get("slot" + (i+1)) == null)
+			if("null".equals(Main.GAME_SETTINGS.get("slot" + (i+1))))
 			{
 				radioButtons.get(i).get(0).setSelected(true);
 			}
@@ -215,15 +232,20 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		configProperty = null;
 		for(int x = 0; x < buttonGroups.size(); x++)
 		{
-			if(buttonGroups.get(x).getSelection().getActionCommand().equals("No Mind"))
+			if("No Mind".equals(buttonGroups.get(x).getSelection().getActionCommand()))
 			{
-				Main.GAME_SETTINGS.set("slot" + (x + 1), null);
+				Main.GAME_SETTINGS.set("slot" + (x + 1), "null");
+			}
+			else if("Disabled".equals(buttonGroups.get(x).getSelection().getActionCommand()))
+			{
+				Main.GAME_SETTINGS.set("slot" + (x + 1), "");
 			}
 			else
 			{
 				Main.GAME_SETTINGS.set("slot" + (x + 1), buttonGroups.get(x).getSelection().getActionCommand());
 			}
 		}
+		
 		String selectedItem = ((JMenuItem) e.getSource()).getText();
 		switch(selectedItem)
 		{

@@ -1,5 +1,5 @@
-slot1=null
+slot1=bots.TestBot
 slot2=null
 slot3=null
 slot4=null
-slot5=bots.TestBot
+slot5=null

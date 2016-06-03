@@ -211,6 +211,9 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 			togglePause();
 		if (e.getKeyChar() == 'd' || e.getKeyChar() == 'D')
 			Main.debug = !Main.debug;
+		if (e.getKeyChar() == 'r' || e.getKeyChar() == 'R')
+			world.restart();
+
 
 		frame.updateMenu();
 	}

@@ -113,6 +113,7 @@ public class UI
 				circles.add((Circle) s);
 		Collections.sort(circles);
 
+		
 		// parse stats
 		String[] statLayout = new String[] { "Mind", "Id", "Kills", "Deaths", "Accuracy", "Status" };
 		LinkedList<StatData> stats = new LinkedList<StatData>();
@@ -126,7 +127,7 @@ public class UI
 							"" + String.format("%.2f", c.getTotalAccuracy()),
 							"" + (c.isAlive() ? "alive" : "dead") // pro ternary here -rjm
 							}));
-
+		
 		// setup font and offsets
 		int width = (int) mainApplet.getWorld().getSize().getX();
 		int height = (int) mainApplet.getWorld().getSize().getY();
@@ -135,7 +136,8 @@ public class UI
 		int xInset = width / 64;
 		int yInset = width / 64;
 		int colWidth = (width - 2 * x - xInset) / statLayout.length;
-		int rowHeight =  (height - 2 * y - yInset) / 2 / stats.size();
+		// guard agains divide by 0
+		int rowHeight = stats.size() > 0 ? (height - 2 * y - yInset) / 2 / stats.size() : (height - 2 * y - yInset) / 2;
 
 		// draw background and title
 		g.setColor(new Color(55, 55, 55, 230));

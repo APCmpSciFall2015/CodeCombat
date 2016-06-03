@@ -57,27 +57,20 @@ public class World
 
 	public void init()
 	{
-		// initialize game objects
 		sprites = new ArrayList<Sprite>();
-		for (int i = 0; i < NUM_OBSTACLES; i++)
-		{
-			spawn(SpriteType.OBSTACLE);
-		}
-		for (int i = 0; i < NUM_SHIELDS; i++)
-		{
-			spawn(SpriteType.SHIELD);
-		}
+		// initialize game objects
 
+		// init circles
 		for (int i = 1; i <= MAX_CIRCLES; i++)
 		{
 			String slotData = Main.GAME_SETTINGS.get("slot" + i);
-			if (slotData.length() > 0)
+			if (slotData != null && slotData.length() > 0)
 			{
 				Sprite s = spawn(SpriteType.CIRCLE);
-				if(!slotData.equals("null"))
+				if (!slotData.equals("null"))
 				{
 					// use magic (java reflection) to bring life to the circles
-					// It's ALIVE!!! 
+					// It's ALIVE!!!
 					try
 					{
 						Class c = Class.forName(slotData);
@@ -92,6 +85,23 @@ public class World
 				}
 			}
 		}
+		
+		// init obstacles and shields
+		for (int i = 0; i < NUM_OBSTACLES; i++)
+		{
+			spawn(SpriteType.OBSTACLE);
+		}
+		for (int i = 0; i < NUM_SHIELDS; i++)
+		{
+			spawn(SpriteType.SHIELD);
+		}
+	}
+
+	public void restart()
+	{
+		ticks = 0;
+		Sprite.idCount = 0;
+		init();	
 	}
 
 	/**
@@ -114,6 +124,7 @@ public class World
 			break;
 		default:
 			System.err.println("Invalid Sprite Type");
+			return s;
 		}
 		assignAvailablePosition(s);
 		sprites.add(s);
