@@ -18,8 +18,5 @@ worldMaxCircles=5
 worldNoiseMean=0
 worldNoiseVariance=0
 worldNumObstacles=15
-<<<<<<< HEAD
-=======
 worldNumShields=5
->>>>>>> master
 worldWidth=800
