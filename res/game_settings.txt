@@ -1,1 +1,5 @@
-mindTypes={"ZekeBot","CommitBot","TestBot"}
+slot1=null
+slot2=null
+slot3=null
+slot4=null
+slot5=TestBot
