@@ -24,6 +24,8 @@ public class World
 	public static final float NOISE_MEAN = Float.parseFloat(Main.CONFIG.get("worldNoiseMean"));
 	/** Number of obstacles **/
 	public static final int NUM_OBSTACLES = Integer.parseInt(Main.CONFIG.get("worldNumObstacles"));
+	public static final int NUM_SHIELDS = Integer.parseInt(Main.CONFIG.get("worldNumShields"));
+	public static final int MAX_CIRCLES = Integer.parseInt(Main.CONFIG.get("worldMaxCircles"));
 	/** size of world **/
 	private Vector2 size;
 	/** ticks executed **/
@@ -61,12 +63,17 @@ public class World
 		{
 			spawn(SpriteType.OBSTACLE);
 		}
-
-		for (int i = 0; i < 5; i++)
+		for(int i = 0; i < NUM_SHIELDS; i++)
 		{
 			spawn(SpriteType.SHIELD);
-			spawn(SpriteType.CIRCLE);
 		}
+		
+		for (int i = 0; i < MAX_CIRCLES; i++)
+		{
+			spawn(SpriteType.CIRCLE);
+//			sprites.get(sprites.size() - 1)
+		}
+		
 		Circle s = (Circle) sprites.get(sprites.size() - 1);
 		s.setMind(new TestBot(s, NOISE_VARIANCE, NOISE_MEAN));
 	}
@@ -82,8 +89,6 @@ public class World
 		{
 		case CIRCLE:
 			s = new Circle(this);
-			// ((Circle) s).setMind(new TestBot((Circle) s, NOISE_VARIANCE,
-			// NOISE_MEAN));
 			break;
 		case OBSTACLE:
 			s = new Obstacle(this);
