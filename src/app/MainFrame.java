@@ -8,7 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -16,6 +19,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 
 public class MainFrame extends JFrame implements ActionListener, ItemListener
 {
@@ -136,7 +140,25 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		debugCbItem.addItemListener((ItemListener) this);
 		menu.add(debugCbItem);
 		
-		menu = new JMenu("Help");
+		menu = new JMenu("Bot Settings");
+		
+		List<String> minds = lib.Parser.parseImmutableStringArray(Main.CONFIG.get("mindTypes"));
+		List<ButtonGroup> radioButtons = new ArrayList<ButtonGroup>();
+		
+		for(int x = 0; x < Integer.parseInt(Main.CONFIG.get("worldMaxCircles")); x++)
+		{
+			radioButtons.add(new ButtonGroup());
+			JRadioButtonMenuItem radioItem = new JRadioButtonMenuItem("No Mind");
+			radioButtons.get(x).add(radioItem);
+			for(String mind : minds)
+			{
+				radioItem = new JRadioButtonMenuItem(mind);
+				radioButtons.get(x).add(radioItem);
+			}
+		}
+		
+		menuItem = new JMenuItem("Number of Bots");
+		menu.addActionListener((ActionListener) this);
 		menuBar.add(menu);
 		
 		// build window and display
