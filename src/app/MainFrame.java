@@ -200,12 +200,9 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		{
 			for(int x = 0; x < minds.size(); x++)
 			{
-				System.out.println(mindName);
-				System.out.println(minds.get(x));
-				System.out.println(minds.get(x).indexOf(mindName));
-				if(minds.get(x).indexOf(mindName) >= 0)
+				if(mindName.indexOf(minds.get(x)) >= 0)
 				{
-					return x;
+					return x + 1;
 				}
 			}
 				return -1;
