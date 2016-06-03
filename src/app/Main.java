@@ -17,11 +17,8 @@ public class Main implements Serializable
 	public static final Config CONFIG = new Config(CONFIG_FILE);
 	/** Game settings **/
 	public static final File GAME_SETTINGS_FILE = new File("./res/game_settings.txt");
-<<<<<<< HEAD
-	private static final Config GAME_SETTINGS = new Config(GAME_SETTINGS_FILE);
-=======
 	public static final Config GAME_SETTINGS = new Config(GAME_SETTINGS_FILE);
->>>>>>> f3614048c77883b3f8713f82f96774365b9b96dc
+
 	
 	/** Serializable id **/
 	private static final long serialVersionUID = 3206847208968227199L;
