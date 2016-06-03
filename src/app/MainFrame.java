@@ -28,10 +28,10 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	private MainApplet applet;
 	private JCheckBoxMenuItem pauseCbItem = new JCheckBoxMenuItem("Pause");
 	private JCheckBoxMenuItem debugCbItem = new JCheckBoxMenuItem("Debug");
-	private String configProperty;
 	private List<String> minds = lib.Parser.parseImmutableStringArray(Main.CONFIG.get("mindTypes"));
 	private List<ButtonGroup> buttonGroups = new ArrayList<ButtonGroup>();
 	private List<List<JRadioButtonMenuItem>> radioButtons = new ArrayList<List<JRadioButtonMenuItem>>();
+	private List<String> configKeys = Main.CONFIG.keysToSortedList();
 	
 	public MainFrame(String s, Dimension size, MainApplet applet)
 	{
@@ -67,12 +67,15 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		menuItem.addActionListener((ActionListener) this);
 		menu.add(menuItem);	
 		
+		// add exit option
+		menuItem = new JMenuItem("Main Menu");
+		menuItem.addActionListener((ActionListener) this);
+		menu.add(menuItem);	
+		
 		// add config menu
-		List<String> keys = Main.CONFIG.keysToSortedList();
 		JMenu config = new JMenu("Config");
-		for(String key : keys)
-		{
-			
+		for(String key : configKeys)
+		{		
 			menuItem = new JMenuItem(key);
 			menuItem.addActionListener((ActionListener) this);
 			config.add(menuItem);
@@ -170,6 +173,15 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand() == "Exit")
+		{
+			System.exit(0);
+		}
+		if(e.getActionCommand() == "Main Menu")
+		{
+			applet.setGameState(Main.GameState.MENU);
+		}
+		
 		for(int x = 0; x < buttonGroups.size(); x++)
 		{
 			if("No Mind".equals(buttonGroups.get(x).getSelection().getActionCommand()))
@@ -186,9 +198,9 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 			}
 		}
 		
-		configProperty = e.getActionCommand();
-		if(configProperty != null) //if a config property was selected
+		if(configKeys.contains(e.getActionCommand()))
 		{
+			String configProperty = e.getActionCommand();
 			String value = (String) JOptionPane.showInputDialog(this, "You are modifying " + e.getActionCommand() + ".",
 					Main.CONFIG.get(configProperty));			
 			if(value != null)
