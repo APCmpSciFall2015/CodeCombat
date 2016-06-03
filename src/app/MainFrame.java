@@ -177,9 +177,16 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		configProperty = null;
-		for(int i = 0; i < radioButtons.size(); i++);
+		for(int x = 0; x < radioButtons.size(); x++)
 		{
-			Main.GAME_SETTINGS.set("slot" + (i + 1), radioButtons.get(i).getSelection());
+			if(radioButtons.get(x).getSelection().getActionCommand().equals("No Mind"))
+			{
+				Main.GAME_SETTINGS.set("slot" + (x + 1), null);
+			}
+			else
+			{
+				Main.GAME_SETTINGS.set("slot" + (x + 1), radioButtons.get(x).getSelection().getActionCommand());
+			}
 		}
 		String selectedItem = ((JMenuItem) e.getSource()).getText();
 		switch(selectedItem)
