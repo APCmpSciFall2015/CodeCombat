@@ -238,7 +238,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	private final void respawn()
 	{
-		if (respawnTimer >= 0)
+		if (respawnTimer <= 0)
 		{
 			accuracy = 1;
 			shotsFired = 0;

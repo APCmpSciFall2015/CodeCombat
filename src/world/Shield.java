@@ -143,7 +143,7 @@ public class Shield extends Sprite
 
 	private final void respawn()
 	{
-		if (respawnTimer >= 0)
+		if (respawnTimer <= 0)
 		{
 			getWorld().respawn(this);
 			respawnTimer = RESPAWN_TIME;
