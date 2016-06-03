@@ -66,8 +66,12 @@ public class Circle extends Sprite implements Comparable<Circle>
 	private int wallCollisions;
 	/** mine collisions during life (possible if have shield) **/
 	private int mineCollisions = 0;
-	/** total mine collision during existence **/
+	/** mine collisions during existence **/
 	private int totalMineCollisions = 0;
+	/** projectile collisions during life (possible if have shield) **/
+	private int projectileCollisions = 0;
+	/** projectile collisions during existence **/
+	private int totalProjectileCollisions = 0;
 
 	/** timer for shooting **/
 	private int shootTimer = RELOAD_TIME;
@@ -76,7 +80,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	/** location of Circle's eyes **/
 	private Vector2 eyePosition;
 	/** has a shield **/
-	private boolean hasShield = false;
+	private boolean shielded = false;
 	/** Mind to control circle bot **/
 	private Mind mind = null;
 
@@ -187,13 +191,15 @@ public class Circle extends Sprite implements Comparable<Circle>
 		// die when hit by projectile (not own projectile)
 		if (s instanceof Projectile && !((Projectile) s).isOwner(this))
 		{
+			projectileCollisions++;
+			totalProjectileCollisions++;
 			kill();
 		}
 		else if (s instanceof Mine)
 		{
-			kill();
 			mineCollisions++;
 			totalMineCollisions++;
+			kill();
 		}
 		// slide on all other objects
 		else if (s instanceof Circle)
@@ -557,13 +563,33 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	public boolean isShielded()
 	{
-		return hasShield;
+		return shielded;
 	}
 	
 
 	public void setShielded(boolean hasShield)
 	{
-		this.hasShield = hasShield;
+		this.shielded = hasShield;
+	}
+
+	public int getProjectileCollisions()
+	{
+		return projectileCollisions;
+	}
+
+	public void setProjectileCollisions(int projectileCollisions)
+	{
+		this.projectileCollisions = projectileCollisions;
+	}
+
+	public int getTotalProjectileCollisions()
+	{
+		return totalProjectileCollisions;
+	}
+
+	public void setTotalProjectileCollisions(int totalProjectileCollisions)
+	{
+		this.totalProjectileCollisions = totalProjectileCollisions;
 	}
 
 }

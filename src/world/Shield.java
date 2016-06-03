@@ -111,6 +111,7 @@ public class Shield extends Sprite
 		else if (unbound && s instanceof Circle)
 		{
 			setOwner(s);
+			((Circle) owner).setShielded(true);
 			((Circle) owner).setShieldsAcquired(((Circle) owner).getShieldsAcquired() + 1);
 			((Circle) owner).setTotalShieldsAcquired(((Circle) owner).getTotalShieldsAcquired() + 1);
 			unbound = false;
@@ -128,6 +129,9 @@ public class Shield extends Sprite
 			if (s instanceof Projectile && !((Projectile) s).isOwner(owner))
 			{
 				setAlive(false);
+				((Circle) owner).setShielded(false);
+				((Circle) owner).setProjectileCollisions(((Circle) owner).getProjectileCollisions() + 1);
+				((Circle) owner).setTotalProjectileCollisions(((Circle) owner).getProjectileCollisions() + 1);
 				setSize(new Vector2(RADIUS, RADIUS));
 				unbound = true;
 			}
@@ -135,6 +139,7 @@ public class Shield extends Sprite
 			{
 				setAlive(false);
 				setSize(new Vector2(RADIUS, RADIUS));
+				((Circle) owner).setShielded(false);
 				((Circle) owner).setMineCollisions(((Circle) owner).getMineCollisions() + 1);
 				unbound = true;
 			}
