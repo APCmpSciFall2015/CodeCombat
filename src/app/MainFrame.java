@@ -1,7 +1,6 @@
 package app;
 
 
-import lib.Config;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -59,87 +57,26 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		// menuBar
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
-				
+
+		// create file menu
 		JMenu menu = new JMenu("File");
 		menuBar.add(menu);
-		
+
+		// add exit option
 		JMenuItem menuItem = new JMenuItem("Exit");
 		menuItem.addActionListener((ActionListener) this);
-		menu.add(menuItem);
+		menu.add(menuItem);	
 		
+		// add config menu
+		List<String> keys = Main.CONFIG.keysToSortedList();
 		JMenu config = new JMenu("Config");
-		menuItem = new JMenuItem("World Width");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("World Height");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Noise Variance");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Noise Mean");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Number of Obstacles");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Obstacle Sizes");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Max Sprite Velocity");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Projectile Speed");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Projectile Radius");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Circle Respawn Time");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Circle Speed");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Circle FOV");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Circle Max Turning Angle");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Circle Reload Time");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Circle Radius");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Shield Radius");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Shield Respawn Time");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
-		menuItem = new JMenuItem("Number of Bots");
-		menuItem.addActionListener((ActionListener) this);
-		config.add(menuItem);
-		
+		for(String key : keys)
+		{
+			
+			menuItem = new JMenuItem(key);
+			menuItem.addActionListener((ActionListener) this);
+			config.add(menuItem);
+		}		
 		menu.add(config);
 		
 		// add pause toggle
@@ -209,9 +146,13 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	
 	public int getMindIndex(String mindName)
 	{
-		if(mindName.equals("null") || mindName.equals("No Mind"))
+		if(mindName.equals("null"))
 		{
 			return 0;
+		}
+		else if(mindName.equals(""))
+		{
+			return 1;
 		}
 		else
 		{
@@ -222,14 +163,13 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 					return x + 1;
 				}
 			}
-				return -1;
+			return -1;
 		}
 	}
 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		configProperty = null;
 		for(int x = 0; x < buttonGroups.size(); x++)
 		{
 			if("No Mind".equals(buttonGroups.get(x).getSelection().getActionCommand()))
@@ -246,74 +186,10 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 			}
 		}
 		
-		String selectedItem = ((JMenuItem) e.getSource()).getText();
-		switch(selectedItem)
-		{
-		case "Exit":
-			System.exit(0);
-			break;
-							
-			case "World Width":
-				configProperty = "worldWidth";
-				break;
-			case "World Height":
-				configProperty = "worldHeight";
-				break;
-			case "Noise Variance":
-				configProperty = "worldNoiseVariance";
-				break;
-			case "Noise Mean":
-				configProperty = "worldNoiseMean";
-				break;
-			case "Number of Obstacles":
-				configProperty = "worldNumObstacles";
-				break;
-			case "Obstacle Sizes":
-				configProperty = "obstacleSizes";
-				break;
-			case "Max Sprite Velocity":
-				configProperty = "spriteMaxVelocity";
-				break;
-			case "Projectile Speed":
-				configProperty = "projectileSpeed";
-				break;
-			case "Projectile Radius":
-				configProperty = "projectileRadius";
-				break;
-			case "Circle Respawn Time":
-				configProperty = "circleRespawnTime";
-				break;
-			case "Circle Speed":
-				configProperty = "circleSpeed";
-				break;
-			case "Circle FOV":
-				configProperty = "circleFOV";
-				break;
-			case "Circle Max Turning Angle":
-				configProperty = "circleMaxTurningAngle";
-				break;
-			case "Circle Reload Time":
-				configProperty = "circleReloadTime";
-				break;
-			case "Circle Radius":
-				configProperty = "circleRadius";
-				break;
-			case "Shield Radius":
-				configProperty = "shieldRadius";
-				break;
-			case "Shield Respawn Time":
-				configProperty = "shieldRespawnTime";
-				break;
-			case "Number of Bots":
-				configProperty = "worldMaxCircles";
-				break;
-				
-			default:
-				break;
-		}
+		configProperty = e.getActionCommand();
 		if(configProperty != null) //if a config property was selected
 		{
-			String value = (String) JOptionPane.showInputDialog(this, "You are modifying " + selectedItem + ".",
+			String value = (String) JOptionPane.showInputDialog(this, "You are modifying " + e.getActionCommand() + ".",
 					Main.CONFIG.get(configProperty));			
 			if(value != null)
 			{

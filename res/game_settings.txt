@@ -1,4 +1,4 @@
-slot1=bots.TestBot
+slot1=
 slot2=null
 slot3=null
 slot4=null

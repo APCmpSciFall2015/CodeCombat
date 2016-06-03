@@ -22,6 +22,8 @@ public class CircleStats
 	public final int obstacleCollisions;
 	public final int totalWallCollisions;
 	public final int wallCollisions;
+	public final int mineCollisions;
+	public final int totalMineCollisions;
 	
 	public CircleStats(Circle c)
 	{
@@ -41,5 +43,7 @@ public class CircleStats
 		this.obstacleCollisions = c.getObstacleCollisions();
 		this.totalWallCollisions = c.getTotalWallCollisions();
 		this.wallCollisions = c.getWallCollisions();
+		this.mineCollisions = c.getMineCollisions();
+		this.totalMineCollisions = c.getTotalMineCollisions();
 	}
 }

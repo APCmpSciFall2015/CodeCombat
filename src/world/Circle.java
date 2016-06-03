@@ -64,6 +64,10 @@ public class Circle extends Sprite implements Comparable<Circle>
 	private int totalWallCollisions = 0;
 	/** wall collisions during life **/
 	private int wallCollisions;
+	/** mine collisions during life (possible if have shield) **/
+	private int mineCollisions = 0;
+	/** total mine collision during existence **/
+	private int totalMineCollisions = 0;
 
 	/** timer for shooting **/
 	private int shootTimer = RELOAD_TIME;
@@ -71,6 +75,8 @@ public class Circle extends Sprite implements Comparable<Circle>
 	private int respawnTimer = RESPAWN_TIME;
 	/** location of Circle's eyes **/
 	private Vector2 eyePosition;
+	/** has a shield **/
+	private boolean hasShield = false;
 	/** Mind to control circle bot **/
 	private Mind mind = null;
 
@@ -183,6 +189,12 @@ public class Circle extends Sprite implements Comparable<Circle>
 		{
 			kill();
 		}
+		else if (s instanceof Mine)
+		{
+			kill();
+			mineCollisions++;
+			totalMineCollisions++;
+		}
 		// slide on all other objects
 		else if (s instanceof Circle)
 		{
@@ -226,7 +238,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	private final void respawn()
 	{
-		if (respawnTimer == 0)
+		if (respawnTimer >= 0)
 		{
 			accuracy = 1;
 			shotsFired = 0;
@@ -316,7 +328,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	// Getters and Setters
 	// -------------------------------------------------------
-
+	
 	@Override
 	public void setPosition(Vector2 position)
 	{
@@ -520,6 +532,38 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public Vector2 getEyePosition()
 	{
 		return eyePosition.copy();
+	}
+
+	public int getMineCollisions()
+	{
+		return mineCollisions;
+	}
+
+	public void setMineCollisions(int mineCollisions)
+	{
+		this.mineCollisions = mineCollisions;
+	}
+
+	public int getTotalMineCollisions()
+	{
+		return totalMineCollisions;
+	}
+
+	public void setTotalMineCollisions(int totalMineCollisions)
+	{
+		this.totalMineCollisions = totalMineCollisions;
+	}
+	
+
+	public boolean isShielded()
+	{
+		return hasShield;
+	}
+	
+
+	public void setShielded(boolean hasShield)
+	{
+		this.hasShield = hasShield;
 	}
 
 }

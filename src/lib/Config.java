@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -53,14 +54,11 @@ public class Config
 			FileWriter fw = new FileWriter(f);
 			
 			// put entries in order
-			LinkedList<String> entries = new LinkedList<String>();
-			for(Entry<String, String> entry : properties.entrySet())
-				entries.add(entry.getKey() + "=" + entry.getValue() + "\n");
-			Collections.sort(entries);
+			
 			
 			
 			// write to file
-			for(String s : entries)
+			for(String s : toSortedList())
 				fw.write(s);
 			fw.close();
 			System.out.println("wrote config data to file: " + f);
@@ -79,5 +77,23 @@ public class Config
 	public void set(String property, String value)
 	{
 		properties.put(property, value);
+	}
+	
+	public List<String> toSortedList()
+	{
+		LinkedList<String> entries = new LinkedList<String>();
+		for(Entry<String, String> entry : properties.entrySet())
+			entries.add(entry.getKey() + "=" + entry.getValue() + "\n");
+		Collections.sort(entries);
+		return entries;
+	}
+	
+	public List<String> keysToSortedList()
+	{
+		LinkedList<String> keys = new LinkedList<String>();
+		for(Entry<String, String> entry : properties.entrySet())
+			keys.add(entry.getKey());
+		Collections.sort(keys);
+		return keys;
 	}
 }

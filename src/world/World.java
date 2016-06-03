@@ -26,6 +26,7 @@ public class World
 	public static final int NUM_OBSTACLES = Integer.parseInt(Main.CONFIG.get("worldNumObstacles"));
 	public static final int NUM_SHIELDS = Integer.parseInt(Main.CONFIG.get("worldNumShields"));
 	public static final int MAX_CIRCLES = Integer.parseInt(Main.CONFIG.get("worldMaxCircles"));
+	public static final int NUM_MINES = Integer.parseInt(Main.CONFIG.get("worldNumMines"));
 	/** size of world **/
 	private Vector2 size;
 	/** ticks executed **/
@@ -37,7 +38,7 @@ public class World
 
 	public static enum SpriteType
 	{
-		CIRCLE, OBSTACLE, PROJECTILE, SHIELD
+		CIRCLE, OBSTACLE, PROJECTILE, SHIELD, MINE
 	}
 
 	// Constructors
@@ -95,6 +96,10 @@ public class World
 		{
 			spawn(SpriteType.SHIELD);
 		}
+		for (int i = 0; i < NUM_MINES; i++)
+		{
+			spawn(SpriteType.MINE);
+		}
 	}
 
 	public void restart()
@@ -121,6 +126,9 @@ public class World
 			break;
 		case SHIELD:
 			s = new Shield(this);
+			break;
+		case MINE:
+			s = new Mine(this);
 			break;
 		default:
 			System.err.println("Invalid Sprite Type");

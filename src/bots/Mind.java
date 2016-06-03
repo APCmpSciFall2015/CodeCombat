@@ -1,5 +1,8 @@
 package bots;
 
+import app.Main;
+
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,6 +13,7 @@ import world.Sprite;
 
 public abstract class Mind
 {
+	public static final int MAX_NAME_CHARS = Integer.parseInt(Main.CONFIG.get("maxMindNameChars"));
 	private static Random random = new Random();
 	
 	private Circle circle;
@@ -88,6 +92,11 @@ public abstract class Mind
 	{
 		return circle.isAlive();
 	}
+
+	public final boolean isShielded()
+	{
+		return circle.isShielded();
+	}
 	
 	public final Vector2 getPosition()
 	{
@@ -96,9 +105,10 @@ public abstract class Mind
 
 	public final Vector2 getEyePosition()
 	{
-		return circle.getEyePosition().add(noise());
+		Vector2 position = getPosition();
+		return new Vector2((position.getX() + getVelocity().normalize().getX() * circle.getSize().getX() / 2),
+				(position.getY() + getVelocity().normalize().getY() * circle.getSize().getY() / 2));
 	}
-	
 	
 	public final Vector2 getVelocity()
 	{

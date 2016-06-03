@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import bots.Mind;
 import world.Circle;
 import world.Sprite;
 
@@ -17,6 +18,44 @@ public class UI
 	public UI(MainApplet main)
 	{
 		this.mainApplet = main;
+	}
+
+	public void drawMenuScreen(Graphics g)
+	{
+		String s = "Code Combat";
+		int width = (int) mainApplet.getWorld().getSize().getX();
+		int height = (int) mainApplet.getWorld().getSize().getY();
+
+		g.setFont(new Font("Serif", Font.PLAIN, (int) 
+						Math.min(getScaledFontSizeHorizontal(s, width / 2, g), getScaledFontSizeVertical(height / 4, g))));
+		
+		// draw title
+		int x = width / 2 - g.getFontMetrics().stringWidth(s) / 2;
+		int y = height / 2 - g.getFontMetrics().getHeight();
+		g.setColor(Color.CYAN);
+		g.drawString(s, x - 1, y - 1); 
+		g.setColor(Color.BLUE);
+		g.drawString(s, x, y); 
+		
+		// draw instructions blinking
+		s = "Press Space to Start";
+		g.setFont(new Font("Serif", Font.PLAIN, (int) 
+				Math.min(getScaledFontSizeHorizontal(s, width / 4, g), getScaledFontSizeVertical(height / 8, g))));
+		x += width / 4 - g.getFontMetrics().stringWidth(s) / 2;
+		y += height / 4 - g.getFontMetrics().getHeight();
+		
+		if(mainApplet.getFrames() % (Main.FRAME_RATE * 3) > Main.FRAME_RATE * 3 / 2)
+		{
+			g.setColor(Color.CYAN);
+			g.drawString(s, x - 1, y - 1); 
+			g.setColor(Color.BLUE);
+			g.drawString(s, x, y); 
+		}
+		else
+		{
+			g.setColor(mainApplet.getBackground());
+			g.drawRect(x, y - g.getFontMetrics().getHeight(), g.getFontMetrics().stringWidth(s), g.getFontMetrics().getHeight());
+		}
 	}
 
 	public void drawPauseScreen(Graphics g)
@@ -41,7 +80,6 @@ public class UI
 		g.drawString(s, x, y);
 	}
 
-
 	public void drawLeaderboard(Graphics g)
 	{
 		// get circles
@@ -50,7 +88,7 @@ public class UI
 			if (s instanceof Circle)
 				circles.add((Circle) s);
 		Collections.sort(circles);
-		
+
 		// setup font and offsets
 		int width = (int) mainApplet.getWorld().getSize().getX();
 		int height = (int) mainApplet.getWorld().getSize().getY();
@@ -59,38 +97,38 @@ public class UI
 		int xInset = width / 32;
 		int rowHeight = height / 32;
 		int colWidth = width / 16;
-		
+
 		// draw box behind leaderboard and title
 		g.setColor(new Color(55, 55, 55, 230));
 		g.fillRect(x - width / 64, y - height / 32, width / 8, rowHeight * circles.size() * 4 / 3);
 		g.setColor(Color.RED);
-		g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(
-				Math.min(getScaledFontSizeHorizontal("LeaderBoard", width / 8 - xInset, g), getScaledFontSizeVertical(rowHeight, g)),
-				g.getFont().getSize())));
+		g.setFont(new Font("Serif", Font.PLAIN,
+				(int) Math.min(Math.min(getScaledFontSizeHorizontal("LeaderBoard", width / 8 - xInset, g),
+						getScaledFontSizeVertical(rowHeight, g)), g.getFont().getSize())));
 		g.drawString("LeaderBoard", x + (colWidth - g.getFontMetrics().stringWidth("LeaderBoard") + xInset) / 2, y);
 		g.drawLine(x - width / 128, y + height / 128, x + width / 32 * 3, y + height / 128);
 		y += rowHeight;
-		
+
 		// size font for circles in list
-		for(Circle c : circles)
+		for (Circle c : circles)
 		{
-			String s = "" + circles.getFirst().getMind() + ": " + circles.getFirst().getId();
+			String s = ("" + c.getMind()).substring(0, Math.min(("" + c.getMind()).length(), Mind.MAX_NAME_CHARS)) + ": " + c.getId();
 			g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(
 					Math.min(getScaledFontSizeHorizontal(s, width / 8, g), getScaledFontSizeVertical(rowHeight, g)),
 					g.getFont().getSize())));
 		}
-		
+
 		// paint list of circles
 		g.setColor(Color.RED);
-		for(Circle c : circles)
+		for (Circle c : circles)
 		{
 			g.setColor(c.getColor());
-			String s = "" + c.getMind() + ": " + c.getId();
+			String s = ("" + c.getMind()).substring(0, Math.min(("" + c.getMind()).length(), Mind.MAX_NAME_CHARS)) + ": " + c.getId();
 			g.drawString(s, x + (colWidth - g.getFontMetrics().stringWidth(s) + xInset) / 2, y);
 			y += rowHeight;
 		}
 	}
-	
+
 	public void drawFullStatsOverlay(Graphics g)
 	{
 		// "struct" for stats data
@@ -113,8 +151,8 @@ public class UI
 				circles.add((Circle) s);
 		Collections.sort(circles);
 
-		
 		// parse stats
+		// @formatter:off
 		String[] statLayout = new String[] { "Mind", "Id", "Kills", "Deaths", "Accuracy", "Status" };
 		LinkedList<StatData> stats = new LinkedList<StatData>();
 		for (Circle c : circles)
@@ -127,7 +165,8 @@ public class UI
 							"" + String.format("%.2f", c.getTotalAccuracy()),
 							"" + (c.isAlive() ? "alive" : "dead") // pro ternary here -rjm
 							}));
-		
+		// @formatter:on
+
 		// setup font and offsets
 		int width = (int) mainApplet.getWorld().getSize().getX();
 		int height = (int) mainApplet.getWorld().getSize().getY();
@@ -149,24 +188,24 @@ public class UI
 		// config fonts and size params
 		for (String s : statLayout)
 		{
-			g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(
-					Math.min(getScaledFontSizeHorizontal(s, colWidth - xInset * 2, g), getScaledFontSizeVertical(rowHeight, g)),
-					g.getFont().getSize())));
+			g.setFont(new Font("Serif", Font.PLAIN,
+					(int) Math.min(Math.min(getScaledFontSizeHorizontal(s, colWidth - xInset * 2, g),
+							getScaledFontSizeVertical(rowHeight, g)), g.getFont().getSize())));
 		}
 		for (StatData entry : stats)
 		{
 			for (String s : entry.data)
 			{
-				g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(
-						Math.min(getScaledFontSizeHorizontal(s, colWidth - xInset * 2, g), getScaledFontSizeVertical(rowHeight, g)),
-						g.getFont().getSize())));
+				g.setFont(new Font("Serif", Font.PLAIN,
+						(int) Math.min(Math.min(getScaledFontSizeHorizontal(s, colWidth - xInset * 2, g),
+								getScaledFontSizeVertical(rowHeight, g)), g.getFont().getSize())));
 			}
 		}
-		
+
 		// overlay circle data
 		x += xInset;
 		y += yInset * 4;
-		
+
 		for (String s : statLayout)
 		{
 			g.drawString(s, x + (colWidth - g.getFontMetrics().stringWidth(s)) / 2, y);
@@ -174,7 +213,7 @@ public class UI
 		}
 		g.drawLine(width / 8 + xInset, y + height / 128, width / 8 * 7 - xInset, y + height / 128);
 		y += rowHeight;
-		
+
 		for (StatData entry : stats)
 		{
 			x = width / 8 + xInset;
@@ -186,7 +225,7 @@ public class UI
 			}
 			y += rowHeight;
 		}
-		
+
 		// overlay other game data
 		String timeElapsed = "Time Elapsed: " + mainApplet.getWorld().getTicks() / 60;
 		g.setColor(Color.RED);

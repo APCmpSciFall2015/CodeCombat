@@ -38,9 +38,11 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	private BufferedImage bi;
 	/** The frame the applet is contained **/
 	private MainFrame frame;
+	/** frames drawn **/
+	private int frames = 0;
 
 	/** GameState */
-	private GameState gameState = GameState.PLAY;
+	private GameState gameState = GameState.MENU;
 
 	// Applet core
 	// ------------------------------------
@@ -92,29 +94,36 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 			g2.setColor(getBackground());
 			g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
 
-			// paint world
-			world.paint(g2);
-			if (gameState.equals(GameState.PAUSED))
-				ui.drawPauseScreen(g2);
-			
-			if (displayFullStatsOverlay)
-				ui.drawFullStatsOverlay(g2);
-			
+			if (gameState.equals(GameState.MENU))
+			{
+				ui.drawMenuScreen(g2);
+			}
 			else
-				ui.drawLeaderboard(g2);
-			
+			{
+				// paint world
+				world.paint(g2);
+				if (gameState.equals(GameState.PAUSED))
+					ui.drawPauseScreen(g2);
+				if (displayFullStatsOverlay)
+					ui.drawFullStatsOverlay(g2);
+
+				else ui.drawLeaderboard(g2);
+			}
 
 			g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
 		}
 		catch (ConcurrentModificationException e)
 		{
 			// skip the rest of the update if paint conflicts with updates
-			if(Main.debug) System.err.println("Skip rest of frame: Concurrent Modification");
+			if (Main.debug)
+				System.err.println("Skip rest of frame: Concurrent Modification");
 		}
 		catch (NoSuchElementException e)
 		{
-			// ditto here (caused by trying to access world's arraylist of circles whilst updating: bah humbug
-			if(Main.debug) System.err.println("Skip rest of frame: No Such Element");
+			// ditto here (caused by trying to access world's arraylist of
+			// circles whilst updating: bah humbug
+			if (Main.debug)
+				System.err.println("Skip rest of frame: No Such Element");
 		}
 	}
 
@@ -136,7 +145,8 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 			catch (ConcurrentModificationException e)
 			{
 				// skip the rest of the update if paint conflicts with updates
-				if(Main.debug) System.err.println("Skip rest of frame: Concurrent Modification");
+				if (Main.debug)
+					System.err.println("Skip rest of frame: Concurrent Modification");
 			}
 
 			// sleep for rest of frame time
@@ -151,6 +161,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 					e.printStackTrace();
 				}
 			}
+			frames++;
 		}
 	}
 
@@ -213,7 +224,14 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 			Main.debug = !Main.debug;
 		if (e.getKeyChar() == 'r' || e.getKeyChar() == 'R')
 			world.restart();
-
+		if (e.getKeyChar() == ' ' && gameState.equals(GameState.MENU))
+		{
+			gameState = GameState.PLAY;
+			world.restart();
+		}
+		if (e.getKeyChar() == 'm' || e.getKeyChar() == 'M' &&
+				!gameState.equals(GameState.MENU))
+			gameState = GameState.MENU;
 
 		frame.updateMenu();
 	}
@@ -307,5 +325,15 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	public void setFrame(MainFrame frame)
 	{
 		this.frame = frame;
+	}
+
+	public int getFrames()
+	{
+		return frames;
+	}
+
+	public void setFrames(int frames)
+	{
+		this.frames = frames;
 	}
 }
