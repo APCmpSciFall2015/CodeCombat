@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 import javax.swing.JApplet;
@@ -40,7 +41,10 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	private MainFrame frame;
 	/** frames drawn **/
 	private int frames = 0;
-
+	/** key toggles **/
+	private HashMap<Character, Boolean> keyToggles = new HashMap<Character, Boolean>();
+	
+	
 	/** GameState */
 	private GameState gameState = GameState.MENU;
 
@@ -50,6 +54,13 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	@Override
 	public void init()
 	{
+		// setup key toggles
+		keyToggles.put('r', false);
+		keyToggles.put('m', false);
+		keyToggles.put('p', false);
+		keyToggles.put('d', false);
+		
+		
 		// setup the window
 		setSize(size);
 		setBackground(backgroundColor);
@@ -218,12 +229,22 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
+		
+
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+		if (e.getKeyChar() == '\t')
+			displayFullStatsOverlay = true;	
 		if (e.getKeyChar() == 'p' || e.getKeyChar() == 'P')
-			togglePause();
+			if(!keyToggles.get('p')) { togglePause(); keyToggles.put('p', true); }
 		if (e.getKeyChar() == 'd' || e.getKeyChar() == 'D')
-			Main.debug = !Main.debug;
+			if(!keyToggles.get('d')) { Main.debug = !Main.debug; keyToggles.put('d', true); }
 		if (e.getKeyChar() == 'r' || e.getKeyChar() == 'R')
-			world.restart();
+			if(!keyToggles.get('r')) { world.restart(); keyToggles.put('r', true); }
 		if (e.getKeyChar() == ' ' && gameState.equals(GameState.MENU))
 		{
 			gameState = GameState.PLAY;
@@ -231,16 +252,10 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		}
 		if (e.getKeyChar() == 'm' || e.getKeyChar() == 'M' &&
 				!gameState.equals(GameState.MENU))
-			gameState = GameState.MENU;
-
+		{
+			if(!keyToggles.get('m')) { gameState = GameState.MENU; keyToggles.put('m', true); }
+		}
 		frame.updateMenu();
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e)
-	{
-		if (e.getKeyChar() == '\t')
-			displayFullStatsOverlay = true;
 	}
 
 	@Override
@@ -248,6 +263,10 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	{
 		if (e.getKeyChar() == '\t')
 			displayFullStatsOverlay = false;
+		if(keyToggles.containsKey(e.getKeyChar()))
+		{
+			keyToggles.put(e.getKeyChar(), false);
+		}
 	}
 
 	// Getters and Setters

@@ -41,7 +41,7 @@ public class UI
 		s = "Press Space to Start";
 		g.setFont(new Font("Serif", Font.PLAIN, (int) 
 				Math.min(getScaledFontSizeHorizontal(s, width / 4, g), getScaledFontSizeVertical(height / 8, g))));
-		x += width / 4 - g.getFontMetrics().stringWidth(s) / 2;
+		x = width / 2 - g.getFontMetrics().stringWidth(s) / 2;
 		y += height / 4 - g.getFontMetrics().getHeight();
 		
 		if(mainApplet.getFrames() % (Main.FRAME_RATE * 3) > Main.FRAME_RATE * 3 / 2)
