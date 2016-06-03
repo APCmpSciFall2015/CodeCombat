@@ -184,14 +184,17 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 		
 		for(int x = 0; x < buttonGroups.size(); x++)
 		{
-			if("No Mind".equals(buttonGroups.get(x).getSelection().getActionCommand()))
+			// set no mind
+			if("null".equals(buttonGroups.get(x).getSelection().getActionCommand()))
 			{
 				Main.GAME_SETTINGS.set("slot" + (x + 1), "null");
 			}
-			else if("Disabled".equals(buttonGroups.get(x).getSelection().getActionCommand()))
+			// set disabled
+			else if("".equals(buttonGroups.get(x).getSelection().getActionCommand()))
 			{
 				Main.GAME_SETTINGS.set("slot" + (x + 1), "");
 			}
+			// set mind
 			else
 			{
 				Main.GAME_SETTINGS.set("slot" + (x + 1), buttonGroups.get(x).getSelection().getActionCommand());

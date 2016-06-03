@@ -1,5 +1,5 @@
 slot1=null
-slot2=bots.CommitBot
+slot2=
 slot3=null
 slot4=null
 slot5=null
