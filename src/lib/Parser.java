@@ -30,4 +30,26 @@ public class Parser
 		}
 		return Collections.unmodifiableList(output);
 	}
+	
+	public static List<List<String>> parse2DImmutableStringArray(String s)
+	{
+		List<List<String>> output = new ArrayList<List<String>>();
+		Scanner sc = new Scanner(s.substring(1, s.length() - 1)).useDelimiter("[\\{\\}]");
+		while(sc.hasNext())
+		{
+			String pair = sc.next();
+			int div = pair.indexOf(',');
+			if(div > 0)
+			{
+				output.add(Collections.unmodifiableList(new ArrayList<String>(Arrays.asList(
+						new String[]
+							{
+								pair.substring(0, div),
+								pair.substring(div+1, pair.length())
+							}
+						))));
+			}
+		}
+		return Collections.unmodifiableList(output);
+	}
 }
