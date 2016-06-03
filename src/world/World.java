@@ -1,7 +1,9 @@
 package world;
 
 import java.awt.Graphics;
+import java.io.File;
 import java.util.ArrayList;
+import app.Config;
 
 import app.Main;
 import app.MainApplet;
@@ -30,7 +32,7 @@ public class World
 	private ArrayList<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
-
+	
 	public static enum SpriteType
 	{
 		CIRCLE, OBSTACLE, PROJECTILE, SHIELD
@@ -52,7 +54,7 @@ public class World
 	}
 
 	public void init()
-	{
+	{	
 		// initialize game objects
 		sprites = new ArrayList<Sprite>();
 		for (int i = 0; i < NUM_OBSTACLES; i++)

@@ -14,6 +14,8 @@ public class Config
 {
 	private HashMap<String, String> properties = new HashMap<String, String>();
 
+	public Config(){}
+	
 	public Config(File f)
 	{
 		load(f);
