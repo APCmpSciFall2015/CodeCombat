@@ -3,7 +3,7 @@ package world;
 import java.awt.Graphics;
 import java.io.File;
 import java.util.ArrayList;
-import app.Config;
+import lib.Config;
 
 import app.Main;
 import app.MainApplet;

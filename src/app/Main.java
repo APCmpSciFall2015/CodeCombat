@@ -3,8 +3,8 @@ package app;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.Serializable;
-import lib.Parser;
 import javax.swing.JFrame;
+import lib.Config;
 
 /**
  * The Main class is the host applet for the game.
@@ -14,10 +14,10 @@ import javax.swing.JFrame;
 public class Main implements Serializable
 {
 	public static final File CONFIG_FILE = new File("./res/config.txt");
-	public static final Config CONFIG = new Config(new File("./res/config.txt"));
+	public static final Config CONFIG = new Config(CONFIG_FILE);
 	/** Game settings **/
-	public static final File GAME_SETTINGS_FILE = new File("./res/config.txt");
-	private static final Config GAME_SETTINGS = new Config(new File("./res/game_settings.txt"));
+	public static final File GAME_SETTINGS_FILE = new File("./res/game_settings.txt");
+	private static final Config GAME_SETTINGS = new Config(GAME_SETTINGS_FILE);
 	
 	/** Serializable id **/
 	private static final long serialVersionUID = 3206847208968227199L;
