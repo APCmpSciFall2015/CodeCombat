@@ -26,7 +26,7 @@ public class Vector2
 
 	/**
 	 * 1-Argument Vector2 Constructor
-	 * @param floats vector as Float array [x,y]
+	 * @param arr vector as Float array [x,y]
 	 */
 	public Vector2(Float[] arr)
 	{
@@ -36,7 +36,7 @@ public class Vector2
 	
 	/**
 	 * 1-Argument Vector2 Constructor
-	 * @param floats vector as float array [x,y]
+	 * @param arr vector as float array [x,y]
 	 */
 	public Vector2(float[] arr)
 	{

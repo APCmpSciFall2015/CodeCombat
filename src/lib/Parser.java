@@ -17,7 +17,7 @@ public class Parser
 	/**
 	 * Parses data in the format {{0,0},(0,0),(0,0)) into a 2D float List
 	 * @param s the string to parse
-	 * @returnThe 2D float list containing the parsed data
+	 * @return The 2D float list containing the parsed data
 	 */
 	public static List<List<Float>> parse2DImmutableFloatArray(String s)
 	{

@@ -1,5 +1,5 @@
-slot1=bots.CommitBot
-slot2=bots.TestBot
-slot3=bots.ZekeBot
+slot1=null
+slot2=bots.CommitBot
+slot3=null
 slot4=null
 slot5=null
