@@ -13,19 +13,25 @@ import lib.Vector2;
  */
 public class Shield extends Sprite
 {
-	/** time for duck to respawn **/
+	
+	/**  time for duck to respawn *. */
 	public static final int RESPAWN_TIME = Integer.parseInt(Main.CONFIG.get("shieldRespawnTime"));
-	/** radius of duck **/
+	
+	/**  radius of duck *. */
 	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("shieldRadius"));
-	/** whether or not the shield has found its mama duck **/
+	
+	/**  whether or not the shield has found its mama duck *. */
 	private boolean unbound;
-	/** shield's mama duck **/
+	
+	/**  shield's mama duck *. */
 	private Sprite owner;
-	/** time for duck's respawn **/
+	
+	/**  time for duck's respawn *. */
 	private int respawnTimer = RESPAWN_TIME;
 
 	/**
-	 * Shield copy constructor
+	 * Shield copy constructor.
+	 *
 	 * @param s duck to copy
 	 */
 	public Shield(Shield s)
@@ -36,7 +42,8 @@ public class Shield extends Sprite
 	}
 
 	/**
-	 * 1-Argument Circle constructor
+	 * 1-Argument Circle constructor.
+	 *
 	 * @param world plane of existence
 	 */
 	public Shield(World world)
@@ -53,6 +60,9 @@ public class Shield extends Sprite
 		// @formatter:on
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#update()
+	 */
 	@Override
 	public void update()
 	{
@@ -75,6 +85,9 @@ public class Shield extends Sprite
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#paint(java.awt.Graphics)
+	 */
 	public void paint(Graphics g)
 	{	
 		if (isAlive())
@@ -92,12 +105,18 @@ public class Shield extends Sprite
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#copy()
+	 */
 	@Override
 	public Sprite copy()
 	{
 		return new Shield(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#collide(world.Sprite)
+	 */
 	@Override
 	public void collide(Sprite s)
 	{
@@ -146,6 +165,9 @@ public class Shield extends Sprite
 		}
 	}
 
+	/**
+	 * Respawns the shield.
+	 */
 	private final void respawn()
 	{
 		if (respawnTimer <= 0)
@@ -157,7 +179,8 @@ public class Shield extends Sprite
 
 	/**
 	 * The isOwner method tells whether the given circle is the owner of the
-	 * projectile
+	 * shield.
+	 *
 	 * @param c Circle to check
 	 * @return is owner circle?
 	 */
@@ -166,16 +189,31 @@ public class Shield extends Sprite
 		return owner != null && owner.getId() == c.getId();
 	}
 
+	/**
+	 * Checks if the shield is part of a sprite.
+	 *
+	 * @return true, if is unbound
+	 */
 	public boolean isUnbound()
 	{
 		return unbound;
 	}
 
+	/**
+	 * Sets whether the shield is not part of a sprite.
+	 *
+	 * @param unbound true if not bound to a sprite
+	 */
 	public void setUnbound(boolean unbound)
 	{
 		this.unbound = unbound;
 	}
 
+	/**
+	 * Gets the owner of the shield.
+	 *
+	 * @return the owner
+	 */
 	public Sprite getOwner()
 	{
 		if (owner != null)
@@ -183,6 +221,11 @@ public class Shield extends Sprite
 		return null;
 	}
 
+	/**
+	 * Sets the owner of the shield.
+	 *
+	 * @param owner the new owner
+	 */
 	public void setOwner(Sprite owner)
 	{
 		this.owner = owner.copy();

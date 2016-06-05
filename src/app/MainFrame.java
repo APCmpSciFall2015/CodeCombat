@@ -22,19 +22,45 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 
+/**
+ * The MainFrame class is responsible for rendering and displaying a window for the user to interact with
+ * @author Robert and Richard
+ * @version 0.1
+ */
 public class MainFrame extends JFrame implements ActionListener, ItemListener, KeyListener
 {
-	/** Serializable id **/
+	
+	/**  Serializable id *. */
 	private static final long serialVersionUID = -3718511819649048230L;
 	
+	/** The applet the window displays. */
 	private MainApplet applet;
+	
+	/** The checkbox item for handling pausing */
 	private JCheckBoxMenuItem pauseCbItem = new JCheckBoxMenuItem("Pause");
+	
+	/** The checkbox item for handling debugging */
 	private JCheckBoxMenuItem debugCbItem = new JCheckBoxMenuItem("Debug");
+	
+	/** The list of AIs avalible to the user. */
 	private List<String> minds = lib.Parser.parseImmutableStringArray(Main.CONFIG.get("mindTypes"));
+	
+	/** The groups of radio buttons to select the AIs for each bot. */
 	private List<ButtonGroup> buttonGroups = new ArrayList<ButtonGroup>();
+	
+	/** The 2D list of radio buttons for selecting the AI for the bot. */
 	private List<List<JRadioButtonMenuItem>> radioButtons = new ArrayList<List<JRadioButtonMenuItem>>();
+	
+	/** The configuration menu properties. */
 	private List<String> configKeys = Main.CONFIG.keysToSortedList();
 	
+	/**
+	 * Creates and initializes the JFrame.
+	 *
+	 * @param s the title of the window
+	 * @param size the size of the window
+	 * @param applet the applet the window displays
+	 */
 	public MainFrame(String s, Dimension size, MainApplet applet)
 	{
 		super(s);
@@ -149,6 +175,12 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Gets the index of an AI for.
+	 *
+	 * @param mindName the name of the AI
+	 * @return the index the AI is located
+	 */
 	public int getMindIndex(String mindName)
 	{
 		if(mindName.equals("null"))
@@ -173,6 +205,9 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand() == "Exit")
@@ -216,6 +251,9 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
 	@Override
 	public void itemStateChanged(ItemEvent e)
 	{
@@ -248,23 +286,35 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 		}
 	}
 	
+	/**
+	 * Updates the checkbox items on the menu.
+	 */
 	public void updateMenu()
 	{
 		pauseCbItem.setState(applet.getGameState() == Main.GameState.PAUSED);		
 		debugCbItem.setState(Main.debug);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyTyped(KeyEvent e)
 	{

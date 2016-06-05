@@ -7,24 +7,37 @@ import app.Main;
 import lib.Vector2;
 
 /**
- * The Shield class provides a layer of protection for Circles in game.
+ * The Mine class destroys circles if they touch it.
  * @author Brian, Robbie, Josh
  * @version 0.1
  */
 public class Mine extends Sprite
 {
-	/** time for duck to respawn **/
+	
+	/**  time for duck to respawn. */
 	public static final int RESPAWN_TIME = Integer.parseInt(Main.CONFIG.get("mineRespawnTime"));
-	/** radius of duck **/
+	
+	/**  radius of duck. */
 	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("mineRadius"));
-	/** time for 's respawn **/
+	
+	/**  time for 's respawn. */
 	private int respawnTimer = RESPAWN_TIME;
 
+	/**
+	 * copy constructor for a mine.
+	 *
+	 * @param m the mine to copy from
+	 */
 	public Mine(Mine m)
 	{
 		super(m);
 	}
 
+	/**
+	 * Instantiates a new mine.
+	 *
+	 * @param world the world the mine is in
+	 */
 	public Mine(World world)
 	{
 		// @formatter:off
@@ -38,6 +51,9 @@ public class Mine extends Sprite
 		// @formatter:on
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#update()
+	 */
 	@Override
 	public void update()
 	{
@@ -57,6 +73,9 @@ public class Mine extends Sprite
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#paint(java.awt.Graphics)
+	 */
 	public void paint(Graphics g)
 	{	
 		if (isAlive())
@@ -73,12 +92,18 @@ public class Mine extends Sprite
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#copy()
+	 */
 	@Override
 	public Sprite copy()
 	{
 		return new Mine(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#collide(world.Sprite)
+	 */
 	@Override
 	public void collide(Sprite s)
 	{
@@ -94,6 +119,9 @@ public class Mine extends Sprite
 		}
 	}
 
+	/**
+	 * Respawns the mine.
+	 */
 	private final void respawn()
 	{
 		if (respawnTimer <= 0)

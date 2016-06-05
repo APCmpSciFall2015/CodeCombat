@@ -11,10 +11,23 @@ import bots.Mind;
 import world.Circle;
 import world.Sprite;
 
+/**
+ * The UI class is responsible for rendering the UI elements of the program
+ * @author Robert
+ * @version 0.1
+ *
+ */
 public class UI
 {
+	/**
+	 * the applet everything is drawn in
+	 */
 	private MainApplet mainApplet;
 
+	/**
+	 * Constructor to initialize the UI class
+	 * @param main the applet eveything will be drawn in
+	 */
 	public UI(MainApplet main)
 	{
 		this.mainApplet = main;
@@ -58,6 +71,10 @@ public class UI
 		}
 	}
 
+	/**
+	 * draws the paused menu
+	 * @param g graphics
+	 */
 	public void drawPauseScreen(Graphics g)
 	{
 		String s = "Paused";
@@ -80,6 +97,10 @@ public class UI
 		g.drawString(s, x, y);
 	}
 
+	/**
+	 * draws the leaderboard in the applet
+	 * @param g graphics
+	 */
 	public void drawLeaderboard(Graphics g)
 	{
 		// get circles
@@ -129,6 +150,10 @@ public class UI
 		}
 	}
 
+	/**
+	 * draws the status overlay of the window
+	 * @param g graphics
+	 */
 	public void drawFullStatsOverlay(Graphics g)
 	{
 		// "struct" for stats data
@@ -234,11 +259,23 @@ public class UI
 		g.drawString(timeElapsed, x, y);
 	}
 
+	/**
+	 * Scales the font in the x direction
+	 * @param text the text to scale
+	 * @param width of the window
+	 * @param g graphics
+	 * @return a float with the scaled size
+	 */
 	public float getScaledFontSizeHorizontal(String text, int width, Graphics g)
 	{
 		return (float) width / g.getFontMetrics().stringWidth(text) * g.getFont().getSize();
 	}
-
+/**
+ * scales the font vertically
+ * @param height the height of the window
+ * @param g graphics
+ * @return a float with the scaled size
+ */
 	public float getScaledFontSizeVertical(int height, Graphics g)
 	{
 		return (float) height / g.getFontMetrics().getHeight() * g.getFont().getSize();
