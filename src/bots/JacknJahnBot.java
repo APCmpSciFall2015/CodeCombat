@@ -66,7 +66,7 @@ public class JacknJahnBot extends Mind{
 					if (s instanceof Mine){
 						if(s.getPosition().dist(getPosition()) < 100){
 							mine = s;
-							Vector2 direction = mine.getPosition().sub(getEyePosition());
+							Vector2 direction = mine.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
 							Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
 							Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
 							turn((float) -(Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag()))));
@@ -78,7 +78,7 @@ public class JacknJahnBot extends Mind{
 					if (s instanceof Obstacle){
 						if(s.getPosition().dist(getPosition()) < 50){
 							obstruction = s;
-							Vector2 direction = obstruction.getPosition().sub(getEyePosition());
+							Vector2 direction = obstruction.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
 							Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
 							Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
 							turn((float) -(Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag()))));
@@ -96,7 +96,7 @@ public class JacknJahnBot extends Mind{
 							shield = s;
 						}
 						if(target != null){
-							Vector2 direction = shield.getPosition().sub(getEyePosition());
+							Vector2 direction = shield.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
 							Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
 							Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
 							turn((float) (Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag()))));
@@ -114,7 +114,7 @@ public class JacknJahnBot extends Mind{
 							target = s;
 						}
 						if(target != null){
-							Vector2 direction = target.getPosition().sub(getEyePosition());
+							Vector2 direction = target.getPosition().sub(calcEyePosition(getVelocity(), getPosition()));
 							Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
 							Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
 							turn((float) (Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag()))));
