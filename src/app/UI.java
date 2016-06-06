@@ -254,7 +254,7 @@ public class UI
 		}
 
 		// overlay other game data
-		String timeElapsed = "Time Elapsed: " + mainApplet.getWorld().getTicks() / Main.FRAME_RATE;
+		String timeElapsed = "Time Elapsed: " + mainApplet.getWorld().getTicks() / (1000 / Main.FRAME_RATE);
 		g.setColor(Color.RED);
 		x = width / 8 * 7 - xInset - g.getFontMetrics().stringWidth(timeElapsed);
 		y = height / 8 * 7 - yInset;
