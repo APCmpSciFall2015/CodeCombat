@@ -55,16 +55,16 @@ public class World
 	public static enum SpriteType
 	{
 		
-		/** The circle. */
+		/** Circle/Bot. */
 		CIRCLE, 
- /** The obstacle. */
- OBSTACLE, 
- /** The projectile. */
- PROJECTILE, 
- /** The shield. */
- SHIELD, 
- /** The mine. */
- MINE
+		/** Obstacle */
+		OBSTACLE, 
+		/** Projectile */
+		PROJECTILE, 
+		/** Shield */
+		SHIELD, 
+		/** mine */
+		MINE
 	}
 
 	// Constructors
@@ -291,15 +291,15 @@ public class World
 	/**
 	 * checks to see if a sprite is colliding with any other sprite in the world.
 	 *
-	 * @param sprite the sprite to check agains the world
-	 * @return sprite if the sprite is colliding with an object, or null otherwise
+	 * @param sprite the sprite to check against the world
+	 * @return the sprite the passed argument is colliding with, or null otherwise
 	 */
 	public Sprite collidingWith(Sprite sprite)
 	{
 		for (Sprite s : sprites)
 		{
 			if (colliding(s, sprite))
-				return sprite;
+				return s;
 		}
 		return null;
 	}
