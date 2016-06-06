@@ -5,37 +5,57 @@ import java.awt.Graphics;
 import app.Main;
 import lib.Vector2;
 
+
+/**
+ * The projectile class is responsible for managing a projectile a sprite shoots out designed to "kill" other sprites.
+ * 
+ * @author Robert
+ * @version 0.1
+ */
 public class Projectile extends Sprite
 {
-	/** maximum speed of a projectile **/
+	
+	/**  maximum speed of a projectile. */
 	private static final float SPEED = Integer.parseInt(Main.CONFIG.get("projectileSpeed"));
+	
+	/** Radius of the projectile. */
 	private static final float RADIUS = Integer.parseInt(Main.CONFIG.get("projectileRadius"));
-	/** owner circle **/
+	
+	// Instance variables
+	// ---------------------------------
+	
+	/**  owner circle. */
 	private Circle owner;
 
 	// Constructors
 	// --------------------------------------------------------------
 
+	/**
+	 * Instantiates a new projectile.
+	 *
+	 * @param p the p
+	 */
 	public Projectile(Projectile p)
 	{
 		super(p);
 	}
 
 	/**
-	 * 5-Argument Projectile Constructor
+	 * 4-Argument Projectile Constructor.
+	 *
 	 * @param x x pos
 	 * @param y y pos
 	 * @param velocity velocity vector
 	 * @param c owner circle
 	 * @param world plane of existence
 	 */
-	public Projectile(float x, float y, Vector2 velocity, Circle c, World world)
+	public Projectile(Vector2 position, Vector2 velocity, Circle c, World world)
 	{
 		// @formatter:off
 		super(
 				new Vector2(RADIUS, RADIUS), //size
-				new Vector2(x, y), // pos
-				new Vector2(SPEED, velocity.angle(), true), // vel
+				position.copy(), // pos
+				velocity.copy().normalize().mult(SPEED), // vel
 				new Vector2(0, 0), // acc
 				c.getColor(), world);
 		this.owner = c; // intentional shallow copy
@@ -45,6 +65,9 @@ public class Projectile extends Sprite
 	// Overridden methods
 	// -----------------------------------------------------------------
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -62,6 +85,9 @@ public class Projectile extends Sprite
 			super.paint(g);
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#update()
+	 */
 	@Override
 	public void update()
 	{
@@ -78,6 +104,9 @@ public class Projectile extends Sprite
 		setPosition(getPosition().add(getVelocity()));
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#collide(world.Sprite)
+	 */
 	@Override
 	public void collide(Sprite s)
 	{
@@ -102,6 +131,9 @@ public class Projectile extends Sprite
 		// @formatter:on
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#copy()
+	 */
 	@Override
 	public Sprite copy()
 	{
@@ -110,7 +142,8 @@ public class Projectile extends Sprite
 
 	/**
 	 * The isOwner method tells whether the given circle is the owner of the
-	 * projectile
+	 * projectile.
+	 *
 	 * @param c Circle to check
 	 * @return is owner circle?
 	 */

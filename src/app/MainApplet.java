@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 import javax.swing.JApplet;
@@ -16,38 +17,74 @@ import app.Main.GameState;
 import lib.Vector2;
 import world.World;
 
+/**
+ * The MainApplet class is responsible for rendering and displaying the game.
+ * @author Robert
+ * @version 0.1
+ */
 public class MainApplet extends JApplet implements Runnable, KeyListener
 {
-	/** serializable id **/
+
+	/** serializable id. */
 	private static final long serialVersionUID = -2598013920892210921L;
-	/** size of Applet **/
+
+	// Instance variables
+	// ----------------------------------
+	
+	/** size of Applet. */
 	private final Dimension size = new Dimension(Main.worldWidth, Main.worldHeight);
-	/** plane of existence help by the applet **/
+
+	/** plane of existence help by the applet. */
 	private World world;
-	/** UI for overlay and other user interaction **/
+
+	/** UI for overlay and other user interaction. */
 	private UI ui;
-	/** overlay stats? **/
+
+	/** overlay stats?. */
 	private boolean displayFullStatsOverlay = false;
-	/** color of background **/
+
+	/** color of background. */
 	private Color backgroundColor = Color.GRAY;
-	/** instance of self **/
+
+	/** instance of self. */
 	public static MainApplet main;
-	/** Thread to run on **/
+
+	/** Thread to run on. */
 	private Thread thread;
-	/** Image to double buffer with **/
+
+	/** Image to double buffer with. */
 	private BufferedImage bi;
-	/** The frame the applet is contained **/
+
+	/** The frame the applet is contained. */
 	private MainFrame frame;
 
-	/** GameState */
-	private GameState gameState = GameState.PLAY;
+	/** frames drawn. */
+	private int frames = 0;
+
+	/** key toggles. */
+	private HashMap<Character, Boolean> keyToggles = new HashMap<Character, Boolean>();
+
+	/** GameState. */
+	private GameState gameState = GameState.MENU;
 
 	// Applet core
 	// ------------------------------------
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.applet.Applet#init()
+	 */
 	@Override
 	public void init()
 	{
+		// setup key toggles
+		keyToggles.put('r', false);
+		keyToggles.put('m', false);
+		keyToggles.put('p', false);
+		keyToggles.put('d', false);
+		keyToggles.put(' ', false);
+		keyToggles.put((char) 27, false);
+
 		// setup the window
 		setSize(size);
 		setBackground(backgroundColor);
@@ -61,6 +98,10 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		ui = new UI(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.applet.Applet#start()
+	 */
 	@Override
 	public void start()
 	{
@@ -69,16 +110,28 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		thread.start();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.applet.Applet#stop()
+	 */
 	@Override
 	public void stop()
 	{
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.applet.Applet#destroy()
+	 */
 	@Override
 	public void destroy()
 	{
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.Container#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -92,29 +145,43 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 			g2.setColor(getBackground());
 			g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
 
-			// paint world
-			world.paint(g2);
-			ui.drawLeaderboard(g2);
-			if (gameState.equals(GameState.PAUSED))
-				ui.drawPauseScreen(g2);
-			if (displayFullStatsOverlay)
-				ui.drawFullStatsOverlay(g2);
-			
+			if (gameState.equals(GameState.MENU))
+			{
+				ui.drawMenuScreen(g2);
+			}
+			else
+			{
+				// paint world
+				world.paint(g2);
+				if (gameState.equals(GameState.PAUSED))
+					ui.drawPauseScreen(g2);
+				if (displayFullStatsOverlay)
+					ui.drawFullStatsOverlay(g2);
+
+				else ui.drawLeaderboard(g2);
+			}
 
 			g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
 		}
 		catch (ConcurrentModificationException e)
 		{
 			// skip the rest of the update if paint conflicts with updates
-			System.err.println("Skip rest of frame: Concurrent Modification");
+			if (Main.debug)
+				System.err.println("Skip rest of frame: Concurrent Modification");
 		}
 		catch (NoSuchElementException e)
 		{
-			// ditto here (caused by trying to access world's arraylist of circles whilst updating: bah humbug
-			System.err.println("Skip rest of frame: No Such Element");
+			// ditto here (caused by trying to access world's arraylist of
+			// circles whilst updating: bah humbug
+			if (Main.debug)
+				System.err.println("Skip rest of frame: No Such Element");
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run()
 	{
@@ -133,7 +200,8 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 			catch (ConcurrentModificationException e)
 			{
 				// skip the rest of the update if paint conflicts with updates
-				System.err.println("Skip rest of frame: Concurrent Modification");
+				if (Main.debug)
+					System.err.println("Skip rest of frame: Concurrent Modification");
 			}
 
 			// sleep for rest of frame time
@@ -148,6 +216,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 					e.printStackTrace();
 				}
 			}
+			frames++;
 		}
 	}
 
@@ -173,7 +242,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	}
 
 	/**
-	 * The resume method sets the gameState enum to PLAY and resumes the game
+	 * The resume method sets the gameState enum to PLAY and resumes the game.
 	 */
 	public void resume()
 	{
@@ -190,6 +259,9 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		// Do menu stuff
 	}
 
+	/**
+	 * If the game is not paused, pause it. If the game is paused, unpause it.
+	 */
 	public void togglePause()
 	{
 		if (gameState.equals(GameState.PLAY))
@@ -201,29 +273,78 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	// Event Listeners
 	// -------------------------------------------------------------------------------------
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		if (e.getKeyChar() == 'p' || e.getKeyChar() == 'P')
-			togglePause();
-		if (e.getKeyChar() == 'd' || e.getKeyChar() == 'D')
-			Main.debug = !Main.debug;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+	 */
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+		// toggle actions
+		char c = ("" + e.getKeyChar()).toLowerCase().charAt(0);
+		if (keyToggles.get(c) != null && !keyToggles.get(c))
+		{
+			// pause
+			if (c == 'p')
+				togglePause();
+			// debug mode
+			if (c == 'd')
+				Main.debug = !Main.debug;
+			// restart game
+			if (c == 'r')
+				world.restart();
+			// launch game from menu
+			if (c == ' ' && gameState.equals(GameState.MENU))
+			{
+				gameState = GameState.PLAY;
+				world.restart();
+			}
+			// go to menu
+			if (c == 'm' && !gameState.equals(GameState.MENU))
+				gameState = GameState.MENU;
+			// esc action
+			if (c == 27)
+			{
+				// hand off keyboard to menubar ?
+			}
+
+			keyToggles.put(c, true);
+		}
+		
+		// enable full stats overlay
+		if (c == '\t')
+			displayFullStatsOverlay = true;
 
 		frame.updateMenu();
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e)
-	{
-		if (e.getKeyChar() == '\t')
-			displayFullStatsOverlay = true;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		if (e.getKeyChar() == '\t')
+		char c = ("" + e.getKeyChar()).toLowerCase().charAt(0);
+		
+		// disable full stats overlay
+		if (c == '\t')
 			displayFullStatsOverlay = false;
+		// toggle keypress off
+		if (keyToggles.containsKey(c))
+		{
+			keyToggles.put(c, false);
+		}
 	}
 
 	// Getters and Setters
@@ -275,7 +396,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	}
 
 	/**
-	 * The setGameState method sets gameState to the desired state
+	 * The setGameState method sets gameState to the desired state.
 	 * @param gameState game state
 	 */
 	public void setGameState(GameState gameState)
@@ -283,23 +404,57 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 		this.gameState = gameState;
 	}
 
+	/**
+	 * Gets the world.
+	 * @return the world
+	 */
 	protected World getWorld()
 	{
 		return world;
 	}
 
+	/**
+	 * Sets the world.
+	 * @param world the new world
+	 */
 	protected void setWorld(World world)
 	{
 		this.world = world;
 	}
 
+	/**
+	 * Gets the Jframe the applet is contained in.
+	 * @return the Jframe
+	 */
 	public MainFrame getFrame()
 	{
 		return frame;
 	}
 
+	/**
+	 * Sets the frame the applet is contained in.
+	 * @param frame the new frame
+	 */
 	public void setFrame(MainFrame frame)
 	{
 		this.frame = frame;
+	}
+
+	/**
+	 * Gets the number of frames drawn.
+	 * @return the number of frames
+	 */
+	public int getFrames()
+	{
+		return frames;
+	}
+
+	/**
+	 * Sets the number frames drawn.
+	 * @param frames the number of frames drawn
+	 */
+	public void setFrames(int frames)
+	{
+		this.frames = frames;
 	}
 }

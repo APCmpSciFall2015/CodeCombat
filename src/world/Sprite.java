@@ -15,38 +15,49 @@ import lib.Vector2;
  */
 public abstract class Sprite
 {
-	/** maximum velocity of sprites **/
+	
+	/**  maximum velocity of sprites *. */
 	public static final float MAX_VELOCITY = Float.parseFloat(Main.CONFIG.get("spriteMaxVelocity"));
-	/** running id count of sprites **/
+	
+	/**  running id count of sprites *. */
 	protected static int idCount = 0;
 
 	// instance variables
 	// -------------------------------------------
 
-	/** id of sprite **/
+	/**  id of sprite *. */
 	private int id;
-	/** whether or not the sprite exists **/
+	
+	/**  whether or not the sprite exists. */
 	private boolean existence;
-	/** whether or not the Circle is alive **/
+	
+	/**  whether or not the Circle is alive. */
 	private boolean alive;
-	/** plane of existence for the sprite **/
+	
+	/**  plane of existence for the sprite. */
 	private World world;
-	/** color of sprite **/
+	
+	/**  color of sprite. */
 	private Color color;
-	/** size of sprite **/
+	
+	/**  size of sprite. */
 	private Vector2 size;
-	/** location of sprite **/
+	
+	/**  location of sprite. */
 	private Vector2 position;
-	/** rate of change in location of sprite **/
+	
+	/**  rate of change in location of sprite. */
 	private Vector2 velocity;
-	/** rate of change in rate of change of location of sprite **/
+	
+	/**  rate of change in rate of change of location of sprite. */
 	private Vector2 acceleration;
 
 	// Constructors
 	// --------------------------------------------------
 
 	/**
-	 * Sprite Copy Constructor
+	 * Sprite Copy Constructor.
+	 *
 	 * @param s Sprite to copy
 	 */
 	protected Sprite(Sprite s)
@@ -64,9 +75,9 @@ public abstract class Sprite
 	}
 
 	/**
-	 * 7-Argument Sprite Constructor
-	 * @param width width
-	 * @param height height
+	 * 6-Argument Sprite Constructor.
+	 *
+	 * @param size the size
 	 * @param position position vector
 	 * @param velocity rate of change in position vector
 	 * @param acceleration rate of change in rate of change of position / rate
@@ -199,7 +210,8 @@ public abstract class Sprite
 	}
 
 	/**
-	 * The paint method draws the sprite
+	 * The paint method draws the sprite.
+	 *
 	 * @param g Graphics to paint on
 	 */
 	public void paint(Graphics g)
@@ -221,6 +233,11 @@ public abstract class Sprite
 		}
 	}
 
+	/**
+	 * Slides a sprite down a wall.
+	 *
+	 * @return true, if the sprite slid
+	 */
 	public boolean slideWalls()
 	{
 		boolean slid = false;
@@ -275,12 +292,18 @@ public abstract class Sprite
 	// Overridden methods
 	// ----------------------------------------------------
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return (this.getClass() + ": " + id).substring(12);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o)
 	{
@@ -290,91 +313,181 @@ public abstract class Sprite
 	// Getters and setters
 	// -----------------------------------------------------
 
+	/**
+	 * Gets the size of the sprite.
+	 *
+	 * @return the size
+	 */
 	public Vector2 getSize()
 	{
 		return size;
 	}
 
+	/**
+	 * Sets the size of the sprite.
+	 *
+	 * @param size the new size
+	 */
 	public void setSize(Vector2 size)
 	{
 		this.size = size;
 	}
 
+	/**
+	 * Gets the position of the sprite.
+	 *
+	 * @return the position
+	 */
 	public Vector2 getPosition()
 	{
 		return position.copy();
 	}
 
+	/**
+	 * Sets the position of the sprite.
+	 *
+	 * @param position the new position
+	 */
 	public void setPosition(Vector2 position)
 	{
 		this.position = position.copy();
 	}
 
+	/**
+	 * Gets the velocity of the sprite.
+	 *
+	 * @return the velocity
+	 */
 	public Vector2 getVelocity()
 	{
 		return velocity.copy();
 	}
 
+	/**
+	 * Sets the velocity of the sprite.
+	 *
+	 * @param velocity the new velocity
+	 */
 	public void setVelocity(Vector2 velocity)
 	{
 		this.velocity = velocity.copy();
 	}
 
+	/**
+	 * Gets the acceleration of the sprite.
+	 *
+	 * @return the acceleration
+	 */
 	public Vector2 getAcceleration()
 	{
 		return acceleration.copy();
 	}
 
+	/**
+	 * Sets the acceleration of the sprite.
+	 *
+	 * @param acceleration the new acceleration
+	 */
 	public void setAcceleration(Vector2 acceleration)
 	{
 		this.acceleration = acceleration.copy();
 	}
 
+	/**
+	 * Gets the color of the sprite.
+	 *
+	 * @return the color
+	 */
 	public Color getColor()
 	{
 		return color;
 	}
 
+	/**
+	 * Sets the color of the sprite.
+	 *
+	 * @param color the new color
+	 */
 	public void setColor(Color color)
 	{
 		this.color = color;
 	}
 
+	/**
+	 * Gets the world the sprite is in.
+	 *
+	 * @return the world
+	 */
 	protected World getWorld()
 	{
 		return world;
 	}
 
+	/**
+	 * Sets the world the sprite is in.
+	 *
+	 * @param world the new world
+	 */
 	protected void setWorld(World world)
 	{
 		this.world = world;
 	}
 
+	/**
+	 * Gets whether the sprite exists in the world.
+	 *
+	 * @return true, if it exists
+	 */
 	public boolean getExistence()
 	{
 		return existence;
 	}
 
+	/**
+	 * Sets whether the sprite exists in the world.
+	 *
+	 * @param existence true, if it exists
+	 */
 	public void setExistence(boolean existence)
 	{
 		this.existence = existence;
 	}
 
+	/**
+	 * Gets the id of the sprite.
+	 *
+	 * @return the id
+	 */
 	public int getId()
 	{
 		return id;
 	}
 
+	/**
+	 * Sets the id of the sprite.
+	 *
+	 * @param id the new id
+	 */
 	protected void setId(int id)
 	{
 		this.id = id;
 	}
 
+	/**
+	 * Checks if the sprite is alive.
+	 *
+	 * @return true, if it is alive
+	 */
 	public boolean isAlive()
 	{
 		return alive;
 	}
 
+	/**
+	 * Sets if the sprite is alive.
+	 *
+	 * @param alive true, if it is alive
+	 */
 	public void setAlive(boolean alive)
 	{
 		this.alive = alive;

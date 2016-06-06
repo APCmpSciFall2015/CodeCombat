@@ -53,7 +53,7 @@ public class CommitBot extends Mind
 
 			if (target != null)
 			{
-				Vector2 direction = target.getPosition().sub(getEyePosition());
+				Vector2 direction = target.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
 				Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
 				Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
 				if(Math.acos(direction.dot(left) / (direction.mag()))
@@ -84,6 +84,6 @@ public class CommitBot extends Mind
 	@Override
 	public String toString()
 	{
-		return "Robbie";
+		return "CommitBot";
 	}
 }
