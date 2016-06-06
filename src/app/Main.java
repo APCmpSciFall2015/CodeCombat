@@ -32,15 +32,15 @@ public class Main implements Serializable
 	public static final long FRAME_RATE = Integer.parseInt(CONFIG.get("frameRate"));
 	
 	/** world width **/
-	public static final int worldWidth = Integer.parseInt(CONFIG.get("worldWidth"));	
+	public static final int WORLD_WIDTH = Integer.parseInt(CONFIG.get("worldWidth"));	
 	
 	/** world height **/
-	public static final int worldHeight = Integer.parseInt(CONFIG.get("worldHeight"));
+	public static final int WORLD_HEIGHT = Integer.parseInt(CONFIG.get("worldHeight"));
 
 	/** JFrame to hold applet **/
 	// @formatter:off
 	private static final JFrame FRAME = new MainFrame("Code Combat", 
-											new Dimension(worldWidth, worldHeight),
+											new Dimension(WORLD_WIDTH, WORLD_HEIGHT),
 											new MainApplet());;
 	// @formatter:on
 	

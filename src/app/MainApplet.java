@@ -32,7 +32,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	// ----------------------------------
 	
 	/** size of Applet. */
-	private final Dimension size = new Dimension(Main.worldWidth, Main.worldHeight);
+	private final Dimension size = new Dimension(Main.WORLD_WIDTH, Main.WORLD_HEIGHT);
 
 	/** plane of existence help by the applet. */
 	private World world;

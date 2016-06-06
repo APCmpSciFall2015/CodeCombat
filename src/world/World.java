@@ -380,32 +380,23 @@ public class World
 	}
 
 	/**
-	 * Gets the sprites in the world. (deep copy)
+	 * Gets the sprites in the world. (shallow copy)
 	 *
 	 * @return the sprites
 	 */
 	public ArrayList<Sprite> getSprites()
 	{
-		ArrayList<Sprite> copy = new ArrayList<Sprite>();
-		for(Sprite s : sprites)
-		{
-			copy.add(s.copy());
-		}
-		return copy;
+		return sprites;
 	}
 
 	/**
-	 * Sets the sprites in the world. (deep copy)
+	 * Sets the sprites in the world. (shallow copy)
 	 *
 	 * @param sprites the new sprites
 	 */
 	public void setSprites(ArrayList<Sprite> sprites)
 	{
-		this.sprites = new ArrayList<Sprite>();
-		for(Sprite s : sprites)
-		{
-			this.sprites.add(s.copy());
-		}
+		this.sprites = sprites;
 	}
 
 	/**

@@ -1,5 +1,5 @@
-slot1=bots.JacknJahnBot
-slot2=
+slot1=CommitBot
+slot2=CommitBot
 slot3=null
 slot4=null
 slot5=null
