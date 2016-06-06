@@ -8,18 +8,33 @@ import app.Main;
 import lib.Parser;
 import lib.Vector2;
 
+
+/**
+ * The Obstacle class is responsible for rendering immovable and collidable objects in the world.
+ * @author Robert
+ * @version 0.1
+ */
 public class Obstacle extends Sprite
 {
+	
+	/** The possible sizes the obstacle can be*/
 	public static final List<List<Float>> SIZES = Parser.parse2DImmutableFloatArray(Main.CONFIG.get("obstacleSizes"));
+	
 	/**
-	 * Obstacle Copy Constructor
-	 * @param o
+	 * Obstacle Copy Constructor.
+	 *
+	 * @param o the o
 	 */
 	public Obstacle(Obstacle o)
 	{
 		super(o);
 	}
 
+	/**
+	 * Instantiates a new obstacle with a random size.
+	 *
+	 * @param world the world
+	 */
 	public Obstacle(World world)
 	{
 		// @formatter:off
@@ -38,9 +53,9 @@ public class Obstacle extends Sprite
 	}
 
 	/**
-	 * 5-Argument Obstacle Constructor
-	 * @param width width
-	 * @param height height
+	 * 5-Argument Obstacle Constructor.
+	 *
+	 * @param size the size
 	 * @param position position
 	 * @param color color
 	 * @param world plane of existence
@@ -53,6 +68,9 @@ public class Obstacle extends Sprite
 	// Overridden methods
 	// --------------------------------------------
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -67,17 +85,27 @@ public class Obstacle extends Sprite
 		// @formatter:on		
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#update()
+	 */
 	@Override
 	public void update()
 	{
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#collide(world.Sprite)
+	 */
 	@Override
 	public void collide(Sprite s)
 	{
 		if(s == null) return;
+		if(s instanceof Obstacle) slide(s);
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#copy()
+	 */
 	@Override
 	public Sprite copy()
 	{

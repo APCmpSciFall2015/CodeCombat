@@ -1,6 +1,8 @@
 package world;
 
 import java.awt.Graphics;
+import java.io.File;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
 import app.Main;
@@ -16,32 +18,61 @@ import lib.Vector2;
  */
 public class World
 {
-	/** variance (standard deviation) of gaussian noise in measurements **/
+	
+	/**  variance (standard deviation) of gaussian noise in measurements */
 	public static final float NOISE_VARIANCE = Float.parseFloat(Main.CONFIG.get("worldNoiseVariance"));
-	/** mean of gaussian noise in measurements **/
+	
+	/**  mean of gaussian noise in measurements */
 	public static final float NOISE_MEAN = Float.parseFloat(Main.CONFIG.get("worldNoiseMean"));
-	/** Number of obstacles **/
+	
+	/**  Number of obstacles*/
 	public static final int NUM_OBSTACLES = Integer.parseInt(Main.CONFIG.get("worldNumObstacles"));
-	/** size of world **/
+	
+	/** Number of Shields */
+	public static final int NUM_SHIELDS = Integer.parseInt(Main.CONFIG.get("worldNumShields"));
+	
+	/** Maximum amount of circles */
+	public static final int MAX_CIRCLES = Integer.parseInt(Main.CONFIG.get("worldMaxCircles"));
+	
+	/** Number of mines. */
+	public static final int NUM_MINES = Integer.parseInt(Main.CONFIG.get("worldNumMines"));
+	
+	/**  size of world. */
 	private Vector2 size;
-	/** ticks executed **/
+	
+	/**  ticks executed. */
 	private long ticks = 0;
-	/** sprites in the plane of existence **/
+	
+	/**  sprites in the plane of existence. */
 	private ArrayList<Sprite> sprites;
-	/** Host mainApplet **/
+	
+	/**  Host mainApplet. */
 	private MainApplet mainApplet;
-	
-	
+
+	/**
+	 * The Enum SpriteType.
+	 */
 	public static enum SpriteType
 	{
-		CIRCLE, OBSTACLE, PROJECTILE, SHIELD
+		
+		/** Circle/Bot. */
+		CIRCLE, 
+		/** Obstacle */
+		OBSTACLE, 
+		/** Projectile */
+		PROJECTILE, 
+		/** Shield */
+		SHIELD, 
+		/** mine */
+		MINE
 	}
 
 	// Constructors
 	// ---------------------------------------------------------
 
 	/**
-	 * 2-Argument World Constructor
+	 * 2-Argument World Constructor.
+	 *
 	 * @param mainApplet host mainApplet
 	 * @param size size of world
 	 */
@@ -49,35 +80,82 @@ public class World
 	{
 		this.mainApplet = mainApplet; // shallow copy
 		this.size = size.copy();
+		init();
+	}
 
-		// initialize game objects
+	/**
+	 * Inits the.
+	 */
+	public void init()
+	{
 		sprites = new ArrayList<Sprite>();
+		// initialize game objects
+
+		// init circles
+		for (int i = 1; i <= MAX_CIRCLES; i++)
+		{
+			String slotData = Main.GAME_SETTINGS.get("slot" + i);
+			if (slotData != null && slotData.length() > 0)
+			{
+				Sprite s = spawn(SpriteType.CIRCLE);
+				if (!slotData.equals("null"))
+				{
+					// use magic (java reflection) to bring life to the circles
+					// It's ALIVE!!!
+					try
+					{
+						Class c = Class.forName(slotData);
+						Constructor cons = c.getConstructor(Circle.class, float.class, float.class);
+						Mind m = (Mind) cons.newInstance((Circle) s, NOISE_VARIANCE, NOISE_MEAN);
+						((Circle) s).setMind(m);
+					}
+					catch (Exception e)
+					{
+						System.err.println("ERROR: Failed to instantiate specified class in game_settings");
+					}
+				}
+			}
+		}
+		
+		// init obstacles and shields
 		for (int i = 0; i < NUM_OBSTACLES; i++)
 		{
 			spawn(SpriteType.OBSTACLE);
 		}
-
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < NUM_SHIELDS; i++)
 		{
 			spawn(SpriteType.SHIELD);
-			spawn(SpriteType.CIRCLE);
 		}
-		Circle s = (Circle) sprites.get(sprites.size() - 1);
-		s.setMind(new TestBot(s, NOISE_VARIANCE, NOISE_MEAN));
+		for (int i = 0; i < NUM_MINES; i++)
+		{
+			spawn(SpriteType.MINE);
+		}
 	}
 
 	/**
-	 * spawns a circle in the world
+	 * Restarts the game.
 	 */
-	public void spawn(SpriteType type)
+	public void restart()
 	{
-		Sprite s;
+		ticks = 0;
+		Sprite.idCount = 0;
+		init();	
+	}
+
+	/**
+	 * spawns a new sprite in the world.
+	 *
+	 * @param type the type of sprite to spawn
+	 * @return the sprite
+	 */
+	public Sprite spawn(SpriteType type)
+	{
+		Sprite s = null;
 
 		switch (type)
 		{
 		case CIRCLE:
 			s = new Circle(this);
-//			((Circle) s).setMind(new TestBot((Circle) s, NOISE_VARIANCE, NOISE_MEAN));
 			break;
 		case OBSTACLE:
 			s = new Obstacle(this);
@@ -85,14 +163,23 @@ public class World
 		case SHIELD:
 			s = new Shield(this);
 			break;
+		case MINE:
+			s = new Mine(this);
+			break;
 		default:
 			System.err.println("Invalid Sprite Type");
-			return;
+			return s;
 		}
 		assignAvailablePosition(s);
 		sprites.add(s);
+		return s;
 	}
-	
+
+	/**
+	 * Assigns an area the sprite will not be colliding with on the world.
+	 *
+	 * @param s the sprite to assign the position to
+	 */
 	public void assignAvailablePosition(Sprite s)
 	{
 		// correct position to avoid collision
@@ -105,10 +192,11 @@ public class World
 		s.update();
 		// @formatter:on	
 	}
-	
+
 	/**
-	 * respawns a circle in the world in a random location
-	 * @param respawn the circle to respawn
+	 * respawns a circle in the world in a random location.
+	 *
+	 * @param s the s
 	 */
 	public void respawn(Sprite s)
 	{
@@ -131,6 +219,14 @@ public class World
 		ticks++;
 	}
 
+	/**
+	 * Requests all sprites in the object's Field of View.
+	 *
+	 * @param position the position of the sprite
+	 * @param face the position the FOV broadcasts from
+	 * @param fieldOfView the Field of View of the sprite
+	 * @return an ArrayList containing all sprites within the Field of View
+	 */
 	public ArrayList<Sprite> requestInView(Vector2 position, Vector2 face, float fieldOfView)
 	{
 		ArrayList<Sprite> inView = new ArrayList<Sprite>();
@@ -147,7 +243,8 @@ public class World
 	}
 
 	/**
-	 * The paint method paints the world and all its sprites
+	 * The paint method paints the world and all its sprites.
+	 *
 	 * @param g Graphics to paint on
 	 */
 	public void paint(Graphics g)
@@ -191,20 +288,26 @@ public class World
 		return collisions;
 	}
 
-
+	/**
+	 * checks to see if a sprite is colliding with any other sprite in the world.
+	 *
+	 * @param sprite the sprite to check against the world
+	 * @return the sprite the passed argument is colliding with, or null otherwise
+	 */
 	public Sprite collidingWith(Sprite sprite)
 	{
 		for (Sprite s : sprites)
 		{
 			if (colliding(s, sprite))
-				return sprite;
+				return s;
 		}
 		return null;
 	}
 
 	/**
 	 * The colliding method checks if 2 sprites are colliding using an
-	 * Axis-Aligned Bounding-Box
+	 * Axis-Aligned Bounding-Box.
+	 *
 	 * @param A 1st sprite
 	 * @param B 2nd sprite
 	 * @return are the sprites colliding
@@ -245,36 +348,71 @@ public class World
 	// Getters and Setters
 	// ---------------------------------------------
 
+	/**
+	 * Gets the main applet the world is contained in.
+	 *
+	 * @return the main applet
+	 */
 	protected MainApplet getMainApplet()
 	{
 		return mainApplet;
 	}
 
+	/**
+	 * Sets the main applet the world is contained in.
+	 *
+	 * @param mainApplet the new main applet
+	 */
 	protected void setMainApplet(MainApplet mainApplet)
 	{
 		this.mainApplet = mainApplet;
 	}
 
+	/**
+	 * Gets the size of the world.
+	 *
+	 * @return the size of the world
+	 */
 	public Vector2 getSize()
 	{
 		return size.copy();
 	}
 
+	/**
+	 * Gets the sprites in the world.
+	 *
+	 * @return the sprites
+	 */
 	public ArrayList<Sprite> getSprites()
 	{
 		return sprites;
 	}
 
+	/**
+	 * Sets the sprites in the world.
+	 *
+	 * @param sprites the new sprites
+	 */
 	public void setSprites(ArrayList<Sprite> sprites)
 	{
 		this.sprites = sprites;
 	}
 
+	/**
+	 * Gets the ticks.
+	 *
+	 * @return the ticks
+	 */
 	public long getTicks()
 	{
 		return ticks;
 	}
 
+	/**
+	 * Sets the ticks.
+	 *
+	 * @param ticks the new ticks
+	 */
 	public void setTicks(long ticks)
 	{
 		this.ticks = ticks;

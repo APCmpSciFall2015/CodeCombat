@@ -1,15 +1,10 @@
 package app;
 
 import java.awt.Dimension;
-import java.awt.Window;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.lang.management.ManagementFactory;
-
 import javax.swing.JFrame;
-
-import world.World;
+import lib.Config;
 
 /**
  * The Main class is the host applet for the game.
@@ -20,6 +15,10 @@ public class Main implements Serializable
 {
 	public static final File CONFIG_FILE = new File("./res/config.txt");
 	public static final Config CONFIG = new Config(CONFIG_FILE);
+	/** Game settings **/
+	public static final File GAME_SETTINGS_FILE = new File("./res/game_settings.txt");
+	public static final Config GAME_SETTINGS = new Config(GAME_SETTINGS_FILE);
+
 	
 	/** Serializable id **/
 	private static final long serialVersionUID = 3206847208968227199L;
@@ -50,6 +49,7 @@ public class Main implements Serializable
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 		    public void run() {
 		    	CONFIG.save(CONFIG_FILE);
+		    	GAME_SETTINGS.save(GAME_SETTINGS_FILE);
 		    }
 		}));
 	}

@@ -16,72 +16,110 @@ import lib.Vector2;
  */
 public class Circle extends Sprite implements Comparable<Circle>
 {
-	/** Speed of Circles **/
+	
+	/**  Speed of Circles */
 	public static final float SPEED = Float.parseFloat(Main.CONFIG.get("circleSpeed"));
-	/** Field of View of Circle **/
+	
+	/**  Field of View angle of Circle */
 	public static final float FOV = Float.parseFloat(Main.CONFIG.get("circleFOV"));
-	/** maximum rate of change in the direction of velocity **/
+	
+	/**  maximum rate of change in the direction of velocity */
 	public static final float MAX_TURNING_ANGLE = Float.parseFloat(Main.CONFIG.get("circleMaxTurningAngle"));
-	/** time to respawn **/
+	
+	/**  time to respawn */
 	public static final int RESPAWN_TIME = Integer.parseInt(Main.CONFIG.get("circleRespawnTime"));
-	/** time to between shots **/
+	
+	/**  time to between shots */
 	public static final int RELOAD_TIME = Integer.parseInt(Main.CONFIG.get("circleReloadTime"));
-	/** radius of circle **/
+	
+	/**  radius of circle */
 	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("circleRadius"));
 
 	// Circle stats
 	// ------------------------------------------
 
-	/** circle accuracy during existence **/
+	/**  circle accuracy during existence */
 	private float totalAccuracy = 0;
-	/** circle accuracy during life **/
+	
+	/**  circle accuracy during life */
 	private float accuracy = 1;
-	/** circle shots fired during existence **/
+	
+	/**  circle shots fired during existence */
 	private int totalShotsFired = 0;
-	/** circle shots fired during life **/
+	
+	/**  circle shots fired during life */
 	private int shotsFired = 0;
-	/** circle hits during existence **/
+	
+	/**  circle hits during existence */
 	private int totalHits = 0;
-	/** circle hits during life **/
+	
+	/**  circle hits during life */
 	private int hits = 0;
-	/** circle deaths **/
+	
+	/**  circle deaths */
 	private int deaths = 0;
-	/** circle kills during existence **/
+	
+	/**  circle kills during existence */
 	private int totalKills = 0;
-	/** circle kills during life **/
+	
+	/**  circle kills during life */
 	private int kills = 0;
-	/** circle ticks alive **/
+	
+	/**  circle ticks alive */
 	private int ticksAlive = 0;
-	/** shields acquired during existence **/
+	
+	/**  shields acquired during existence */
 	private int totalShieldsAcquired = 0;
-	/** shields acquired during life **/
+	
+	/**  shields acquired during life */
 	private int shieldsAcquired = 0;
-	/** obstacle collisions during existence **/
+	
+	/**  obstacle collisions during existence */
 	private int totalObstacleCollisions = 0;
-	/** obstacle collisions during life **/
+	
+	/**  obstacle collisions during life */
 	private int obstacleCollisions = 0;
-	/** wall collisions during existence **/
+	
+	/**  wall collisions during existence */
 	private int totalWallCollisions = 0;
-	/** wall collisions during life **/
+	
+	/**  wall collisions during life */
 	private int wallCollisions;
+	
+	/**  mine collisions during life (possible if have shield) */
+	private int mineCollisions = 0;
+	
+	/**  mine collisions during existence */
+	private int totalMineCollisions = 0;
+	
+	/**  projectile collisions during life (possible if have shield) */
+	private int projectileCollisions = 0;
+	
+	/**  projectile collisions during existence */
+	private int totalProjectileCollisions = 0;
 
-	/** timer for shooting **/
+	/**  timer for shooting */
 	private int shootTimer = RELOAD_TIME;
-	/** timer for respawns **/
+	
+	/**  timer for respawns */
 	private int respawnTimer = RESPAWN_TIME;
-	/** location of Circle's eyes **/
+	
+	/**  location of Circle's eyes */
 	private Vector2 eyePosition;
-	/** Mind to control circle bot **/
+	
+	/**  has a shield */
+	private boolean shielded = false;
+	
+	/**  Mind to control circle bot */
 	private Mind mind = null;
 
 	// Constructors
 	// --------------------------------------------------------------------
 
 	/**
-	 * Circle copy constructor
-	 * @param x x pos
-	 * @param y y pos
-	 * @param world plane of existence
+	 * Circle copy constructor.
+	 *
+	 * @param c the c
 	 */
 	public Circle(Circle c)
 	{
@@ -92,6 +130,11 @@ public class Circle extends Sprite implements Comparable<Circle>
 		this.eyePosition = c.getEyePosition();
 	}
 
+	/**
+	 * Instantiates a new circle and places it randomly in the world.
+	 *
+	 * @param world the world to place it in
+	 */
 	public Circle(World world)
 	{
 		super(new Vector2(RADIUS * 2, RADIUS * 2),
@@ -104,6 +147,14 @@ public class Circle extends Sprite implements Comparable<Circle>
 				(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
 	}
 
+	/**
+	 * Instantiates a new circle.
+	 *
+	 * @param position the position of the circle
+	 * @param direction the direction the circle is facing in
+	 * @param color the color of the circle
+	 * @param world the world to place it in
+	 */
 	public Circle(Vector2 position, Vector2 direction, Color color, World world)
 	{
 		super(new Vector2(RADIUS / 2, RADIUS / 2), position, direction.normalize().mult(SPEED), new Vector2(0, 0),
@@ -115,6 +166,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 	// Overridden methods
 	// -----------------------------------------------------------------------
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#paint(java.awt.Graphics)
+	 */
 	@Override
 	public final void paint(Graphics g)
 	{
@@ -149,6 +203,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#update()
+	 */
 	@Override
 	public void update()
 	{
@@ -174,6 +231,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#collide(world.Sprite)
+	 */
 	@Override
 	public final void collide(Sprite s)
 	{
@@ -181,6 +241,14 @@ public class Circle extends Sprite implements Comparable<Circle>
 		// die when hit by projectile (not own projectile)
 		if (s instanceof Projectile && !((Projectile) s).isOwner(this))
 		{
+			projectileCollisions++;
+			totalProjectileCollisions++;
+			kill();
+		}
+		else if (s instanceof Mine)
+		{
+			mineCollisions++;
+			totalMineCollisions++;
 			kill();
 		}
 		// slide on all other objects
@@ -195,6 +263,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#copy()
+	 */
 	@Override
 	public Sprite copy()
 	{
@@ -203,6 +274,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(Circle c)
 	{
@@ -217,6 +291,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 	// instance methods
 	// ----------------------------------------------------------------------
 
+	/**
+	 * Kills the circle.
+	 */
 	public void kill()
 	{
 		respawnTimer = RESPAWN_TIME;
@@ -224,9 +301,12 @@ public class Circle extends Sprite implements Comparable<Circle>
 		setAlive(false);
 	}
 
+	/**
+	 * Respawns the circle.
+	 */
 	private final void respawn()
 	{
-		if (respawnTimer == 0)
+		if (respawnTimer <= 0)
 		{
 			accuracy = 1;
 			shotsFired = 0;
@@ -241,6 +321,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 		}
 	}
 
+	/**
+	 * Calcculates the stats of the circles.
+	 */
 	private void calcStats()
 	{
 		if (shotsFired > 0)
@@ -249,6 +332,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 			totalAccuracy = (float) totalHits / totalShotsFired;
 	}
 
+	/**
+	 * Updates the counters.
+	 */
 	private final void updateCounters()
 	{
 		// @formatter:off
@@ -258,6 +344,11 @@ public class Circle extends Sprite implements Comparable<Circle>
 		// @formatter:on
 	}
 
+	/**
+	 * Requests items in view.
+	 *
+	 * @return a List containing's the object in the Bot's view
+	 */
 	public final ArrayList<Sprite> requestInView()
 	{
 		// @formatter:off
@@ -280,6 +371,11 @@ public class Circle extends Sprite implements Comparable<Circle>
 		// @formatter:on
 	}
 
+	/**
+	 * responsible for turning the robot.
+	 *
+	 * @param deltaTheta the angle to turn
+	 */
 	public final void turn(float deltaTheta)
 	{
 		// do nothing if input not a number
@@ -316,7 +412,10 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	// Getters and Setters
 	// -------------------------------------------------------
-
+	
+	/* (non-Javadoc)
+	 * @see world.Sprite#setPosition(lib.Vector2)
+	 */
 	@Override
 	public void setPosition(Vector2 position)
 	{
@@ -325,201 +424,498 @@ public class Circle extends Sprite implements Comparable<Circle>
 				(position.getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
 	}
 
+	/**
+	 * Gets the total accuracy.
+	 *
+	 * @return the total accuracy
+	 */
 	public float getTotalAccuracy()
 	{
 		return totalAccuracy;
 	}
 
+	/**
+	 * Sets the total accuracy.
+	 *
+	 * @param totalAccuracy the new total accuracy
+	 */
 	public void setTotalAccuracy(float totalAccuracy)
 	{
 		this.totalAccuracy = totalAccuracy;
 	}
 
+	/**
+	 * Gets the accuracy.
+	 *
+	 * @return the accuracy
+	 */
 	public float getAccuracy()
 	{
 		return accuracy;
 	}
 
+	/**
+	 * Sets the accuracy.
+	 *
+	 * @param accuracy the new accuracy
+	 */
 	public void setAccuracy(float accuracy)
 	{
 		this.accuracy = accuracy;
 	}
 
+	/**
+	 * Gets the total shots fired.
+	 *
+	 * @return the total shots fired
+	 */
 	public int getTotalShotsFired()
 	{
 		return totalShotsFired;
 	}
 
+	/**
+	 * Sets the total shots fired.
+	 *
+	 * @param totalShotsFired the new total shots fired
+	 */
 	public void setTotalShotsFired(int totalShotsFired)
 	{
 		this.totalShotsFired = totalShotsFired;
 	}
 
+	/**
+	 * Gets the shots fired.
+	 *
+	 * @return the shots fired
+	 */
 	public int getShotsFired()
 	{
 		return shotsFired;
 	}
 
+	/**
+	 * Sets the shots fired.
+	 *
+	 * @param shotsFired the new shots fired
+	 */
 	public void setShotsFired(int shotsFired)
 	{
 		this.shotsFired = shotsFired;
 	}
 
+	/**
+	 * Gets the total hits.
+	 *
+	 * @return the total hits
+	 */
 	public int getTotalHits()
 	{
 		return totalHits;
 	}
 
+	/**
+	 * Sets the total hits.
+	 *
+	 * @param totalHits the new total hits
+	 */
 	public void setTotalHits(int totalHits)
 	{
 		this.totalHits = totalHits;
 	}
 
+	/**
+	 * Gets the hits.
+	 *
+	 * @return the hits
+	 */
 	public int getHits()
 	{
 		return hits;
 	}
 
+	/**
+	 * Sets the hits.
+	 *
+	 * @param hits the new hits
+	 */
 	public void setHits(int hits)
 	{
 		this.hits = hits;
 	}
 
+	/**
+	 * Gets the deaths.
+	 *
+	 * @return the deaths
+	 */
 	public int getDeaths()
 	{
 		return deaths;
 	}
 
+	/**
+	 * Sets the deaths.
+	 *
+	 * @param deaths the new deaths
+	 */
 	public void setDeaths(int deaths)
 	{
 		this.deaths = deaths;
 	}
 
+	/**
+	 * Gets the total kills.
+	 *
+	 * @return the total kills
+	 */
 	public int getTotalKills()
 	{
 		return totalKills;
 	}
 
+	/**
+	 * Sets the total kills.
+	 *
+	 * @param totalKills the new total kills
+	 */
 	public void setTotalKills(int totalKills)
 	{
 		this.totalKills = totalKills;
 	}
 
+	/**
+	 * Gets the kills.
+	 *
+	 * @return the kills
+	 */
 	public int getKills()
 	{
 		return kills;
 	}
 
+	/**
+	 * Sets the kills.
+	 *
+	 * @param kills the new kills
+	 */
 	public void setKills(int kills)
 	{
 		this.kills = kills;
 	}
 
+	/**
+	 * Gets the ticks alive.
+	 *
+	 * @return the ticks alive
+	 */
 	public int getTicksAlive()
 	{
 		return ticksAlive;
 	}
 
+	/**
+	 * Sets the ticks alive.
+	 *
+	 * @param ticksAlive the new ticks alive
+	 */
 	public void setTicksAlive(int ticksAlive)
 	{
 		this.ticksAlive = ticksAlive;
 	}
 
+	/**
+	 * Gets the total shields acquired.
+	 *
+	 * @return the total shields acquired
+	 */
 	public int getTotalShieldsAcquired()
 	{
 		return totalShieldsAcquired;
 	}
 
+	/**
+	 * Sets the total shields acquired.
+	 *
+	 * @param totalShieldsAcquired the new total shields acquired
+	 */
 	public void setTotalShieldsAcquired(int totalShieldsAcquired)
 	{
 		this.totalShieldsAcquired = totalShieldsAcquired;
 	}
 
+	/**
+	 * Gets the shields acquired.
+	 *
+	 * @return the shields acquired
+	 */
 	public int getShieldsAcquired()
 	{
 		return shieldsAcquired;
 	}
 
+	/**
+	 * Sets the shields acquired.
+	 *
+	 * @param shieldsAcquired the new shields acquired
+	 */
 	public void setShieldsAcquired(int shieldsAcquired)
 	{
 		this.shieldsAcquired = shieldsAcquired;
 	}
 
+	/**
+	 * Gets the total obstacle collisions.
+	 *
+	 * @return the total obstacle collisions
+	 */
 	public int getTotalObstacleCollisions()
 	{
 		return totalObstacleCollisions;
 	}
 
+	/**
+	 * Sets the total obstacle collisions.
+	 *
+	 * @param totalObstacleCollisions the new total obstacle collisions
+	 */
 	public void setTotalObstacleCollisions(int totalObstacleCollisions)
 	{
 		this.totalObstacleCollisions = totalObstacleCollisions;
 	}
 
+	/**
+	 * Gets the obstacle collisions.
+	 *
+	 * @return the obstacle collisions
+	 */
 	public int getObstacleCollisions()
 	{
 		return obstacleCollisions;
 	}
 
+	/**
+	 * Sets the obstacle collisions.
+	 *
+	 * @param obstaclesCollisions the new obstacle collisions
+	 */
 	public void setObstacleCollisions(int obstaclesCollisions)
 	{
 		this.obstacleCollisions = obstaclesCollisions;
 	}
 
+	/**
+	 * Gets the total wall collisions.
+	 *
+	 * @return the total wall collisions
+	 */
 	public int getTotalWallCollisions()
 	{
 		return totalWallCollisions;
 	}
 
+	/**
+	 * Sets the total wall collisions.
+	 *
+	 * @param totalWallCollisions the new total wall collisions
+	 */
 	public void setTotalWallCollisions(int totalWallCollisions)
 	{
 		this.totalWallCollisions = totalWallCollisions;
 	}
 
+	/**
+	 * Gets the wall collisions.
+	 *
+	 * @return the wall collisions
+	 */
 	public int getWallCollisions()
 	{
 		return wallCollisions;
 	}
 
+	/**
+	 * Sets the wall collisions.
+	 *
+	 * @param wallCollisions the new wall collisions
+	 */
 	public void setWallCollisions(int wallCollisions)
 	{
 		this.wallCollisions = wallCollisions;
 	}
 
+	/**
+	 * Gets the shoot timer.
+	 *
+	 * @return the shoot timer
+	 */
 	public int getShootTimer()
 	{
 		return shootTimer;
 	}
 
+	/**
+	 * Sets the amount of time to reload.
+	 *
+	 * @param shootTimer the amount of time to reload
+	 */
 	public void setShootTimer(int shootTimer)
 	{
 		this.shootTimer = shootTimer;
 	}
 
+	/**
+	 * Gets the respawn timer.
+	 *
+	 * @return the respawn timer
+	 */
 	public int getRespawnTimer()
 	{
 		return respawnTimer;
 	}
 
+	/**
+	 * Sets the respawn timer.
+	 *
+	 * @param respawnTimer the new respawn timer
+	 */
 	public void setRespawnTimer(int respawnTimer)
 	{
 		this.respawnTimer = respawnTimer;
 	}
 
+	/**
+	 * Gets the AI controlling the robot.
+	 *
+	 * @return the AI controlling the robot
+	 */
 	public Mind getMind()
 	{
 		// intentional shallow copy minds copy circles
 		return mind;
 	}
 
+	/**
+	 * Sets the AI containing the robot.
+	 *
+	 * @param mind the new AI
+	 */
 	public void setMind(Mind mind)
 	{
 		// intentional shallow copy minds copy circles
 		this.mind = mind;
 	}
 
+	/**
+	 * Gets the eye position.
+	 *
+	 * @return the eye position
+	 */
 	public Vector2 getEyePosition()
 	{
 		return eyePosition.copy();
+	}
+
+	/**
+	 * Gets the mine collisions.
+	 *
+	 * @return the mine collisions
+	 */
+	public int getMineCollisions()
+	{
+		return mineCollisions;
+	}
+
+	/**
+	 * Sets the mine collisions.
+	 *
+	 * @param mineCollisions the new mine collisions
+	 */
+	public void setMineCollisions(int mineCollisions)
+	{
+		this.mineCollisions = mineCollisions;
+	}
+
+	/**
+	 * Gets the total mine collisions.
+	 *
+	 * @return the total mine collisions
+	 */
+	public int getTotalMineCollisions()
+	{
+		return totalMineCollisions;
+	}
+
+	/**
+	 * Sets the total mine collisions.
+	 *
+	 * @param totalMineCollisions the new total mine collisions
+	 */
+	public void setTotalMineCollisions(int totalMineCollisions)
+	{
+		this.totalMineCollisions = totalMineCollisions;
+	}
+	
+
+	/**
+	 * Checks if is shielded.
+	 *
+	 * @return true, if it is shielded
+	 */
+	public boolean isShielded()
+	{
+		return shielded;
+	}
+	
+
+	/**
+	 * Sets the shielded.
+	 *
+	 * @param hasShield if it is shielded
+	 */
+	public void setShielded(boolean hasShield)
+	{
+		this.shielded = hasShield;
+	}
+
+	/**
+	 * Gets the projectile collisions.
+	 *
+	 * @return the projectile collisions
+	 */
+	public int getProjectileCollisions()
+	{
+		return projectileCollisions;
+	}
+
+	/**
+	 * Sets the projectile collisions.
+	 *
+	 * @param projectileCollisions the new projectile collisions
+	 */
+	public void setProjectileCollisions(int projectileCollisions)
+	{
+		this.projectileCollisions = projectileCollisions;
+	}
+
+	/**
+	 * Gets the total projectile collisions.
+	 *
+	 * @return the total projectile collisions
+	 */
+	public int getTotalProjectileCollisions()
+	{
+		return totalProjectileCollisions;
+	}
+
+	/**
+	 * Sets the total projectile collisions.
+	 *
+	 * @param totalProjectileCollisions the new total projectile collisions
+	 */
+	public void setTotalProjectileCollisions(int totalProjectileCollisions)
+	{
+		this.totalProjectileCollisions = totalProjectileCollisions;
 	}
 
 }

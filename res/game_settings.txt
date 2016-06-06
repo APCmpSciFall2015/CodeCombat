@@ -1,0 +1,5 @@
+slot1=bots.bots.CommitBot
+slot2=bots.bots.CommitBot
+slot3=null
+slot4=null
+slot5=null

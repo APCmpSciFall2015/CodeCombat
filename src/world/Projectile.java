@@ -5,24 +5,41 @@ import java.awt.Graphics;
 import app.Main;
 import lib.Vector2;
 
+
+/**
+ * The projectile class is responsible for managing a projectile a sprite shoots out designed to "kill" other sprites.
+ * 
+ * @author Robert
+ * @version 0.1
+ */
 public class Projectile extends Sprite
 {
-	/** maximum speed of a projectile **/
+	
+	/**  maximum speed of a projectile. */
 	private static final float SPEED = Integer.parseInt(Main.CONFIG.get("projectileSpeed"));
+	
+	/** Radius of the projectile. */
 	private static final float RADIUS = Integer.parseInt(Main.CONFIG.get("projectileRadius"));
-	/** owner circle **/
+	
+	/**  owner circle. */
 	private Circle owner;
 
 	// Constructors
 	// --------------------------------------------------------------
 
+	/**
+	 * Instantiates a new projectile.
+	 *
+	 * @param p the p
+	 */
 	public Projectile(Projectile p)
 	{
 		super(p);
 	}
 
 	/**
-	 * 5-Argument Projectile Constructor
+	 * 5-Argument Projectile Constructor.
+	 *
 	 * @param x x pos
 	 * @param y y pos
 	 * @param velocity velocity vector
@@ -45,6 +62,9 @@ public class Projectile extends Sprite
 	// Overridden methods
 	// -----------------------------------------------------------------
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -62,6 +82,9 @@ public class Projectile extends Sprite
 			super.paint(g);
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#update()
+	 */
 	@Override
 	public void update()
 	{
@@ -78,6 +101,9 @@ public class Projectile extends Sprite
 		setPosition(getPosition().add(getVelocity()));
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#collide(world.Sprite)
+	 */
 	@Override
 	public void collide(Sprite s)
 	{
@@ -102,6 +128,9 @@ public class Projectile extends Sprite
 		// @formatter:on
 	}
 
+	/* (non-Javadoc)
+	 * @see world.Sprite#copy()
+	 */
 	@Override
 	public Sprite copy()
 	{
@@ -110,7 +139,8 @@ public class Projectile extends Sprite
 
 	/**
 	 * The isOwner method tells whether the given circle is the owner of the
-	 * projectile
+	 * projectile.
+	 *
 	 * @param c Circle to check
 	 * @return is owner circle?
 	 */

@@ -84,6 +84,6 @@ public class CommitBot extends Mind
 	@Override
 	public String toString()
 	{
-		return "Robbie";
+		return "CommitBot";
 	}
 }
