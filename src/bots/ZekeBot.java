@@ -1,6 +1,7 @@
 package bots;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import lib.Vector2;
 import world.Circle;
@@ -46,7 +47,16 @@ public class ZekeBot extends Mind{
 					}
 				}
 				if (s instanceof Obstacle){
-					
+					boolean seen = false;
+					for (ArrayList<Obstacle> o : obstacles){
+						if(o.get(0).getId() == s.getId()){
+							o.add((Obstacle)s);
+							seen = true;
+						}
+					}
+					if(!seen){
+						obstacles.add(new ArrayList<Obstacle>(Arrays.asList(new Obstacle[]{(Obstacle) s})));
+					}
 					
 //					boolean seen = false;
 //					for (Obstacle o : obstacles){
