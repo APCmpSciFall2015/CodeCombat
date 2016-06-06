@@ -46,7 +46,7 @@ public class ZekeBot extends Mind{
 	
 			if(target != null)
 			{
-				Vector2 direction = target.getPosition().sub(getEyePosition());
+				Vector2 direction = target.getPosition().sub(getVelocity(), getVelocity());
 				Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
 				Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
 				turn((float) (Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag()))));
