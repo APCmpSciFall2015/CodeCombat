@@ -17,8 +17,14 @@ public class Mine extends Sprite
 	/**  time for duck to respawn. */
 	public static final int RESPAWN_TIME = Integer.parseInt(Main.CONFIG.get("mineRespawnTime"));
 	
-	/**  radius of duck. */
+	/**  radius of goose. */
 	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("mineRadius"));
+	
+	/** speed of goose */
+	public static final float SPEED = Integer.parseInt(Main.CONFIG.get("mineSpeed"));
+	
+	/** path radius of goose */
+	public static final int PATH_RADIUS = Integer.parseInt(Main.CONFIG.get("minePathRadius"));
 	
 	// Instance variables
 	// ---------------------------------------
@@ -70,9 +76,9 @@ public class Mine extends Sprite
 		{
 			// look for mama duck to kill for kidnapping
 			// update position (move in circle)
-			setAcceleration(new Vector2(1f / 60f, (float) (getVelocity().angle() + Math.PI / 2), true));
+			setAcceleration(new Vector2(SPEED*SPEED / PATH_RADIUS, (float) (getVelocity().angle() + Math.PI / 2), true));
 			Vector2 previousVelocity = getVelocity();
-			setVelocity(getVelocity().add(getAcceleration()).normalize());
+			setVelocity(getVelocity().add(getAcceleration()).normalize().mult(SPEED));
 			setPosition(getPosition().add(getVelocity().add(previousVelocity).div(2)));
 		}
 		else
