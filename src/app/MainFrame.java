@@ -149,7 +149,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 				radioItem = new JRadioButtonMenuItem(mind);
 				buttonGroups.get(i).add(radioItem);
 				radioItem.addActionListener(this);
-				radioItem.setActionCommand("bots." + mind);
+				radioItem.setActionCommand(mind);
 
 				bot.add(radioItem);
 				radioButtons.get(i).add(radioItem);
