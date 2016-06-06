@@ -149,7 +149,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 				radioItem = new JRadioButtonMenuItem(mind);
 				buttonGroups.get(i).add(radioItem);
 				radioItem.addActionListener(this);
-				radioItem.setActionCommand("bots." + mind);
+				radioItem.setActionCommand(mind);
 
 				bot.add(radioItem);
 				radioButtons.get(i).add(radioItem);
@@ -265,6 +265,12 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 			{
 				Main.CONFIG.set(configProperty, value);
 				System.out.println("Config edit: " + configProperty + "=" + value);
+				
+				// update game settings if necessary
+				if(configProperty.equals("worldMaxCircles") && Main.GAME_SETTINGS.get("slot" + value) == null)
+				{	
+					Main.GAME_SETTINGS.set("slot" + value, "");
+				}
 			}
 		}
 	}

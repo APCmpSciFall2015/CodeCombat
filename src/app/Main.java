@@ -62,7 +62,7 @@ public class Main implements Serializable
 	// Initialization of Application
 	public static void main(String[] args)
 	{
-		System.out.println(GAME_SETTINGS);
+		System.out.println();
 		FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()

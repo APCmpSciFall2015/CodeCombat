@@ -17,38 +17,38 @@ import lib.Vector2;
  */
 public class World
 {
-	
-	/**  variance (standard deviation) of gaussian noise in measurements */
+
+	/** variance (standard deviation) of gaussian noise in measurements */
 	public static final float NOISE_VARIANCE = Float.parseFloat(Main.CONFIG.get("worldNoiseVariance"));
-	
-	/**  mean of gaussian noise in measurements */
+
+	/** mean of gaussian noise in measurements */
 	public static final float NOISE_MEAN = Float.parseFloat(Main.CONFIG.get("worldNoiseMean"));
-	
-	/**  Number of obstacles*/
+
+	/** Number of obstacles */
 	public static final int NUM_OBSTACLES = Integer.parseInt(Main.CONFIG.get("worldNumObstacles"));
-	
+
 	/** Number of Shields */
 	public static final int NUM_SHIELDS = Integer.parseInt(Main.CONFIG.get("worldNumShields"));
-	
+
 	/** Maximum amount of circles */
 	public static final int MAX_CIRCLES = Integer.parseInt(Main.CONFIG.get("worldMaxCircles"));
-	
+
 	/** Number of mines. */
 	public static final int NUM_MINES = Integer.parseInt(Main.CONFIG.get("worldNumMines"));
-	
+
 	// Instance variables
 	// ------------------------------------------------
-	
-	/**  size of world. */
+
+	/** size of world. */
 	private Vector2 size;
-	
-	/**  ticks executed. */
+
+	/** ticks executed. */
 	private long ticks = 0;
-	
-	/**  sprites in the plane of existence. */
+
+	/** sprites in the plane of existence. */
 	private ArrayList<Sprite> sprites;
-	
-	/**  Host mainApplet. */
+
+	/** Host mainApplet. */
 	private MainApplet mainApplet;
 
 	/**
@@ -56,11 +56,16 @@ public class World
 	 */
 	public static enum SpriteType
 	{
-		/** Circle/Bot. */ CIRCLE,
-		/** Obstacle */ OBSTACLE, 
-		/** Projectile */ PROJECTILE, 
-		/** Shield */ SHIELD, 
-		/** mine */ MINE
+		/** Circle/Bot. */
+		CIRCLE,
+		/** Obstacle */
+		OBSTACLE,
+		/** Projectile */
+		PROJECTILE,
+		/** Shield */
+		SHIELD,
+		/** mine */
+		MINE
 	}
 
 	// Constructors
@@ -68,7 +73,6 @@ public class World
 
 	/**
 	 * 2-Argument World Constructor.
-	 *
 	 * @param mainApplet host mainApplet
 	 * @param size size of world
 	 */
@@ -81,22 +85,25 @@ public class World
 
 	// Functional methods
 	// ---------------------------------------
-	
+
 	/**
 	 * Initializes the world
 	 **/
 	public void init()
 	{
-		sprites = new ArrayList<Sprite>();
+		long startTime = System.currentTimeMillis();
+
 		// initialize game objects
+		sprites = new ArrayList<Sprite>();
 
 		// init circles
+		String circleGenLog = "Initialized Circles: {";
 		for (int i = 1; i <= MAX_CIRCLES; i++)
 		{
 			String slotData = Main.GAME_SETTINGS.get("slot" + i);
-			System.out.println(slotData);
 			if (slotData != null && slotData.length() > 0)
 			{
+				circleGenLog += slotData + ", ";
 				Sprite s = spawn(SpriteType.CIRCLE);
 				if (!slotData.equals("null"))
 				{
@@ -116,22 +123,28 @@ public class World
 				}
 			}
 		}
-		
-		// init obstacles, shields, and minds
+		// log circle gen
+		System.out.println(circleGenLog.substring(0, circleGenLog.length() - 2) + "}");
+
+		// init obstacles, shields, and minds and log
 		for (int i = 0; i < NUM_OBSTACLES; i++)
 		{
 			spawn(SpriteType.OBSTACLE);
 		}
+		System.out.println("Initialized " + NUM_OBSTACLES + "obstacles");
 		for (int i = 0; i < NUM_SHIELDS; i++)
 		{
 			spawn(SpriteType.SHIELD);
 		}
+		System.out.println("Initialized " + NUM_SHIELDS + "shields");
 		for (int i = 0; i < NUM_MINES; i++)
 		{
 			spawn(SpriteType.MINE);
 		}
+		System.out.println("Initialized " + NUM_MINES + "mines");
+		System.out.println("#Initialization Complete: took " + (System.currentTimeMillis() - startTime) + "ms#\n");
 	}
-	
+
 	/**
 	 * Restarts the game.
 	 */
@@ -139,12 +152,11 @@ public class World
 	{
 		ticks = 0;
 		Sprite.idCount = 0;
-		init();	
+		init();
 	}
 
 	/**
 	 * spawns a new sprite in the world.
-	 *
 	 * @param type the type of sprite to spawn
 	 * @return the sprite
 	 */
@@ -177,7 +189,6 @@ public class World
 
 	/**
 	 * Assigns an area the sprite will not be colliding with on the world.
-	 *
 	 * @param s the sprite to assign the position to
 	 */
 	public void assignAvailablePosition(Sprite s)
@@ -195,7 +206,6 @@ public class World
 
 	/**
 	 * respawns a circle in the world in a random location.
-	 *
 	 * @param s the s
 	 */
 	public void respawn(Sprite s)
@@ -221,7 +231,6 @@ public class World
 
 	/**
 	 * Requests all sprites in the object's Field of View.
-	 *
 	 * @param position the position of the sprite
 	 * @param face the position the FOV broadcasts from
 	 * @param fieldOfView the Field of View of the sprite
@@ -244,7 +253,6 @@ public class World
 
 	/**
 	 * The paint method paints the world and all its sprites.
-	 *
 	 * @param g Graphics to paint on
 	 */
 	public void paint(Graphics g)
@@ -259,7 +267,7 @@ public class World
 	 * The generateObeject method adds the input sprite to the world.
 	 * @param s Sprite to add to world
 	 */
-	public void generateObject(Sprite s)
+	protected void generateObject(Sprite s)
 	{
 		sprites.add(s);
 	}
@@ -290,10 +298,11 @@ public class World
 	}
 
 	/**
-	 * checks to see if a sprite is colliding with any other sprite in the world.
-	 *
+	 * checks to see if a sprite is colliding with any other sprite in the
+	 * world.
 	 * @param sprite the sprite to check against the world
-	 * @return the sprite the passed argument is colliding with, or null otherwise
+	 * @return the sprite the passed argument is colliding with, or null
+	 *         otherwise
 	 */
 	public Sprite collidingWith(Sprite sprite)
 	{
@@ -308,7 +317,6 @@ public class World
 	/**
 	 * The colliding method checks if 2 sprites are colliding using an
 	 * Axis-Aligned Bounding-Box.
-	 *
 	 * @param A 1st sprite
 	 * @param B 2nd sprite
 	 * @return are the sprites colliding
@@ -351,7 +359,6 @@ public class World
 
 	/**
 	 * Gets the main applet the world is contained in.
-	 *
 	 * @return the main applet
 	 */
 	protected MainApplet getMainApplet()
@@ -361,7 +368,6 @@ public class World
 
 	/**
 	 * Sets the main applet the world is contained in.
-	 *
 	 * @param mainApplet the new main applet
 	 */
 	protected void setMainApplet(MainApplet mainApplet)
@@ -371,7 +377,6 @@ public class World
 
 	/**
 	 * Gets the size of the world.
-	 *
 	 * @return the size of the world
 	 */
 	public Vector2 getSize()
@@ -381,7 +386,6 @@ public class World
 
 	/**
 	 * Gets the sprites in the world. (shallow copy)
-	 *
 	 * @return the sprites
 	 */
 	public ArrayList<Sprite> getSprites()
@@ -391,7 +395,6 @@ public class World
 
 	/**
 	 * Sets the sprites in the world. (shallow copy)
-	 *
 	 * @param sprites the new sprites
 	 */
 	public void setSprites(ArrayList<Sprite> sprites)
@@ -401,7 +404,6 @@ public class World
 
 	/**
 	 * Gets the ticks.
-	 *
 	 * @return the ticks
 	 */
 	public long getTicks()
@@ -411,7 +413,6 @@ public class World
 
 	/**
 	 * Sets the ticks.
-	 *
 	 * @param ticks the new ticks
 	 */
 	public void setTicks(long ticks)
