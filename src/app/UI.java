@@ -15,7 +15,6 @@ import world.Sprite;
  * The UI class is responsible for rendering the UI elements of the program
  * @author Robert
  * @version 0.1
- *
  */
 public class UI
 {
@@ -39,35 +38,36 @@ public class UI
 		int width = (int) mainApplet.getWorld().getSize().getX();
 		int height = (int) mainApplet.getWorld().getSize().getY();
 
-		g.setFont(new Font("Serif", Font.PLAIN, (int) 
-						Math.min(getScaledFontSizeHorizontal(s, width / 2, g), getScaledFontSizeVertical(height / 4, g))));
-		
+		g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(getScaledFontSizeHorizontal(s, width / 2, g),
+				getScaledFontSizeVertical(height / 4, g))));
+
 		// draw title
 		int x = width / 2 - g.getFontMetrics().stringWidth(s) / 2;
 		int y = height / 2 - g.getFontMetrics().getHeight();
 		g.setColor(Color.CYAN);
-		g.drawString(s, x - 1, y - 1); 
+		g.drawString(s, x - 1, y - 1);
 		g.setColor(Color.BLUE);
-		g.drawString(s, x, y); 
-		
+		g.drawString(s, x, y);
+
 		// draw instructions blinking
 		s = "Press Space to Start";
-		g.setFont(new Font("Serif", Font.PLAIN, (int) 
-				Math.min(getScaledFontSizeHorizontal(s, width / 4, g), getScaledFontSizeVertical(height / 8, g))));
+		g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(getScaledFontSizeHorizontal(s, width / 4, g),
+				getScaledFontSizeVertical(height / 8, g))));
 		x = width / 2 - g.getFontMetrics().stringWidth(s) / 2;
 		y += height / 4 - g.getFontMetrics().getHeight();
-		
-		if(mainApplet.getFrames() % (Main.FRAME_RATE * 3) > Main.FRAME_RATE * 3 / 2)
+
+		if (mainApplet.getFrames() % (Main.FRAME_RATE * 3) > Main.FRAME_RATE * 3 / 2)
 		{
 			g.setColor(Color.CYAN);
-			g.drawString(s, x - 1, y - 1); 
+			g.drawString(s, x - 1, y - 1);
 			g.setColor(Color.BLUE);
-			g.drawString(s, x, y); 
+			g.drawString(s, x, y);
 		}
 		else
 		{
 			g.setColor(mainApplet.getBackground());
-			g.drawRect(x, y - g.getFontMetrics().getHeight(), g.getFontMetrics().stringWidth(s), g.getFontMetrics().getHeight());
+			g.drawRect(x, y - g.getFontMetrics().getHeight(), g.getFontMetrics().stringWidth(s),
+					g.getFontMetrics().getHeight());
 		}
 	}
 
@@ -133,7 +133,8 @@ public class UI
 		// size font for circles in list
 		for (Circle c : circles)
 		{
-			String s = ("" + c.getMind()).substring(0, Math.min(("" + c.getMind()).length(), Mind.MAX_NAME_CHARS)) + ": " + c.getId();
+			String s = ("" + c.getMind()).substring(0, Math.min(("" + c.getMind()).length(), Mind.MAX_NAME_CHARS))
+					+ ": " + c.getId();
 			g.setFont(new Font("Serif", Font.PLAIN, (int) Math.min(
 					Math.min(getScaledFontSizeHorizontal(s, width / 8, g), getScaledFontSizeVertical(rowHeight, g)),
 					g.getFont().getSize())));
@@ -144,7 +145,8 @@ public class UI
 		for (Circle c : circles)
 		{
 			g.setColor(c.getColor());
-			String s = ("" + c.getMind()).substring(0, Math.min(("" + c.getMind()).length(), Mind.MAX_NAME_CHARS)) + ": " + c.getId();
+			String s = ("" + c.getMind()).substring(0, Math.min(("" + c.getMind()).length(), Mind.MAX_NAME_CHARS))
+					+ ": " + c.getId();
 			g.drawString(s, x + (colWidth - g.getFontMetrics().stringWidth(s) + xInset) / 2, y);
 			y += rowHeight;
 		}
@@ -252,7 +254,7 @@ public class UI
 		}
 
 		// overlay other game data
-		String timeElapsed = "Time Elapsed: " + mainApplet.getWorld().getTicks() / 60;
+		String timeElapsed = "Time Elapsed: " + mainApplet.getWorld().getTicks() / Main.FRAME_RATE;
 		g.setColor(Color.RED);
 		x = width / 8 * 7 - xInset - g.getFontMetrics().stringWidth(timeElapsed);
 		y = height / 8 * 7 - yInset;
@@ -270,12 +272,13 @@ public class UI
 	{
 		return (float) width / g.getFontMetrics().stringWidth(text) * g.getFont().getSize();
 	}
-/**
- * scales the font vertically
- * @param height the height of the window
- * @param g graphics
- * @return a float with the scaled size
- */
+
+	/**
+	 * scales the font vertically
+	 * @param height the height of the window
+	 * @param g graphics
+	 * @return a float with the scaled size
+	 */
 	public float getScaledFontSizeVertical(int height, Graphics g)
 	{
 		return (float) height / g.getFontMetrics().getHeight() * g.getFont().getSize();

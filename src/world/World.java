@@ -1,7 +1,6 @@
 package world;
 
 import java.awt.Graphics;
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
@@ -37,6 +36,9 @@ public class World
 	/** Number of mines. */
 	public static final int NUM_MINES = Integer.parseInt(Main.CONFIG.get("worldNumMines"));
 	
+	// Instance variables
+	// ------------------------------------------------
+	
 	/**  size of world. */
 	private Vector2 size;
 	
@@ -54,17 +56,11 @@ public class World
 	 */
 	public static enum SpriteType
 	{
-		
-		/** Circle/Bot. */
-		CIRCLE, 
-		/** Obstacle */
-		OBSTACLE, 
-		/** Projectile */
-		PROJECTILE, 
-		/** Shield */
-		SHIELD, 
-		/** mine */
-		MINE
+		/** Circle/Bot. */ CIRCLE,
+		/** Obstacle */ OBSTACLE, 
+		/** Projectile */ PROJECTILE, 
+		/** Shield */ SHIELD, 
+		/** mine */ MINE
 	}
 
 	// Constructors
@@ -83,9 +79,12 @@ public class World
 		init();
 	}
 
+	// Functional methods
+	// ---------------------------------------
+	
 	/**
-	 * Inits the.
-	 */
+	 * Initializes the world
+	 **/
 	public void init()
 	{
 		sprites = new ArrayList<Sprite>();
@@ -95,6 +94,7 @@ public class World
 		for (int i = 1; i <= MAX_CIRCLES; i++)
 		{
 			String slotData = Main.GAME_SETTINGS.get("slot" + i);
+			System.out.println(slotData);
 			if (slotData != null && slotData.length() > 0)
 			{
 				Sprite s = spawn(SpriteType.CIRCLE);
@@ -104,7 +104,7 @@ public class World
 					// It's ALIVE!!!
 					try
 					{
-						Class c = Class.forName(slotData);
+						Class c = Class.forName("bots." + slotData);
 						Constructor cons = c.getConstructor(Circle.class, float.class, float.class);
 						Mind m = (Mind) cons.newInstance((Circle) s, NOISE_VARIANCE, NOISE_MEAN);
 						((Circle) s).setMind(m);
@@ -117,7 +117,7 @@ public class World
 			}
 		}
 		
-		// init obstacles and shields
+		// init obstacles, shields, and minds
 		for (int i = 0; i < NUM_OBSTACLES; i++)
 		{
 			spawn(SpriteType.OBSTACLE);
@@ -131,7 +131,7 @@ public class World
 			spawn(SpriteType.MINE);
 		}
 	}
-
+	
 	/**
 	 * Restarts the game.
 	 */
@@ -272,6 +272,7 @@ public class World
 	public boolean checkCollisions()
 	{
 		boolean collisions = false;
+		// iterate over combinations and check collisions using AABB
 		for (int i = 0; i < sprites.size() - 1; i++)
 		{
 			for (int j = i + 1; j < sprites.size(); j++)
@@ -379,23 +380,32 @@ public class World
 	}
 
 	/**
-	 * Gets the sprites in the world.
+	 * Gets the sprites in the world. (deep copy)
 	 *
 	 * @return the sprites
 	 */
 	public ArrayList<Sprite> getSprites()
 	{
-		return sprites;
+		ArrayList<Sprite> copy = new ArrayList<Sprite>();
+		for(Sprite s : sprites)
+		{
+			copy.add(s.copy());
+		}
+		return copy;
 	}
 
 	/**
-	 * Sets the sprites in the world.
+	 * Sets the sprites in the world. (deep copy)
 	 *
 	 * @param sprites the new sprites
 	 */
 	public void setSprites(ArrayList<Sprite> sprites)
 	{
-		this.sprites = sprites;
+		this.sprites = new ArrayList<Sprite>();
+		for(Sprite s : sprites)
+		{
+			this.sprites.add(s.copy());
+		}
 	}
 
 	/**

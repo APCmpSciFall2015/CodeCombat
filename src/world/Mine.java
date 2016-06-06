@@ -20,9 +20,15 @@ public class Mine extends Sprite
 	/**  radius of duck. */
 	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("mineRadius"));
 	
+	// Instance variables
+	// ---------------------------------------
+	
 	/**  time for 's respawn. */
 	private int respawnTimer = RESPAWN_TIME;
 
+	// Constructors
+	// --------------------------------------------
+	
 	/**
 	 * copy constructor for a mine.
 	 *
@@ -34,7 +40,7 @@ public class Mine extends Sprite
 	}
 
 	/**
-	 * Instantiates a new mine.
+	 * 1-Argument Mine constructor.
 	 *
 	 * @param world the world the mine is in
 	 */
@@ -51,6 +57,9 @@ public class Mine extends Sprite
 		// @formatter:on
 	}
 
+	// Overridden methods
+	// ---------------------------------------------------
+	
 	/* (non-Javadoc)
 	 * @see world.Sprite#update()
 	 */
@@ -76,6 +85,7 @@ public class Mine extends Sprite
 	/* (non-Javadoc)
 	 * @see world.Sprite#paint(java.awt.Graphics)
 	 */
+	@Override
 	public void paint(Graphics g)
 	{	
 		if (isAlive())
@@ -119,6 +129,9 @@ public class Mine extends Sprite
 		}
 	}
 
+	// Functional methods
+	// ------------------------------------------
+	
 	/**
 	 * Respawns the mine.
 	 */

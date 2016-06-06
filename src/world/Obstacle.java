@@ -18,7 +18,10 @@ public class Obstacle extends Sprite
 {
 	
 	/** The possible sizes the obstacle can be*/
-	public static final List<List<Float>> SIZES = Parser.parse2DImmutableFloatArray(Main.CONFIG.get("obstacleSizes"));
+	public static final List<List<Float>> SIZES = Parser.parse2DImmutableFloatList(Main.CONFIG.get("obstacleSizes"));
+	
+	// Constructors
+	// --------------------------------------
 	
 	/**
 	 * Obstacle Copy Constructor.
@@ -31,9 +34,9 @@ public class Obstacle extends Sprite
 	}
 
 	/**
-	 * Instantiates a new obstacle with a random size.
+	 * 1-Argument Obstacle Constructor. Instantiates a new obstacle with a random position and size.
 	 *
-	 * @param world the world
+	 * @param world plane of existence for Obstacle
 	 */
 	public Obstacle(World world)
 	{
@@ -53,7 +56,7 @@ public class Obstacle extends Sprite
 	}
 
 	/**
-	 * 5-Argument Obstacle Constructor.
+	 * 4-Argument Obstacle Constructor. Instantiates Obstacle with given params.
 	 *
 	 * @param size the size
 	 * @param position position

@@ -21,6 +21,9 @@ public class Projectile extends Sprite
 	/** Radius of the projectile. */
 	private static final float RADIUS = Integer.parseInt(Main.CONFIG.get("projectileRadius"));
 	
+	// Instance variables
+	// ---------------------------------
+	
 	/**  owner circle. */
 	private Circle owner;
 
@@ -38,7 +41,7 @@ public class Projectile extends Sprite
 	}
 
 	/**
-	 * 5-Argument Projectile Constructor.
+	 * 4-Argument Projectile Constructor.
 	 *
 	 * @param x x pos
 	 * @param y y pos
@@ -46,13 +49,13 @@ public class Projectile extends Sprite
 	 * @param c owner circle
 	 * @param world plane of existence
 	 */
-	public Projectile(float x, float y, Vector2 velocity, Circle c, World world)
+	public Projectile(Vector2 position, Vector2 velocity, Circle c, World world)
 	{
 		// @formatter:off
 		super(
 				new Vector2(RADIUS, RADIUS), //size
-				new Vector2(x, y), // pos
-				new Vector2(SPEED, velocity.angle(), true), // vel
+				position.copy(), // pos
+				velocity.copy().normalize().mult(SPEED), // vel
 				new Vector2(0, 0), // acc
 				c.getColor(), world);
 		this.owner = c; // intentional shallow copy
