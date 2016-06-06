@@ -4,24 +4,28 @@ import java.util.ArrayList;
 
 import lib.Vector2;
 import world.Circle;
+import world.CircleStats;
 import world.Sprite;
 
-public class TestBot extends Mind
+public class CommitBot extends Mind
 {
-
-	public TestBot(TestBot t)
+	CircleStats stats;
+	
+	public CommitBot(CommitBot r)
 	{
-		super(t);
+		super(r);
+		this.stats = r.stats;
 	}
-
-	public TestBot(Circle c, float variance, float mean)
+	
+	public CommitBot(Circle c, float variance, float mean)
 	{
 		super(c, variance, mean);
 	}
 
+	@Override
 	public Mind copy()
 	{
-		return new TestBot(this);
+		return new CommitBot(this);
 	}
 
 	@Override
@@ -71,11 +75,15 @@ public class TestBot extends Mind
 			if (target != null)
 				shoot();
 		}
+		else
+		{
+			stats = getStats();
+		}
 	}
-
+	
 	@Override
 	public String toString()
 	{
-		return "TestBot";
+		return "Robbie";
 	}
 }

@@ -30,7 +30,8 @@ public class World
 	private ArrayList<Sprite> sprites;
 	/** Host mainApplet **/
 	private MainApplet mainApplet;
-
+	
+	
 	public static enum SpriteType
 	{
 		CIRCLE, OBSTACLE, PROJECTILE, SHIELD
@@ -61,8 +62,8 @@ public class World
 			spawn(SpriteType.SHIELD);
 			spawn(SpriteType.CIRCLE);
 		}
-		((Circle) sprites.get(sprites.size() - 1))
-				.setMind(new TestBot(((Circle) sprites.get(sprites.size() - 1)), 20, 0));
+		Circle s = (Circle) sprites.get(sprites.size() - 1);
+		s.setMind(new TestBot(s, NOISE_VARIANCE, NOISE_MEAN));
 	}
 
 	/**
@@ -75,7 +76,8 @@ public class World
 		switch (type)
 		{
 		case CIRCLE:
-			s = new Circle(this, null);
+			s = new Circle(this);
+//			((Circle) s).setMind(new TestBot((Circle) s, NOISE_VARIANCE, NOISE_MEAN));
 			break;
 		case OBSTACLE:
 			s = new Obstacle(this);
@@ -87,35 +89,31 @@ public class World
 			System.err.println("Invalid Sprite Type");
 			return;
 		}
-
-		do
-		{
-			// correct position to avoid collision
-			// @formatter:off 
-			s.setPosition(new Vector2(
-					(float) (Math.random() * (getSize().getX() - s.getSize().getX()) + s.getSize().getX() / 2),
-					(float) (Math.random() * (getSize().getY() - s.getSize().getY()) + s.getSize().getY() / 2)
-					));
-			// @formatter:on
-		} while (colliding(s));
-
+		assignAvailablePosition(s);
 		sprites.add(s);
 	}
-
+	
+	public void assignAvailablePosition(Sprite s)
+	{
+		// correct position to avoid collision
+		// @formatter:off 
+		s.setPosition(new Vector2(
+				(float) (Math.random() * (getSize().getX() - s.getSize().getX()) + s.getSize().getX() / 2),
+				(float) (Math.random() * (getSize().getY() - s.getSize().getY()) + s.getSize().getY() / 2)
+				));
+		s.collide(collidingWith(s));
+		s.update();
+		// @formatter:on	
+	}
+	
 	/**
 	 * respawns a circle in the world in a random location
 	 * @param respawn the circle to respawn
 	 */
 	public void respawn(Sprite s)
 	{
-		do
-		{
-			s.setPosition(new Vector2(
-					(float) ((Math.random() * (size.getX()) - (s.getSize().getX()))) + s.getSize().getX() / 2,
-					(float) (((Math.random() * (size.getY()) - (s.getSize().getY()))) + s.getSize().getY() / 2)));
-		} while (colliding(s));
 		s.setAlive(true);
-		;
+		assignAvailablePosition(s);
 	}
 
 	/**
@@ -193,20 +191,15 @@ public class World
 		return collisions;
 	}
 
-	/**
-	 * Checks to see if a sprite will collide with any other sprites in the
-	 * world using an Axis-Aligned Bounding-Box
-	 * @param sprite the sprite to check against the world
-	 * @return true, if there is a collision
-	 */
-	public boolean colliding(Sprite sprite)
+
+	public Sprite collidingWith(Sprite sprite)
 	{
 		for (Sprite s : sprites)
 		{
 			if (colliding(s, sprite))
-				return true;
+				return sprite;
 		}
-		return false;
+		return null;
 	}
 
 	/**

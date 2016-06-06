@@ -72,7 +72,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	/** location of Circle's eyes **/
 	private Vector2 eyePosition;
 	/** Mind to control circle bot **/
-	private Mind mind;
+	private Mind mind = null;
 
 	// Constructors
 	// --------------------------------------------------------------------
@@ -92,7 +92,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 		this.eyePosition = c.getEyePosition();
 	}
 
-	public Circle(World world, Mind mind)
+	public Circle(World world)
 	{
 		super(new Vector2(RADIUS * 2, RADIUS * 2),
 				new Vector2((float) ((Math.random() * (world.getSize().getX()) - (2 * RADIUS))) + RADIUS,
@@ -100,17 +100,15 @@ public class Circle extends Sprite implements Comparable<Circle>
 				new Vector2(SPEED, (float) (Math.random() * Math.PI * 2), true), new Vector2(0, 0),
 				new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)),
 				world);
-		this.mind = mind;
 		this.eyePosition = new Vector2((getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
 				(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
 	}
 
-	public Circle(Vector2 position, Vector2 direction, Color color, World world, Mind mind)
+	public Circle(Vector2 position, Vector2 direction, Color color, World world)
 	{
 		super(new Vector2(RADIUS / 2, RADIUS / 2), position, direction.normalize().mult(SPEED), new Vector2(0, 0),
 				color, world);
-		this.mind = mind;
-		new Vector2((getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
+		this.eyePosition = new Vector2((getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
 				(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
 	}
 
@@ -154,36 +152,32 @@ public class Circle extends Sprite implements Comparable<Circle>
 	@Override
 	public void update()
 	{
-		if (mind != null)
-			mind.think();
-
-		if (isAlive())
+		if(isAlive())
 		{
-			eyePosition = new Vector2((getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
-					(getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
-
-			if (mind == null)
-			{
-				// test change in velocity and shooting
-				turn((float) -Math.PI / 500);
-				shoot();
-			}
-
-			// update position
-			setPosition(getPosition().add(getVelocity()));
 			slideWalls();
-		}
-		else
-		{
-			respawn();
-		}
-		calcStats();
-		updateCounters();
+			setPosition(getPosition().add(getVelocity()));
+			if(mind == null) 
+			{
+				turn ((float) -Math.PI / 500); shoot();
+			}
+		}else
+
+	{
+		respawn();
+	}
+
+	if(mind!=null)mind.think();
+
+	calcStats();
+
+	updateCounters();
+
 	}
 
 	@Override
 	public final void collide(Sprite s)
 	{
+		if(s == null) return;
 		// die when hit by projectile (not own projectile)
 		if (s instanceof Projectile && !((Projectile) s).isOwner(this))
 		{
@@ -207,19 +201,15 @@ public class Circle extends Sprite implements Comparable<Circle>
 		return new Circle(this);
 	}
 
-	@Override
-	public String toString()
-	{
-		return mind + ": " + getId() + "(" + isAlive() + ")";
-	}
+
 
 	@Override
 	public int compareTo(Circle c)
 	{
 		// @formatter:off
-		if (c.kills > kills) return 1; else if (c.kills < kills) return -1;
+		if (c.totalKills > totalKills) return 1; else if (c.totalKills < totalKills) return -1;
 		if (c.deaths < deaths) return 1; else if (c.deaths > deaths) return -1;
-		if (c.accuracy > accuracy) return 1; else if (c.accuracy < accuracy) return -1;
+		if (c.totalAccuracy > accuracy) return 1; else if (c.totalAccuracy < totalAccuracy) return -1;
 		return 0;
 		// @formatter:on
 	}
@@ -241,7 +231,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 			accuracy = 1;
 			shotsFired = 0;
 			hits = 0;
-			totalKills = 0;
 			kills = 0;
 			ticksAlive = 0;
 			shieldsAcquired = 0;
@@ -293,6 +282,8 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	public final void turn(float deltaTheta)
 	{
+		// do nothing if input not a number
+		if(Float.isNaN(deltaTheta)) return;
 		// truncate to interval [-MAX_TURNING_ANGLE, MAX_TURNING_ANGLE]
 		if (deltaTheta < -MAX_TURNING_ANGLE)
 			deltaTheta = -MAX_TURNING_ANGLE;
@@ -300,7 +291,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 			deltaTheta = MAX_TURNING_ANGLE;
 
 		// adjust angle of velocity vector (aka turn)
-//		System.out.println(deltaTheta);
 		setVelocity(new Vector2(SPEED, getVelocity().angle() + deltaTheta, true));
 	}
 
@@ -326,6 +316,14 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 	// Getters and Setters
 	// -------------------------------------------------------
+
+	@Override
+	public void setPosition(Vector2 position)
+	{
+		super.setPosition(position);
+		this.eyePosition = new Vector2((position.getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
+				(position.getY() + getVelocity().normalize().getY() * getSize().getY() / 2));
+	}
 
 	public float getTotalAccuracy()
 	{
@@ -510,7 +508,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public Mind getMind()
 	{
 		// intentional shallow copy minds copy circles
-		return mind; 
+		return mind;
 	}
 
 	public void setMind(Mind mind)
@@ -522,11 +520,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public Vector2 getEyePosition()
 	{
 		return eyePosition.copy();
-	}
-
-	public void setEyePosition(Vector2 eyePosition)
-	{
-		this.eyePosition = eyePosition.copy();
 	}
 
 }

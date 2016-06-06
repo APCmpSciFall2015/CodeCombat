@@ -19,7 +19,7 @@ public class CircleStats
 	public final int totalShieldsAcquired;
 	public final int shieldsAcquired;
 	public final int totalObstacleCollisions;
-	public final int obstaclesCollisions;
+	public final int obstacleCollisions;
 	public final int totalWallCollisions;
 	public final int wallCollisions;
 	
@@ -38,7 +38,7 @@ public class CircleStats
 		this.totalShieldsAcquired = c.getTotalShieldsAcquired();
 		this.shieldsAcquired = c.getShieldsAcquired();
 		this.totalObstacleCollisions = c.getTotalObstacleCollisions();
-		this.obstaclesCollisions = c.getObstacleCollisions();
+		this.obstacleCollisions = c.getObstacleCollisions();
 		this.totalWallCollisions = c.getTotalWallCollisions();
 		this.wallCollisions = c.getWallCollisions();
 	}

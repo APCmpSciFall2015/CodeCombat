@@ -1,3 +1,4 @@
+World Width=null
 circleFOV=1.0471975512
 circleMaxTurningAngle=0.05235987755
 circleRadius=20
@@ -14,6 +15,6 @@ shieldRespawnTime=300
 spriteMaxVelocity=20
 worldHeight=600
 worldNoiseMean=0
-worldNoiseVariance=20
+worldNoiseVariance=0
 worldNumObstacles=15
 worldWidth=800

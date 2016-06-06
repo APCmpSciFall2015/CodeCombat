@@ -1,6 +1,5 @@
 package app;
 
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,12 +8,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ConcurrentModificationException;
+import java.util.NoSuchElementException;
+
+import javax.swing.JApplet;
 
 import app.Main.GameState;
 import lib.Vector2;
 import world.World;
 
-public class MainApplet extends Applet implements Runnable, KeyListener
+public class MainApplet extends JApplet implements Runnable, KeyListener
 {
 	/** serializable id **/
 	private static final long serialVersionUID = -2598013920892210921L;
@@ -34,6 +36,8 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	private Thread thread;
 	/** Image to double buffer with **/
 	private BufferedImage bi;
+	/** The frame the applet is contained **/
+	private MainFrame frame;
 
 	/** GameState */
 	private GameState gameState = GameState.PLAY;
@@ -75,35 +79,40 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	{
 	}
 
-	/**
-	 * The update method double buffers the contents of the screen while an
-	 * update is occurring.
-	 * @param g Graphics of screen
-	 */
-	@Override
-	public void update(Graphics g)
-	{
-		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
-				BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D g2 = bi.createGraphics();
-
-		// paint world
-		g2.setColor(Color.GRAY);
-		g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
-		paint(g2);
-
-		// paint the scaled image on the applet
-		g.drawImage(bi, 0, 0, getWidth(), getHeight(), null);
-	}
-
 	@Override
 	public void paint(Graphics g)
 	{
-		world.paint(g);
-		if (gameState.equals(GameState.PAUSED))
-			ui.drawPauseScreen(g);
-		if (displayFullStatsOverlay)
-			ui.drawFullStatsOverlay(g);
+		try
+		{
+
+			// setup canvas
+			bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
+					BufferedImage.TYPE_4BYTE_ABGR);
+			Graphics2D g2 = bi.createGraphics();
+			g2.setColor(getBackground());
+			g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
+
+			// paint world
+			world.paint(g2);
+			ui.drawLeaderboard(g2);
+			if (gameState.equals(GameState.PAUSED))
+				ui.drawPauseScreen(g2);
+			if (displayFullStatsOverlay)
+				ui.drawFullStatsOverlay(g2);
+			
+
+			g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
+		}
+		catch (ConcurrentModificationException e)
+		{
+			// skip the rest of the update if paint conflicts with updates
+			System.err.println("Skip rest of frame: Concurrent Modification");
+		}
+		catch (NoSuchElementException e)
+		{
+			// ditto here (caused by trying to access world's arraylist of circles whilst updating: bah humbug
+			System.err.println("Skip rest of frame: No Such Element");
+		}
 	}
 
 	@Override
@@ -112,11 +121,20 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		while (!gameState.equals(GameState.OVER))
 		{
 			long start = System.currentTimeMillis();
-			if (gameState.equals(GameState.PLAY))
+
+			try
 			{
-				world.update();
+				if (gameState.equals(GameState.PLAY))
+				{
+					world.update();
+				}
+				repaint();
 			}
-			repaint();
+			catch (ConcurrentModificationException e)
+			{
+				// skip the rest of the update if paint conflicts with updates
+				System.err.println("Skip rest of frame: Concurrent Modification");
+			}
 
 			// sleep for rest of frame time
 			while (System.currentTimeMillis() - start < Main.FRAME_RATE)
@@ -155,6 +173,14 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	}
 
 	/**
+	 * The resume method sets the gameState enum to PLAY and resumes the game
+	 */
+	public void resume()
+	{
+		gameState = GameState.PLAY;
+	}
+
+	/**
 	 * The end method sets the gameState enum to MENU and returns the game to
 	 * the main menu.
 	 */
@@ -178,10 +204,12 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		if (e.getKeyChar() == 'p')
+		if (e.getKeyChar() == 'p' || e.getKeyChar() == 'P')
 			togglePause();
-		if (e.getKeyChar() == 'd')
+		if (e.getKeyChar() == 'd' || e.getKeyChar() == 'D')
 			Main.debug = !Main.debug;
+
+		frame.updateMenu();
 	}
 
 	@Override
@@ -255,13 +283,23 @@ public class MainApplet extends Applet implements Runnable, KeyListener
 		this.gameState = gameState;
 	}
 
-	public World getWorld()
+	protected World getWorld()
 	{
 		return world;
 	}
 
-	public void setWorld(World world)
+	protected void setWorld(World world)
 	{
 		this.world = world;
+	}
+
+	public MainFrame getFrame()
+	{
+		return frame;
+	}
+
+	public void setFrame(MainFrame frame)
+	{
+		this.frame = frame;
 	}
 }
