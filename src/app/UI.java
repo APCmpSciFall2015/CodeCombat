@@ -121,7 +121,7 @@ public class UI
 
 		// draw box behind leaderboard and title
 		g.setColor(new Color(55, 55, 55, 230));
-		g.fillRect(x - width / 64, y - height / 32, width / 8, rowHeight * circles.size() * 4 / 3);
+		g.fillRect(x - width / 64, y - height / 32, width / 8, rowHeight * (circles.size() + 2));
 		g.setColor(Color.RED);
 		g.setFont(new Font("Serif", Font.PLAIN,
 				(int) Math.min(Math.min(getScaledFontSizeHorizontal("LeaderBoard", width / 8 - xInset, g),
