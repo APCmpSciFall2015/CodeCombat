@@ -185,11 +185,10 @@ public abstract class Mind
 	 *
 	 * @return the eye position
 	 */
-	public final Vector2 getEyePosition()
+	public final Vector2 calcEyePosition(Vector2 position, Vector2 velocity)
 	{
-		Vector2 position = getPosition();
-		return new Vector2((position.getX() + getVelocity().normalize().getX() * circle.getSize().getX() / 2),
-				(position.getY() + getVelocity().normalize().getY() * circle.getSize().getY() / 2));
+		return new Vector2((position.getX() + velocity.normalize().getX() * circle.getSize().getX() / 2),
+				(position.getY() + velocity.normalize().getY() * circle.getSize().getY() / 2));
 	}
 	
 	/**

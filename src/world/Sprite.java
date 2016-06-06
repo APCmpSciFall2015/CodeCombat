@@ -75,7 +75,7 @@ public abstract class Sprite
 	}
 
 	/**
-	 * 7-Argument Sprite Constructor.
+	 * 6-Argument Sprite Constructor.
 	 *
 	 * @param size the size
 	 * @param position position vector

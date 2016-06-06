@@ -20,15 +20,21 @@ public class Shield extends Sprite
 	/**  radius of duck *. */
 	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("shieldRadius"));
 	
+	// Instance variables
+	// ----------------------------------------
+	
 	/**  whether or not the shield has found its mama duck *. */
 	private boolean unbound;
 	
-	/**  shield's mama duck *. */
+	/**  shield's mama duck **/
 	private Sprite owner;
 	
 	/**  time for duck's respawn *. */
 	private int respawnTimer = RESPAWN_TIME;
 
+	// Constructors 
+	// -----------------------------------------
+	
 	/**
 	 * Shield copy constructor.
 	 *
@@ -60,6 +66,9 @@ public class Shield extends Sprite
 		// @formatter:on
 	}
 
+	// Overridden methods
+	// -----------------------------------------
+	
 	/* (non-Javadoc)
 	 * @see world.Sprite#update()
 	 */
@@ -88,6 +97,7 @@ public class Shield extends Sprite
 	/* (non-Javadoc)
 	 * @see world.Sprite#paint(java.awt.Graphics)
 	 */
+	@Override
 	public void paint(Graphics g)
 	{	
 		if (isAlive())
@@ -164,6 +174,9 @@ public class Shield extends Sprite
 			}
 		}
 	}
+	
+	// Functional methods 
+	// --------------------------------------
 
 	/**
 	 * Respawns the shield.
@@ -188,6 +201,9 @@ public class Shield extends Sprite
 	{
 		return owner != null && owner.getId() == c.getId();
 	}
+	
+	// Getters and Setters
+	// -------------------------------------------------
 
 	/**
 	 * Checks if the shield is part of a sprite.

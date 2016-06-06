@@ -131,7 +131,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	}
 
 	/**
-	 * Instantiates a new circle and places it randomly in the world.
+	 * 1-Argument Circle Constructor. Instantiates a new circle and places it randomly in the world.
 	 *
 	 * @param world the world to place it in
 	 */
@@ -400,9 +400,9 @@ public class Circle extends Sprite implements Comparable<Circle>
 		{
 			// generate a new projectile in front of the circle traveling faster
 			// in the same direction
-			getWorld().generateObject(new Projectile(
+			getWorld().generateObject(new Projectile(new Vector2(
 					(int) (getPosition().getX() + getVelocity().normalize().getX() * getSize().getX() / 2),
-					(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2),
+					(int) (getPosition().getY() + getVelocity().normalize().getY() * getSize().getY() / 2)),
 					getVelocity(), this, getWorld()));
 			shootTimer = RELOAD_TIME;
 			shotsFired++;
