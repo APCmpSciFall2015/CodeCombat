@@ -97,7 +97,7 @@ public class World
 		sprites = new ArrayList<Sprite>();
 
 		// init circles
-		String circleGenLog = "Initialized Circles: {";
+		String circleGenLog = "\nInitialized Circles: {";
 		for (int i = 1; i <= MAX_CIRCLES; i++)
 		{
 			String slotData = Main.GAME_SETTINGS.get("slot" + i);
@@ -131,17 +131,17 @@ public class World
 		{
 			spawn(SpriteType.OBSTACLE);
 		}
-		System.out.println("Initialized " + NUM_OBSTACLES + "obstacles");
+		System.out.println("Initialized " + NUM_OBSTACLES + " obstacles");
 		for (int i = 0; i < NUM_SHIELDS; i++)
 		{
 			spawn(SpriteType.SHIELD);
 		}
-		System.out.println("Initialized " + NUM_SHIELDS + "shields");
+		System.out.println("Initialized " + NUM_SHIELDS + " shields");
 		for (int i = 0; i < NUM_MINES; i++)
 		{
 			spawn(SpriteType.MINE);
 		}
-		System.out.println("Initialized " + NUM_MINES + "mines");
+		System.out.println("Initialized " + NUM_MINES + " mines");
 		System.out.println("#Initialization Complete: took " + (System.currentTimeMillis() - startTime) + "ms#\n");
 	}
 
