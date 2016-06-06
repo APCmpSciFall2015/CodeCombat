@@ -11,11 +11,16 @@ import world.Sprite;
 public class ZekeBot extends Mind{
 	
 	private ArrayList<ArrayList<Obstacle>> obstacles;
+	private ArrayList<Circle> circles;
+//	private ArrayList<Shield> shields;
+//	private ArrayList<Mine> mines;
+	
+	
+	private int fear;
 
 	public ZekeBot(Circle c, float variance, float mean) {
 		super(c, variance, mean);
 		obstacles = new ArrayList<ArrayList<Obstacle>>();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ZekeBot(ZekeBot zekeBot) {//this method should never be called
@@ -29,6 +34,7 @@ public class ZekeBot extends Mind{
 
 	@Override
 	public void think() {
+		fear = 0;
 		if(isAlive())
 		{
 			ArrayList<Sprite> inView = requestInView();
@@ -93,6 +99,8 @@ public class ZekeBot extends Mind{
 		}
 		
 	}
+	
+	
 	
 	@Override
 	public String toString()
