@@ -206,11 +206,11 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 		}
 		else
 		{
-			for (int x = 0; x < minds.size(); x++)
+			for (int i = 0; i < minds.size(); i++)
 			{
-				if (mindName.indexOf(minds.get(x)) >= 0)
+				if (mindName.indexOf(minds.get(i)) >= 0)
 				{
-					return x + 1;
+					return i + 2;
 				}
 			}
 			return -1;

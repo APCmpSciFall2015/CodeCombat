@@ -1,6 +1,6 @@
-slot1=
+slot1=null
 slot2=CommitBot
-slot3=
-slot4=null
-slot5=null
-slot6=null
+slot3=TestBot
+slot4=
+slot5=
+slot6=
