@@ -157,6 +157,10 @@ public class Shield extends Sprite
 		{
 			setAlive(false);
 		}
+		else if (s instanceof Shield && unbound)
+		{
+			setAlive(false);
+		}
 		
 		// run in circle (also like a little ducky)
 		if (!unbound)
@@ -250,7 +254,7 @@ public class Shield extends Sprite
 	 */
 	public void setOwner(Sprite owner)
 	{
-		this.owner = owner;
+		this.owner = owner.copy();
 	}
 
 }
