@@ -1,4 +1,4 @@
-slot1=
+slot1=CommitBot
 slot2=null
 slot3=null
 slot4=null
