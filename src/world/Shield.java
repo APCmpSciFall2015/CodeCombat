@@ -20,6 +20,12 @@ public class Shield extends Sprite
 	/**  radius of duck *. */
 	public static final int RADIUS = Integer.parseInt(Main.CONFIG.get("shieldRadius"));
 	
+	/** speed of duck */
+	public static final float SPEED = Integer.parseInt(Main.CONFIG.get("shieldSpeed"));
+	
+	/** path radius of duck */
+	public static final int PATH_RADIUS = Integer.parseInt(Main.CONFIG.get("shieldPathRadius"));
+	
 	// Instance variables
 	// ----------------------------------------
 	
@@ -81,9 +87,9 @@ public class Shield extends Sprite
 			if (unbound)
 			{
 				// update position (move in circle)
-				setAcceleration(new Vector2(1f / 60f, (float) (getVelocity().angle() + Math.PI / 2), true));
+				setAcceleration(new Vector2(SPEED * SPEED  / PATH_RADIUS, (float) (getVelocity().angle() + Math.PI / 2), true));
 				Vector2 previousVelocity = getVelocity();
-				setVelocity(getVelocity().add(getAcceleration()).normalize());
+				setVelocity(getVelocity().add(getAcceleration()).normalize().mult(SPEED));
 				setPosition(getPosition().add(getVelocity().add(previousVelocity).div(2)));
 			}
 		}

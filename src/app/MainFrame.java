@@ -265,6 +265,12 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 			{
 				Main.CONFIG.set(configProperty, value);
 				System.out.println("Config edit: " + configProperty + "=" + value);
+				
+				// update game settings if necessary
+				if(configProperty.equals("worldMaxCircles") && Main.GAME_SETTINGS.get("slot" + value) == null)
+				{	
+					Main.GAME_SETTINGS.set("slot" + value, "");
+				}
 			}
 		}
 	}

@@ -121,7 +121,7 @@ public class UI
 
 		// draw box behind leaderboard and title
 		g.setColor(new Color(55, 55, 55, 230));
-		g.fillRect(x - width / 64, y - height / 32, width / 8, rowHeight * circles.size() * 4 / 3);
+		g.fillRect(x - width / 64, y - height / 32, width / 8, rowHeight * (circles.size() + 2));
 		g.setColor(Color.RED);
 		g.setFont(new Font("Serif", Font.PLAIN,
 				(int) Math.min(Math.min(getScaledFontSizeHorizontal("LeaderBoard", width / 8 - xInset, g),
@@ -254,7 +254,7 @@ public class UI
 		}
 
 		// overlay other game data
-		String timeElapsed = "Time Elapsed: " + mainApplet.getWorld().getTicks() / Main.FRAME_RATE;
+		String timeElapsed = "Time Elapsed: " + mainApplet.getWorld().getTicks() / (1000 / Main.FRAME_RATE);
 		g.setColor(Color.RED);
 		x = width / 8 * 7 - xInset - g.getFontMetrics().stringWidth(timeElapsed);
 		y = height / 8 * 7 - yInset;
