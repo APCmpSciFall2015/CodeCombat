@@ -45,7 +45,7 @@ public class RicardoBot extends Mind{
 		 * spin in circles
 		 */
 		//get the stuff in view
-
+		targeting = false;
 		ArrayList<Sprite> inView = requestInView();
 		ArrayList<ArrayList<Sprite>> sortedItems = new ArrayList<ArrayList<Sprite>>();
 		//add each list of items
@@ -80,7 +80,40 @@ public class RicardoBot extends Mind{
 
 		if(sortedItems.get(PROJECTILE_INDEX).size() > 0)
 		{
+			System.out.println("Targeting Projectiles");
+			Sprite target = null;
 			for(Sprite s : sortedItems.get(PROJECTILE_INDEX))
+			{
+				if(s.getPosition().dist(getPosition()) < 20)
+				{
+					target = s;
+				}
+			}
+			if(target != null)
+			{
+			target(target);
+			shoot();
+			}
+		}
+		
+
+		if(sortedItems.get(OBSTACLE_INDEX).size() > 0)
+		{
+			System.out.println("Targeting Obstacles");
+			for(Sprite s : sortedItems.get(OBSTACLE_INDEX))
+			{
+				if (s.getPosition().dist(getPosition()) < 20)
+				{
+					System.out.println("Avoiding Obstacles");
+					avoid();
+				}
+			}
+		}
+
+		if(sortedItems.get(MINE_INDEX).size() > 0)
+		{
+			System.out.println("Targeting Mines");
+			for(Sprite s : sortedItems.get(MINE_INDEX))
 			{
 				if(s.getPosition().dist(getPosition()) < 20)
 				{
@@ -89,30 +122,13 @@ public class RicardoBot extends Mind{
 				}
 			}
 		}
-
-		if(sortedItems.get(OBSTACLE_INDEX).size() > 0)
-		{
-			for(Sprite s : sortedItems.get(OBSTACLE_INDEX))
-			{
-				if (s.getPosition().dist(getPosition()) < 5)
-				{
-					avoid();
-				}
-			}
-		}
-
-		if(sortedItems.get(PROJECTILE_INDEX).size() > 0)
-		{
-			target(sortedItems.get(PROJECTILE_INDEX).get(0));
-			shoot();
-		}
-
+		
 		if(!isShielded())
 		{
 			if(sortedItems.get(SHIELD_INDEX).size() > 0)
 			{
 				Sprite shortest;
-
+				System.out.println("Targeting Shields");
 				shortest = sortedItems.get(SHIELD_INDEX).get(0);
 				for(Sprite s : sortedItems.get(SHIELD_INDEX))
 				{
@@ -127,13 +143,23 @@ public class RicardoBot extends Mind{
 
 		if(sortedItems.get(CIRCLE_INDEX).size() > 0)
 		{
-			target(sortedItems.get(CIRCLE_INDEX).get(0));
+			System.out.println("Targeting Circles");
+			Sprite shortest = sortedItems.get(CIRCLE_INDEX).get(0);
+			for(Sprite s : sortedItems.get(CIRCLE_INDEX))
+			{
+				if(s.getPosition().dist(getPosition()) < shortest.getPosition().dist(getPosition()))
+				{
+					shortest = s;
+				}
+			}
+			target(shortest);
 			shoot();
 		}
 
 		if(!targeting)
 		{
-			avoid();
+			System.out.println("Roaming");
+			turn((float) (Math.PI / 2));
 		}
 
 	}
