@@ -18,6 +18,7 @@ public class RicardoBot extends Mind{
 	public static final int PROJECTILE_INDEX = 2;
 	public static final int SHIELD_INDEX = 3;
 	public static final int CIRCLE_INDEX = 4;
+	Vector2 lastPos;
 	public RicardoBot(RicardoBot c)
 	{
 		super(c);
@@ -35,102 +36,126 @@ public class RicardoBot extends Mind{
 
 	@Override
 	public void think() {
-		/*
-		 * What this robot wants to do:
-		 * avoid projectiles
-		 * avoid mines
-		 * avoid obstacles
-		 * get shields
-		 * shoot other robots
-		 * spin in circles
-		 */
-		//get the stuff in view
-		targeting = false;
-		ArrayList<Sprite> inView = requestInView();
-		ArrayList<ArrayList<Sprite>> sortedItems = new ArrayList<ArrayList<Sprite>>();
-		//add each list of items
-		for(int x = 0; x < 5; x++)
+		if(isAlive())
 		{
-			sortedItems.add(new ArrayList<Sprite>());
-		}
+			/*
+			 * What this robot wants to do:
+			 * avoid projectiles
+			 * avoid mines
+			 * avoid obstacles
+			 * get shields
+			 * shoot other robots
+			 * spin in circles
+			 */
+			//get the stuff in view
+			targeting = false;
+			ArrayList<Sprite> inView = requestInView();
+			ArrayList<ArrayList<Sprite>> sortedItems = new ArrayList<ArrayList<Sprite>>();
 
-		for(Sprite s : inView)
-		{
-			if(s instanceof Mine)
+			//check to see if we moved
+			if(lastPos != null && lastPos.dist(getPosition()) < 1)
 			{
-				sortedItems.get(MINE_INDEX).add(s);
+				System.out.println("Scramble");
+				avoid();
 			}
-			else if(s instanceof Obstacle)
+			//add each list of items
+			for(int x = 0; x < 5; x++)
 			{
-				sortedItems.get(OBSTACLE_INDEX).add(s);
+				sortedItems.add(new ArrayList<Sprite>());
 			}
-			else if(s instanceof Projectile)
-			{
-				sortedItems.get(PROJECTILE_INDEX).add(s);
-			}
-			else if(s instanceof Shield)
-			{
-				sortedItems.get(SHIELD_INDEX).add(s);
-			}
-			else if(s instanceof Circle)
-			{
-				sortedItems.get(CIRCLE_INDEX).add(s);
-			}
-		}
 
-		if(sortedItems.get(PROJECTILE_INDEX).size() > 0)
-		{
-			System.out.println("Targeting Projectiles");
-			Sprite target = null;
-			for(Sprite s : sortedItems.get(PROJECTILE_INDEX))
+			for(Sprite s : inView)
 			{
-				if(s.getPosition().dist(getPosition()) < 20)
+				if(s instanceof Mine)
 				{
-					target = s;
+					sortedItems.get(MINE_INDEX).add(s);
+				}
+				else if(s instanceof Obstacle)
+				{
+					sortedItems.get(OBSTACLE_INDEX).add(s);
+				}
+				else if(s instanceof Projectile)
+				{
+					sortedItems.get(PROJECTILE_INDEX).add(s);
+				}
+				else if(s instanceof Shield)
+				{
+					sortedItems.get(SHIELD_INDEX).add(s);
+				}
+				else if(s instanceof Circle)
+				{
+					sortedItems.get(CIRCLE_INDEX).add(s);
 				}
 			}
-			if(target != null)
-			{
-			target(target);
-			shoot();
-			}
-		}
-		
 
-		if(sortedItems.get(OBSTACLE_INDEX).size() > 0)
-		{
-			System.out.println("Targeting Obstacles");
-			for(Sprite s : sortedItems.get(OBSTACLE_INDEX))
+			if(sortedItems.get(PROJECTILE_INDEX).size() > 0)
 			{
-				if (s.getPosition().dist(getPosition()) < 20)
+				System.out.println("Targeting Projectiles");
+				Sprite target = null;
+				for(Sprite s : sortedItems.get(PROJECTILE_INDEX))
 				{
-					System.out.println("Avoiding Obstacles");
-					avoid();
+					if(s.getPosition().dist(getPosition()) < 20)
+					{
+						target = s;
+					}
 				}
-			}
-		}
-
-		if(sortedItems.get(MINE_INDEX).size() > 0)
-		{
-			System.out.println("Targeting Mines");
-			for(Sprite s : sortedItems.get(MINE_INDEX))
-			{
-				if(s.getPosition().dist(getPosition()) < 20)
+				if(target != null)
 				{
-					target(s);
+					target(target);
 					shoot();
 				}
 			}
-		}
-		
-		if(!isShielded())
-		{
-			if(sortedItems.get(SHIELD_INDEX).size() > 0)
+			
+			if(sortedItems.get(MINE_INDEX).size() > 0)
 			{
-				Sprite shortest;
-				System.out.println("Targeting Shields");
-				shortest = sortedItems.get(SHIELD_INDEX).get(0);
-				for(Sprite s : sortedItems.get(SHIELD_INDEX))
+				System.out.println("Targeting Mines");
+				for(Sprite s : sortedItems.get(MINE_INDEX))
+				{
+					if(s.getPosition().dist(getPosition()) < 20)
+					{
+						target(s);
+						shoot();
+					}
+				}
+			}
+
+
+			if(sortedItems.get(OBSTACLE_INDEX).size() > 0)
+			{
+				System.out.println("Targeting Obstacles");
+				for(Sprite s : sortedItems.get(OBSTACLE_INDEX))
+				{
+					if (s.getPosition().dist(getPosition()) < 100)
+					{
+						System.out.println("Avoiding Obstacles");
+						avoid();
+					}
+				}
+			}
+
+			if(!isShielded())
+			{
+				if(sortedItems.get(SHIELD_INDEX).size() > 0)
+				{
+					Sprite shortest;
+					System.out.println("Targeting Shields");
+					shortest = sortedItems.get(SHIELD_INDEX).get(0);
+					for(Sprite s : sortedItems.get(SHIELD_INDEX))
+					{
+						if(s.getPosition().dist(getPosition()) < shortest.getPosition().dist(getPosition()))
+						{
+							shortest = s;
+						}
+					}
+					target(shortest);
+				}
+			}
+
+			if(sortedItems.get(CIRCLE_INDEX).size() > 0)
+			{
+				System.out.println("Targeting Circles");
+				Sprite shortest = sortedItems.get(CIRCLE_INDEX).get(0);
+				for(Sprite s : sortedItems.get(CIRCLE_INDEX))
 				{
 					if(s.getPosition().dist(getPosition()) < shortest.getPosition().dist(getPosition()))
 					{
@@ -138,30 +163,16 @@ public class RicardoBot extends Mind{
 					}
 				}
 				target(shortest);
+				shoot();
 			}
-		}
 
-		if(sortedItems.get(CIRCLE_INDEX).size() > 0)
-		{
-			System.out.println("Targeting Circles");
-			Sprite shortest = sortedItems.get(CIRCLE_INDEX).get(0);
-			for(Sprite s : sortedItems.get(CIRCLE_INDEX))
+			if(!targeting)
 			{
-				if(s.getPosition().dist(getPosition()) < shortest.getPosition().dist(getPosition()))
-				{
-					shortest = s;
-				}
+				System.out.println("Roaming");
+				turn((float) (Math.PI / 2));
 			}
-			target(shortest);
-			shoot();
+			lastPos = getPosition().copy();
 		}
-
-		if(!targeting)
-		{
-			System.out.println("Roaming");
-			turn((float) (Math.PI / 2));
-		}
-
 	}
 
 	private void target(Sprite target)
