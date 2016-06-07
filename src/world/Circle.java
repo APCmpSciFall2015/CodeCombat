@@ -124,10 +124,31 @@ public class Circle extends Sprite implements Comparable<Circle>
 	public Circle(Circle c)
 	{
 		super(c);
+		this.totalAccuracy = c.totalAccuracy;
+		this.accuracy = c.accuracy;
+		this.totalShotsFired = c.totalShotsFired;
+		this.shotsFired = c.shotsFired;
+		this.totalHits = c.totalHits;
+		this.hits = c.hits;
+		this.deaths = c.deaths;
+		this.totalKills = c.totalKills;
+		this.kills = c.kills;
+		this.ticksAlive = c.ticksAlive;
+		this.totalShieldsAcquired = c.totalShieldsAcquired;
+		this.shieldsAcquired = c.shieldsAcquired;
+		this.totalObstacleCollisions = c.totalObstacleCollisions;
+		this.obstacleCollisions = c.obstacleCollisions;
+		this.totalWallCollisions = c.totalWallCollisions;
+		this.wallCollisions = c.wallCollisions;
+		this.totalMineCollisions = c.totalMineCollisions;
+		this.mineCollisions = c.mineCollisions;
+		this.totalProjectileCollisions = c.totalProjectileCollisions;
+		this.projectileCollisions = c.projectileCollisions;
 		this.shootTimer = c.shootTimer;
 		this.respawnTimer = c.respawnTimer;
-		this.mind = c.mind;
+		this.shielded = c.shielded;
 		this.eyePosition = c.getEyePosition();
+		// mind not copied
 	}
 
 	/**
@@ -218,17 +239,15 @@ public class Circle extends Sprite implements Comparable<Circle>
 				turn ((float) -Math.PI / 500); shoot();
 			}
 		}else
-
-	{
+		{
 		respawn();
-	}
+		}
 
-	if(mind!=null)mind.think();
+		if(mind != null) mind.think();
 
-	calcStats();
-
-	updateCounters();
-
+		calcStats();
+		updateCounters();
+		shielded = false;
 	}
 
 	/* (non-Javadoc)
@@ -256,6 +275,10 @@ public class Circle extends Sprite implements Comparable<Circle>
 		{
 			if (((Circle) s).isAlive())
 				slide(s);
+		}
+		else if (s instanceof Shield)
+		{
+			shielded = true;
 		}
 		else if (!(s instanceof Projectile || s instanceof Shield))
 		{

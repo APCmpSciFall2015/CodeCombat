@@ -8,15 +8,15 @@ import java.util.HashMap;
 import lib.Vector2;
 import world.Circle;
 import world.CircleStats;
+import world.Mine;
+import world.Obstacle;
 import world.Projectile;
+import world.Shield;
 import world.Sprite;
 
 public class CommitBot extends Mind
 {
 	CircleStats stats;
-	
-	
-	
 	
 	public CommitBot(CommitBot r)
 	{
@@ -103,7 +103,7 @@ public class CommitBot extends Mind
 	}
 	
 	private HashMap<Integer, SpriteData> tracked = new HashMap<>(); 
-	
+	private ArrayList<Sprite> inView;
 	private int ticks = 0;
 	
 	private void updateTracked(ArrayList<Sprite> inView)
@@ -128,12 +128,72 @@ public class CommitBot extends Mind
 			}
 		}
 		
-		System.out.println("Sprite Data (" + ticks + "): ");
-		for(Entry<Integer, SpriteData> e : tracked.entrySet())
+//		System.out.println("Sprite Data (" + ticks + "): ");
+//		for(Entry<Integer, SpriteData> e : tracked.entrySet())
+//		{
+//			System.out.println(e.getValue());
+//		}
+//		System.out.println("\n");
+	}
+	
+	private Sprite seek()
+	{
+		Sprite target = null;
+		for (Entry<Integer, SpriteData> e : tracked.entrySet())
 		{
-			System.out.println(e.getValue());
+			Sprite s = e.getValue().s;
+			
+			Vector2 direction = s.getPosition().sub(getPosition());
+			if (Math.abs(Math.acos(direction.dot(getVelocity()) / (getVelocity().mag() * direction.mag()))) < Math.abs(Circle.FOV / 2) && !inView.contains(s))
+			{					
+				tracked.remove(s.getId());
+			}
+				
+			
+			if (s instanceof Circle || (!getCircle().isShielded() && s instanceof Shield && ((Shield) s).isUnbound()))
+			{
+				if (target != null
+						&& s.getPosition().dist(getPosition()) < target.getPosition().dist(getPosition()))
+				{
+					target = s;
+				}
+				else if (target == null)
+				{
+					target = s;
+				}
+			}
 		}
-		System.out.println("\n");
+		return target;
+	}
+	
+	private Sprite avoid()
+	{
+		Sprite target = null;
+		for (Entry<Integer, SpriteData> e : tracked.entrySet())
+		{
+			Sprite s = e.getValue().s;
+			
+			Vector2 direction = s.getPosition().sub(getPosition());
+			if (Math.abs(Math.acos(direction.dot(getVelocity()) / (getVelocity().mag() * direction.mag()))) < Math.abs(Circle.FOV / 2) && !inView.contains(s))
+			{					
+				tracked.remove(s.getId());
+			}
+				
+			
+			if (s instanceof Mine || s instanceof Obstacle)
+			{
+				if (target != null
+						&& s.getPosition().dist(getPosition()) < target.getPosition().dist(getPosition()))
+				{
+					target = s;
+				}
+				else if (target == null)
+				{
+					target = s;
+				}
+			}
+		}
+		return target;
 	}
 	
 	@Override
@@ -141,48 +201,44 @@ public class CommitBot extends Mind
 	{
 		if (isAlive())
 		{
-			ArrayList<Sprite> inView = requestInView();
+			inView = requestInView();
 			updateTracked(inView);
-			Sprite target = null;
-			for (Sprite s : inView)
+			
+			Vector2 eyePosition = calcEyePosition(getPosition(), getVelocity());
+			Sprite seek = seek();
+			Sprite avoid = avoid();
+			if (seek != null && avoid != null)
 			{
-				if (s instanceof Circle)
+				if(seek.getPosition().dist(eyePosition) < avoid.getPosition().dist(eyePosition))
 				{
-					if (target != null
-							&& s.getPosition().dist(getPosition()) < target.getPosition().dist(getPosition()))
+//					System.out.println(seek);
+					Vector2 direction = seek.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
+					Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
+					Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
+					if(Math.acos(direction.dot(left) / (direction.mag()))
+							- Math.acos(direction.dot(right) / (direction.mag())) > 0)
 					{
-						target = s;
+						turn((float) Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
 					}
-					else if (target == null)
+					else
 					{
-						target = s;
+						turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
 					}
-				}
-			}
-
-			if (target != null)
-			{
-				Vector2 direction = target.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
-				Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
-				Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
-				if(Math.acos(direction.dot(left) / (direction.mag()))
-						- Math.acos(direction.dot(right) / (direction.mag())) > 0)
-				{
-					turn((float) Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
 				}
 				else
 				{
-					turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+//					System.out.println(avoid);
+					turn((float) Circle.MAX_TURNING_ANGLE);
 				}
 				
+				if (seek instanceof Circle)
+					shoot();
 			}
 			else
 			{
 				turn((float) Circle.MAX_TURNING_ANGLE);
 			}
-
-			if (target != null)
-				shoot();
+	
 			ticks++;
 		}
 		else
