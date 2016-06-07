@@ -1,5 +1,5 @@
-slot1=RicardoBot
-slot2=null
+slot1=CommitBot
+slot2=RicardoBot
 slot3=null
 slot4=null
 slot5=null

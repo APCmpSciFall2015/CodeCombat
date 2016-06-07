@@ -2,6 +2,7 @@ package bots;
 
 import java.util.ArrayList;
 
+import lib.Vector2;
 import world.Circle;
 import world.Mine;
 import world.Obstacle;
@@ -11,6 +12,7 @@ import world.Sprite;
 
 
 public class RicardoBot extends Mind{
+	private boolean targeting = false;
 	public static final int MINE_INDEX = 0;
 	public static final int OBSTACLE_INDEX = 1;
 	public static final int PROJECTILE_INDEX = 2;
@@ -20,7 +22,7 @@ public class RicardoBot extends Mind{
 	{
 		super(c);
 	}
-	
+
 	public RicardoBot(Circle c, float variance, float mean)
 	{
 		super(c, variance, mean);
@@ -42,16 +44,16 @@ public class RicardoBot extends Mind{
 		 * shoot other robots
 		 * spin in circles
 		 */
-		
 		//get the stuff in view
+
 		ArrayList<Sprite> inView = requestInView();
 		ArrayList<ArrayList<Sprite>> sortedItems = new ArrayList<ArrayList<Sprite>>();
 		//add each list of items
 		for(int x = 0; x < 5; x++)
 		{
-		sortedItems.add(new ArrayList<Sprite>());
+			sortedItems.add(new ArrayList<Sprite>());
 		}
-		
+
 		for(Sprite s : inView)
 		{
 			if(s instanceof Mine)
@@ -75,13 +77,93 @@ public class RicardoBot extends Mind{
 				sortedItems.get(CIRCLE_INDEX).add(s);
 			}
 		}
-		
-		
-		
-		
-		
+
+		if(sortedItems.get(PROJECTILE_INDEX).size() > 0)
+		{
+			for(Sprite s : sortedItems.get(PROJECTILE_INDEX))
+			{
+				if(s.getPosition().dist(getPosition()) < 20)
+				{
+					target(s);
+					shoot();
+				}
+			}
+		}
+
+		if(sortedItems.get(OBSTACLE_INDEX).size() > 0)
+		{
+			for(Sprite s : sortedItems.get(OBSTACLE_INDEX))
+			{
+				if (s.getPosition().dist(getPosition()) < 5)
+				{
+					avoid();
+				}
+			}
+		}
+
+		if(sortedItems.get(PROJECTILE_INDEX).size() > 0)
+		{
+			target(sortedItems.get(PROJECTILE_INDEX).get(0));
+			shoot();
+		}
+
+		if(!isShielded())
+		{
+			if(sortedItems.get(SHIELD_INDEX).size() > 0)
+			{
+				Sprite shortest;
+
+				shortest = sortedItems.get(SHIELD_INDEX).get(0);
+				for(Sprite s : sortedItems.get(SHIELD_INDEX))
+				{
+					if(s.getPosition().dist(getPosition()) < shortest.getPosition().dist(getPosition()))
+					{
+						shortest = s;
+					}
+				}
+				target(shortest);
+			}
+		}
+
+		if(sortedItems.get(CIRCLE_INDEX).size() > 0)
+		{
+			target(sortedItems.get(CIRCLE_INDEX).get(0));
+			shoot();
+		}
+
+		if(!targeting)
+		{
+			avoid();
+		}
+
 	}
-	
+
+	private void target(Sprite target)
+	{
+		targeting = true;
+		if (target != null)
+		{
+			Vector2 direction = target.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
+			Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
+			Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
+			if(Math.acos(direction.dot(left) / (direction.mag()))
+					- Math.acos(direction.dot(right) / (direction.mag())) > 0)
+			{
+				turn((float) Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+			}
+			else
+			{
+				turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+			}
+
+		}
+	}
+
+	private void avoid()
+	{
+		turn(Circle.MAX_TURNING_ANGLE);
+	}
+
 	@Override
 	public String toString()
 	{
