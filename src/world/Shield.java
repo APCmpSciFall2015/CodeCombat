@@ -250,7 +250,7 @@ public class Shield extends Sprite
 	 */
 	public void setOwner(Sprite owner)
 	{
-		this.owner = owner;
+		this.owner = owner.copy();
 	}
 
 }
