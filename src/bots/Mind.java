@@ -136,7 +136,7 @@ public abstract class Mind
 	 */
 	public final Circle getCircle()
 	{
-		Circle c = (Circle) c.copy();
+		Circle c = (Circle) circle.copy();
 		c.setPosition(c.getPosition().add(noise()));
 		c.setVelocity(c.getVelocity().add(noise()));
 		return c;
