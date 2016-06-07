@@ -30,11 +30,6 @@ public class JacknJahnBot extends Mind{
 			Sprite shield = null;
 			int priorityQueue = 0;	
 
-			for (Sprite s : inView){
-				if (s instanceof Circle){ //go for kill
-					priorityQueue = 3;
-				}
-			}
 			if(!super.isShielded()){
 				for (Sprite s : inView){
 					if (s instanceof Shield){
@@ -42,6 +37,11 @@ public class JacknJahnBot extends Mind{
 							priorityQueue = 2;
 						}
 					}
+				}
+			}
+			for (Sprite s : inView){
+				if (s instanceof Circle){ //go for kill
+					priorityQueue = 3;
 				}
 			}
 			for (Sprite s : inView){
@@ -56,15 +56,8 @@ public class JacknJahnBot extends Mind{
 					}
 				}	
 			}	
-			if (super.getVelocity().mag() < 2){ //stuck on obstacle
+			if (super.getVelocity().mag() < 1){ //stuck on obstacle
 				priorityQueue = 1;
-			}
-			for (Sprite s : inView){ 
-				if (s instanceof Circle){
-					if(s.getPosition().dist(getPosition()) < 100){ //ez kill
-						priorityQueue = 3;
-					}
-				}
 			}
 			switch (priorityQueue){
 			case 1://avoidance
@@ -80,11 +73,18 @@ public class JacknJahnBot extends Mind{
 						else if (shield == null);{
 							shield = b;
 						}
-						if(target != null){
+						if(shield != null){
 							Vector2 direction = shield.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
-							Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
-							Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
-							turn((float) (Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag()))));
+							Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
+							Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
+							if(Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag())) > 0)
+							{
+								turn((float) Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+							}
+							else
+							{
+								turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+							}
 						}
 					}
 				}
@@ -99,10 +99,17 @@ public class JacknJahnBot extends Mind{
 							target = c;
 						}
 						if(target != null){
-							Vector2 direction = target.getPosition().sub(calcEyePosition(getVelocity(), getPosition()));
-							Vector2 left = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
-							Vector2 right = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
-							turn((float) (Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag()))));
+							Vector2 direction = target.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
+							Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
+							Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
+							if(Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag())) > 0)
+							{
+								turn((float) Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+							}
+							else
+							{
+								turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+							}
 							shoot();
 						}
 					}	
