@@ -83,7 +83,7 @@ public abstract class Mind
 	{
 		if(circle.isAlive()) circle.shoot();
 	}
-
+	
 	/**
 	 * Request in view.
 	 *
@@ -130,6 +130,18 @@ public abstract class Mind
 	// Getters and Setters
 	// ---------------------------------------------
 
+	/**
+	 * Returns a noisy deep copy of the circle.
+	 * @return Circle copy
+	 */
+	public final Circle getCircle()
+	{
+		Circle c = (Circle) circle.copy();
+		c.setPosition(c.getPosition().add(noise()));
+		c.setVelocity(c.getVelocity().add(noise()));
+		return c;
+	}
+	
 	/**
 	 * Gets the time for the bot to respawn.
 	 *
