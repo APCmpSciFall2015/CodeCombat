@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-slot1=CommitBot
+slot1=null
 slot2=RicardoBot
 slot3=null
-=======
-slot1=
-slot2=CommitBot
-slot3=
->>>>>>> master
 slot4=null
 slot5=null
 slot6=null
