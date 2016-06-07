@@ -251,10 +251,6 @@ public class Circle extends Sprite implements Comparable<Circle>
 			totalMineCollisions++;
 			kill();
 		}
-		else if (s instanceof Shield)
-		{
-			shielded = true;
-		}
 		// slide on all other objects
 		else if (s instanceof Circle)
 		{
