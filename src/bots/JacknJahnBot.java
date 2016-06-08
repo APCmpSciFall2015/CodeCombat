@@ -30,28 +30,37 @@ public class JacknJahnBot extends Mind{
 			Sprite shield = null;
 			int priorityQueue = 0;	
 
-			if(!super.isShielded()){
+			if(!super.isShielded()){ //checks if should shield
 				for (Sprite s : inView){
 					if (s instanceof Shield){
-						if(s.getPosition().dist(getPosition()) < 200){ //get shield
+						if(s.getPosition().dist(getPosition()) < 300){ 
+							priorityQueue = 3;
+						}
+					}
+				}
+			}
+			for (Sprite s : inView){ //checks if should kill
+				if (s instanceof Circle){ 
+					for (Sprite t : inView){
+						if (t instanceof Obstacle){
+							if(s.getPosition().dist(getPosition()) > t.getPosition().dist(getPosition())){
+								priorityQueue = 2;
+							}
+						}
+						else{
 							priorityQueue = 2;
 						}
 					}
 				}
 			}
-			for (Sprite s : inView){
-				if (s instanceof Circle){ //go for kill
-					priorityQueue = 3;
-				}
-			}
-			for (Sprite s : inView){
+			for (Sprite s : inView){  //checks if should avoid
 				if (s instanceof Obstacle){
-					if(s.getPosition().dist(getPosition()) < 50){ //avoid obstacle
+					if(s.getPosition().dist(getPosition()) < 75){ //avoid obstacle
 						priorityQueue = 1;
 					}
 				}
 				if (s instanceof Mine){
-					if(s.getPosition().dist(getPosition()) < 150){ //avoid mine
+					if(s.getPosition().dist(getPosition()) < 200){ //avoid mine
 						priorityQueue = 1;
 					}
 				}	
@@ -61,35 +70,9 @@ public class JacknJahnBot extends Mind{
 			}
 			switch (priorityQueue){
 			case 1://avoidance
-				turn((float) Circle.MAX_TURNING_ANGLE);
+					turn((float) Circle.MAX_TURNING_ANGLE);
 				break;
-			
-			case 2://get shield
-				for (Sprite b : inView){
-					if (b instanceof Shield){ 
-						if(shield != null && b.getPosition().dist(getPosition()) < shield.getPosition().dist(getPosition())){
-							shield = b;
-						}
-						else if (shield == null);{
-							shield = b;
-						}
-						if(shield != null){
-							Vector2 direction = shield.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
-							Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
-							Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
-							if(Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag())) > 0)
-							{
-								turn((float) Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
-							}
-							else
-							{
-								turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
-							}
-						}
-					}
-				}
-				break;
-			case 3: //murder
+			case 2: //murder
 				for (Sprite c : inView){
 					if (c instanceof Circle){ 
 						if(target != null && c.getPosition().dist(getPosition()) < target.getPosition().dist(getPosition())){
@@ -113,6 +96,31 @@ public class JacknJahnBot extends Mind{
 							shoot();
 						}
 					}	
+				}
+				break;
+			case 3://get shield
+				for (Sprite b : inView){
+					if (b instanceof Shield){ 
+						if(shield != null && b.getPosition().dist(getPosition()) < shield.getPosition().dist(getPosition())){
+							shield = b;
+						}
+						else if (shield == null);{
+							shield = b;
+						}
+						if(shield != null){
+							Vector2 direction = shield.getPosition().sub(calcEyePosition(getPosition(), getVelocity()));
+							Vector2 left = new Vector2(1, getVelocity().angle() - Circle.FOV / 2, true);
+							Vector2 right = new Vector2(1, getVelocity().angle() + Circle.FOV / 2, true);
+							if(Math.acos(direction.dot(left) / (direction.mag())) - Math.acos(direction.dot(right) / (direction.mag())) > 0)
+							{
+								turn((float) Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+							}
+							else
+							{
+								turn((float) -Math.acos(direction.dot(getVelocity()) / direction.mag() / getVelocity().mag()));
+							}
+						}
+					}
 				}
 				break;
 			default: turn((float) Circle.MAX_TURNING_ANGLE);
