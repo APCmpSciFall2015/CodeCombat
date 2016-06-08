@@ -38,6 +38,7 @@ public class Projectile extends Sprite
 	public Projectile(Projectile p)
 	{
 		super(p);
+		this.owner = p.owner;
 	}
 
 	/**
@@ -115,7 +116,7 @@ public class Projectile extends Sprite
 		if (s.getId() != owner.getId() && !(s instanceof Shield && ((Shield) s).isOwner(owner)))
 		{
 				setExistence(false);
-				if(s instanceof Circle) 
+				if(s instanceof Circle && !((Circle) s).isShielded()) 
 				{
 					owner.setKills(owner.getKills() + 1);
 					owner.setHits(owner.getHits() + 1);
@@ -149,6 +150,6 @@ public class Projectile extends Sprite
 	 */
 	public boolean isOwner(Sprite c)
 	{
-		return owner.getId() == c.getId();
+		return c != null && owner.getId() == c.getId();
 	}
 }
