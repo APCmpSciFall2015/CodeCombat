@@ -9,6 +9,7 @@ import world.Obstacle;
 import world.Sprite;
 
 public class ZekeBot extends Mind{
+	//attempted to compensate for obstacles only to find the base bot is super effective
 	
 	private ArrayList<ArrayList<Obstacle>> obstacles;
 	private ArrayList<Circle> circles;
@@ -52,30 +53,30 @@ public class ZekeBot extends Mind{
 						target = s;
 					}
 				}
-				if (s instanceof Obstacle){
-					boolean seen = false;
-					for (ArrayList<Obstacle> o : obstacles){
-						if(o.get(0).getId() == s.getId()){
-							o.add((Obstacle)s);
-							seen = true;
-						}
-					}
-					if(!seen){
-						obstacles.add(new ArrayList<Obstacle>(Arrays.asList(new Obstacle[]{(Obstacle) s})));
-					}
-					
+//				if (s instanceof Obstacle){
 //					boolean seen = false;
-//					for (Obstacle o : obstacles){
-//						if (o.getId() == s.getId()){
-//							seen = true; 
-//							o.setPosition(o.getPosition().add(s.getPosition()).div(2));
-//							break;
+//					for (ArrayList<Obstacle> o : obstacles){
+//						if(o.get(0).getId() == s.getId()){
+//							o.add((Obstacle)s);
+//							seen = true;
 //						}
 //					}
 //					if(!seen){
-//						obstacles.add((Obstacle)s);
+//						obstacles.add(new ArrayList<Obstacle>(Arrays.asList(new Obstacle[]{(Obstacle) s})));
 //					}
-				}
+//					
+////					boolean seen = false;
+////					for (Obstacle o : obstacles){
+////						if (o.getId() == s.getId()){
+////							seen = true; 
+////							o.setPosition(o.getPosition().add(s.getPosition()).div(2));
+////							break;
+////						}
+////					}
+////					if(!seen){
+////						obstacles.add((Obstacle)s);
+////					}
+//				}
 			}
 			
 	
