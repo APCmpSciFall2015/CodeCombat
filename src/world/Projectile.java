@@ -16,7 +16,7 @@ public class Projectile extends Sprite
 {
 	
 	/**  maximum speed of a projectile. */
-	private static final float SPEED = Integer.parseInt(Main.CONFIG.get("projectileSpeed"));
+	public static final float SPEED = Integer.parseInt(Main.CONFIG.get("projectileSpeed"));
 	
 	/** Radius of the projectile. */
 	private static final float RADIUS = Integer.parseInt(Main.CONFIG.get("projectileRadius"));
@@ -114,19 +114,24 @@ public class Projectile extends Sprite
 		if(s == null) return;
 		// @formatter:off
 		if (s.getId() != owner.getId() && !(s instanceof Shield && ((Shield) s).isOwner(owner)))
-		{
-				setExistence(false);
+		{			
 				if(s instanceof Circle && !((Circle) s).isShielded()) 
 				{
+					setExistence(false);
 					owner.setKills(owner.getKills() + 1);
 					owner.setHits(owner.getHits() + 1);
 					owner.setTotalHits(owner.getTotalHits() + 1);
 					owner.setTotalKills(owner.getTotalHits() + 1);
 				}
-				else if (s instanceof Shield)
+				else if (s instanceof Shield || s instanceof Mine)
 				{
+					setExistence(false);
 					owner.setHits(owner.getHits() + 1);
 					owner.setTotalHits(owner.getTotalHits() + 1);
+				}
+				else if (s instanceof Obstacle)
+				{
+					setExistence(false);
 				}
 		}
 		// @formatter:on

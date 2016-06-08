@@ -89,7 +89,7 @@ public class RicardoBot extends Mind{
 
 			if(sortedItems.get(PROJECTILE_INDEX).size() > 0)
 			{
-				System.out.println("Targeting Projectiles");
+//				System.out.println("Targeting Projectiles");
 				for(Sprite s : sortedItems.get(PROJECTILE_INDEX))
 				{
 					if(s.getPosition().dist(getPosition()) < 35)
@@ -102,7 +102,7 @@ public class RicardoBot extends Mind{
 			
 			if(sortedItems.get(MINE_INDEX).size() > 0)
 			{
-				System.out.println("Targeting Mines");
+//				System.out.println("Targeting Mines");
 				for(Sprite s : sortedItems.get(MINE_INDEX))
 				{
 					if(s.getPosition().dist(getPosition()) < 35)

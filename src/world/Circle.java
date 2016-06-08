@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import app.Main;
+import app.Main.GameState;
 import bots.Mind;
 import lib.Vector2;
 
@@ -243,7 +244,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 		respawn();
 		}
 
-		if(mind != null) mind.think();
+		if(mind != null && getWorld().getMainApplet().getGameState() != GameState.PAUSED) mind.think();
 
 		calcStats();
 		updateCounters();
