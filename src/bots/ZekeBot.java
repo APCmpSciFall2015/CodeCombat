@@ -1,19 +1,30 @@
 package bots;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import lib.Vector2;
 import world.Circle;
+import world.Obstacle;
 import world.Sprite;
 
 public class ZekeBot extends Mind{
+	//attempted to compensate for obstacles only to find the base bot is super effective
+	
+	private ArrayList<ArrayList<Obstacle>> obstacles;
+	private ArrayList<Circle> circles;
+//	private ArrayList<Shield> shields;
+//	private ArrayList<Mine> mines;
+	
+	
+	private int fear;
 
 	public ZekeBot(Circle c, float variance, float mean) {
 		super(c, variance, mean);
-		// TODO Auto-generated constructor stub
+		obstacles = new ArrayList<ArrayList<Obstacle>>();
 	}
 
-	public ZekeBot(ZekeBot zekeBot) {
+	public ZekeBot(ZekeBot zekeBot) {//this method should never be called
 		super(zekeBot);
 	}
 
@@ -24,6 +35,7 @@ public class ZekeBot extends Mind{
 
 	@Override
 	public void think() {
+		fear = 0;
 		if(isAlive())
 		{
 			ArrayList<Sprite> inView = requestInView();
@@ -41,6 +53,30 @@ public class ZekeBot extends Mind{
 						target = s;
 					}
 				}
+//				if (s instanceof Obstacle){
+//					boolean seen = false;
+//					for (ArrayList<Obstacle> o : obstacles){
+//						if(o.get(0).getId() == s.getId()){
+//							o.add((Obstacle)s);
+//							seen = true;
+//						}
+//					}
+//					if(!seen){
+//						obstacles.add(new ArrayList<Obstacle>(Arrays.asList(new Obstacle[]{(Obstacle) s})));
+//					}
+//					
+////					boolean seen = false;
+////					for (Obstacle o : obstacles){
+////						if (o.getId() == s.getId()){
+////							seen = true; 
+////							o.setPosition(o.getPosition().add(s.getPosition()).div(2));
+////							break;
+////						}
+////					}
+////					if(!seen){
+////						obstacles.add((Obstacle)s);
+////					}
+//				}
 			}
 			
 	
@@ -64,6 +100,8 @@ public class ZekeBot extends Mind{
 		}
 		
 	}
+	
+	
 	
 	@Override
 	public String toString()
