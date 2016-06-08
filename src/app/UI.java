@@ -96,7 +96,7 @@ public class UI
 		g.setColor(Color.BLUE);
 		g.drawString(s, x, y);
 	}
-
+	
 	/**
 	 * draws the leaderboard in the applet
 	 * @param g graphics

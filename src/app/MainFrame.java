@@ -97,8 +97,13 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 		menuItem.addActionListener((ActionListener) this);
 		menu.add(menuItem);
 
-		// add exit option
+		// add menu option
 		menuItem = new JMenuItem("Main Menu");
+		menuItem.addActionListener((ActionListener) this);
+		menu.add(menuItem);
+		
+		// add restart option
+		menuItem = new JMenuItem("Restart");
 		menuItem.addActionListener((ActionListener) this);
 		menu.add(menuItem);
 
@@ -228,13 +233,17 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener, K
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (e.getActionCommand() == "Exit")
+		if ( "Exit".equals(e.getActionCommand()))
 		{
 			System.exit(0);
 		}
-		if (e.getActionCommand() == "Main Menu")
+		else if ("Main Menu".equals(e.getActionCommand()))
 		{
 			applet.setGameState(Main.GameState.MENU);
+		}
+		else if("Restart".equals(e.getActionCommand()))
+		{
+			applet.restart();
 		}
 
 		for (int x = 0; x < buttonGroups.size(); x++)

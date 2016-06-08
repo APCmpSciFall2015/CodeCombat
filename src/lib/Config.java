@@ -68,7 +68,8 @@ public class Config
 			{
 				String line = s.nextLine();
 				int div = line.indexOf('=');
-				properties.put(line.substring(0, div), line.substring(div + 1));
+				if(div > 0)
+					properties.put(line.substring(0, div), line.substring(div + 1));
 			}
 			System.out.println("loaded config data from file: " + f);
 		}

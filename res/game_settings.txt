@@ -1,15 +1,6 @@
-<<<<<<< HEAD
-slot1=TestBot
-slot2=null
-slot3=RicardoBot
-slot4=ZekeBot
-slot5=CommitBot
-slot6=null
-=======
-slot1=JacknJahnBot
-slot2=TestBot
+slot1=null
+slot2=CommitBot
 slot3=TestBot
-slot4=CommitBot
-slot5=
-slot6=
->>>>>>> BestBranch
+slot4=ZekeBot
+slot5=RicardoBot
+slot6=JacknJahnBot

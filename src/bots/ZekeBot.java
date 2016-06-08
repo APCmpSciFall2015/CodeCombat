@@ -106,7 +106,7 @@ public class ZekeBot extends Mind{
 	@Override
 	public String toString()
 	{
-		return "The Greatest Little Zeke That Could";
+		return "ZekeBot";
 	}
 
 }
