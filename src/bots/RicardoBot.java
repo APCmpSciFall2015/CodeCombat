@@ -55,7 +55,6 @@ public class RicardoBot extends Mind{
 			//check to see if we moved
 			if(lastPos != null && lastPos.dist(getPosition()) < 1)
 			{
-				System.out.println("Scramble");
 				avoid();
 			}
 			//add each list of items
@@ -117,12 +116,10 @@ public class RicardoBot extends Mind{
 
 			if(sortedItems.get(OBSTACLE_INDEX).size() > 0)
 			{
-				System.out.println("Targeting Obstacles");
 				for(Sprite s : sortedItems.get(OBSTACLE_INDEX))
 				{
 					if (s.getPosition().dist(getPosition()) < 35)
 					{
-						System.out.println("Avoiding Obstacles");
 						avoid();
 					}
 				}
@@ -133,7 +130,6 @@ public class RicardoBot extends Mind{
 				if(sortedItems.get(SHIELD_INDEX).size() > 0)
 				{
 					Sprite shortest;
-					System.out.println("Targeting Shields");
 					shortest = sortedItems.get(SHIELD_INDEX).get(0);
 					for(Sprite s : sortedItems.get(SHIELD_INDEX))
 					{
@@ -148,7 +144,6 @@ public class RicardoBot extends Mind{
 
 			if(sortedItems.get(CIRCLE_INDEX).size() > 0)
 			{
-				System.out.println("Targeting Circles");
 				Sprite shortest = sortedItems.get(CIRCLE_INDEX).get(0);
 				for(Sprite s : sortedItems.get(CIRCLE_INDEX))
 				{
@@ -163,7 +158,6 @@ public class RicardoBot extends Mind{
 
 			if(!targeting)
 			{
-				System.out.println("Roaming");
 				turn((float) (Math.PI / 2));
 			}
 			lastPos = getPosition().copy();
