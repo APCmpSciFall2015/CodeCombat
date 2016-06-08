@@ -185,7 +185,7 @@ public class UI
 		for (Circle c : circles)
 			stats.add(new StatData(c,
 					new String[] {
-							"" + c.getMind(),
+							("" + c.getMind()).substring(0, Math.min(("" + c.getMind()).length(), Mind.MAX_NAME_CHARS)),
 							"" + c.getId(),
 							"" + c.getTotalKills(),
 							"" + c.getDeaths(),
