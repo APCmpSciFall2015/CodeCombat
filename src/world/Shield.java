@@ -157,6 +157,10 @@ public class Shield extends Sprite
 		{
 			setAlive(false);
 		}
+		else if (s instanceof Shield && unbound)
+		{
+			setAlive(false);
+		}
 		
 		// run in circle (also like a little ducky)
 		if (!unbound)

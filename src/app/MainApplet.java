@@ -19,6 +19,7 @@ import world.World;
 
 /**
  * The MainApplet class is responsible for rendering and displaying the game.
+ * 
  * @author Robert
  * @version 0.1
  */
@@ -30,7 +31,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	// Instance variables
 	// ----------------------------------
-	
+
 	/** size of Applet. */
 	private final Dimension size = new Dimension(Main.WORLD_WIDTH, Main.WORLD_HEIGHT);
 
@@ -72,6 +73,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.applet.Applet#init()
 	 */
 	@Override
@@ -100,18 +102,19 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.applet.Applet#start()
 	 */
 	@Override
 	public void start()
 	{
 		thread = new Thread(this);
-		thread.setDaemon(true);
 		thread.start();
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.applet.Applet#stop()
 	 */
 	@Override
@@ -121,6 +124,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.applet.Applet#destroy()
 	 */
 	@Override
@@ -130,79 +134,60 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
 	@Override
 	public void paint(Graphics g)
 	{
-		try
+
+		// setup canvas
+		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
+				BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g2 = bi.createGraphics();
+		g2.setColor(getBackground());
+		g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
+
+		if (gameState.equals(GameState.MENU))
 		{
+			ui.drawMenuScreen(g2);
+		}
+		else
+		{
+			// paint world
+			world.paint(g2);
+			if (gameState.equals(GameState.PAUSED))
+				ui.drawPauseScreen(g2);
+			if (displayFullStatsOverlay)
+				ui.drawFullStatsOverlay(g2);
 
-			// setup canvas
-			bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
-					BufferedImage.TYPE_4BYTE_ABGR);
-			Graphics2D g2 = bi.createGraphics();
-			g2.setColor(getBackground());
-			g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
-
-			if (gameState.equals(GameState.MENU))
-			{
-				ui.drawMenuScreen(g2);
-			}
 			else
-			{
-				// paint world
-				world.paint(g2);
-				if (gameState.equals(GameState.PAUSED))
-					ui.drawPauseScreen(g2);
-				if (displayFullStatsOverlay)
-					ui.drawFullStatsOverlay(g2);
+				ui.drawLeaderboard(g2);
+		}
 
-				else ui.drawLeaderboard(g2);
-			}
+		g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
 
-			g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
-		}
-		catch (ConcurrentModificationException e)
-		{
-			// skip the rest of the update if paint conflicts with updates
-			if (Main.debug)
-				System.err.println("Skip rest of frame: Concurrent Modification");
-		}
-		catch (NoSuchElementException e)
-		{
-			// ditto here (caused by trying to access world's arraylist of
-			// circles whilst updating: bah humbug
-			if (Main.debug)
-				System.err.println("Skip rest of frame: No Such Element");
-		}
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
 	public void run()
 	{
+		
 		while (!gameState.equals(GameState.OVER))
 		{
+			
 			long start = System.currentTimeMillis();
 
-			try
+			if (gameState.equals(GameState.PLAY))
 			{
-				if (gameState.equals(GameState.PLAY))
-				{
-					world.update();
-				}
-				repaint();
+				world.update();
 			}
-			catch (ConcurrentModificationException e)
-			{
-				// skip the rest of the update if paint conflicts with updates
-				if (Main.debug)
-					System.err.println("Skip rest of frame: Concurrent Modification");
-			}
+			repaint();
 
 			// sleep for rest of frame time
 			while (System.currentTimeMillis() - start < Main.FRAME_RATE)
@@ -275,6 +260,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
 	 */
 	@Override
@@ -285,6 +271,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
 	 */
 	@Override
@@ -302,7 +289,9 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 				Main.debug = !Main.debug;
 			// restart game
 			if (c == 'r')
+			{
 				world.restart();
+			}
 			// launch game from menu
 			if (c == ' ' && gameState.equals(GameState.MENU))
 			{
@@ -320,7 +309,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 			keyToggles.put(c, true);
 		}
-		
+
 		// enable full stats overlay
 		if (c == '\t')
 			displayFullStatsOverlay = true;
@@ -330,13 +319,14 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
 	 */
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
 		char c = ("" + e.getKeyChar()).toLowerCase().charAt(0);
-		
+
 		// disable full stats overlay
 		if (c == '\t')
 			displayFullStatsOverlay = false;
@@ -352,6 +342,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * The getWidth method returns the width of the applet.
+	 * 
 	 * @return width of applet
 	 */
 	public int getWidth()
@@ -361,6 +352,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * The setWidth method sets the width of the applet.
+	 * 
 	 * @param width width of applet
 	 */
 	public void setWidth(int width)
@@ -370,6 +362,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * The getHeight method returns the height of the applet.
+	 * 
 	 * @return height of applet
 	 */
 	public int getHeight()
@@ -379,6 +372,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * The setHeight method sets the height of the applet.
+	 * 
 	 * @param height height of applet
 	 */
 	public void setHeight(int height)
@@ -388,6 +382,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * The getGameState method returns the current game state.
+	 * 
 	 * @return The current game state
 	 */
 	public GameState getGameState()
@@ -397,6 +392,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * The setGameState method sets gameState to the desired state.
+	 * 
 	 * @param gameState game state
 	 */
 	public void setGameState(GameState gameState)
@@ -406,6 +402,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * Gets the world.
+	 * 
 	 * @return the world
 	 */
 	protected World getWorld()
@@ -415,6 +412,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * Sets the world.
+	 * 
 	 * @param world the new world
 	 */
 	protected void setWorld(World world)
@@ -424,6 +422,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * Gets the Jframe the applet is contained in.
+	 * 
 	 * @return the Jframe
 	 */
 	public MainFrame getFrame()
@@ -433,6 +432,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * Sets the frame the applet is contained in.
+	 * 
 	 * @param frame the new frame
 	 */
 	public void setFrame(MainFrame frame)
@@ -442,6 +442,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * Gets the number of frames drawn.
+	 * 
 	 * @return the number of frames
 	 */
 	public int getFrames()
@@ -451,6 +452,7 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 
 	/**
 	 * Sets the number frames drawn.
+	 * 
 	 * @param frames the number of frames drawn
 	 */
 	public void setFrames(int frames)

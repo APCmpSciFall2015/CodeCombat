@@ -48,6 +48,9 @@ public class World
 	/** sprites in the plane of existence. */
 	private ArrayList<Sprite> sprites;
 
+	/** sprites in use lock variable **/
+	private volatile boolean spritesLock = false;
+	
 	/** Host mainApplet. */
 	private MainApplet mainApplet;
 
@@ -91,6 +94,8 @@ public class World
 	 **/
 	public void init()
 	{
+		while(spritesLock);
+		spritesLock = true;
 		long startTime = System.currentTimeMillis();
 
 		// initialize game objects
@@ -143,6 +148,7 @@ public class World
 		}
 		System.out.println("Initialized " + NUM_MINES + " mines");
 		System.out.println("#Initialization Complete: took " + (System.currentTimeMillis() - startTime) + "ms#\n");
+		spritesLock = false;
 	}
 
 	/**
@@ -219,6 +225,8 @@ public class World
 	 */
 	public void update()
 	{
+		while(spritesLock);
+		spritesLock = true;
 		for (int i = sprites.size() - 1; i >= 0; i--)
 		{
 			if (sprites.get(i).getExistence())
@@ -226,6 +234,7 @@ public class World
 			else sprites.remove(i);
 		}
 		checkCollisions();
+		spritesLock = false;
 		ticks++;
 	}
 
@@ -257,10 +266,13 @@ public class World
 	 */
 	public void paint(Graphics g)
 	{
+		while(spritesLock);
+		spritesLock = true;
 		for (Sprite s : sprites)
 		{
 			s.paint(g);
 		}
+		spritesLock = false;
 	}
 
 	/**

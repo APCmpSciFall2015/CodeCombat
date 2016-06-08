@@ -1,6 +1,6 @@
-slot1=
+slot1=TestBot
 slot2=null
-slot3=null
-slot4=null
-slot5=null
+slot3=RicardoBot
+slot4=ZekeBot
+slot5=CommitBot
 slot6=null
