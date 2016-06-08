@@ -258,7 +258,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		if(s == null) return;
 		// die when hit by projectile (not own projectile)
-		if (s instanceof Projectile && !((Projectile) s).isOwner(this))
+		if (s instanceof Projectile && !((Projectile) s).isOwner(this) && !shielded)
 		{
 			projectileCollisions++;
 			totalProjectileCollisions++;
