@@ -424,6 +424,7 @@ public class CommitBot extends Mind
 			{
 				target = sightedFront;
 			}
+			// attack closest target
 			else if (closestTarget != null && clearPath(closestTarget))
 			{
 				target = closestTarget;

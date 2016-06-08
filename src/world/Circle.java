@@ -111,9 +111,12 @@ public class Circle extends Sprite implements Comparable<Circle>
 	/**  has a shield */
 	private boolean shielded = false;
 	
+	/** whether or not the circle has turned this tick **/
+	private boolean turned = false;
+	
 	/**  Mind to control circle bot */
 	private Mind mind = null;
-
+	
 	// Constructors
 	// --------------------------------------------------------------------
 
@@ -233,6 +236,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 	{
 		if(isAlive())
 		{
+			turned = false;
 			slideWalls();
 			setPosition(getPosition().add(getVelocity()));
 			if(mind == null) 
@@ -412,6 +416,7 @@ public class Circle extends Sprite implements Comparable<Circle>
 
 		// adjust angle of velocity vector (aka turn)
 		setVelocity(new Vector2(SPEED, getVelocity().angle() + deltaTheta, true));
+		turned = true;
 	}
 
 	/**
