@@ -4,3 +4,4 @@ slot3=TestBot
 slot4=ZekeBot
 slot5=RicardoBot
 slot6=JacknJahnBot
+slot7=scuBOT
