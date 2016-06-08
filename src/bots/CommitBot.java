@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import app.Main;
 
 import java.util.HashMap;
+import java.util.List;
 
 import lib.Vector2;
 import world.Circle;
@@ -180,8 +181,9 @@ public class CommitBot extends Mind
 
 	private void updateTracked(ArrayList<Sprite> inView)
 	{
+
 		// update old data
-		for (Entry<Integer, SpriteData> e : tracked.entrySet())
+		for (Entry<Integer, SpriteData> e : new ArrayList<Entry<Integer, SpriteData>>(tracked.entrySet()))
 		{
 			// System.out.println(e.getValue());
 			Sprite s = e.getValue().s;
@@ -344,7 +346,7 @@ public class CommitBot extends Mind
 			// Process data
 			// ---------------------------------------------------------------------
 
-			for (Entry<Integer, SpriteData> e : tracked.entrySet())
+			for (Entry<Integer, SpriteData> e : new ArrayList<Entry<Integer, SpriteData>>(tracked.entrySet()))
 			{
 				Sprite s = e.getValue().s;
 
@@ -457,18 +459,16 @@ public class CommitBot extends Mind
 						.div(2));
 			}
 
-			// avoid mines
-			if (closestMine != null && closestMine.getPosition().dist(position) < Mine.RADIUS + Circle.RADIUS * 3)
-			{
-				turnAwayFrom(closestMine);
-			}
 			// attack predicted location of target
-			else if (predictedTarget != null && clearPath(predictedTarget))
+			if (predictedTarget != null && clearPath(predictedTarget))
 			{
 				turnTowards(predictedTarget);
-				Vector2 direction = predictedTarget.getPosition().sub(eyePosition);
-				if (Math.acos(direction.dot(velocity) / (direction.mag() * velocity.mag())) < Math.toRadians(Circle.FOV / 3))
-					shoot();
+				shoot();
+			}
+			// avoid mines
+			else if (closestMine != null && closestMine.getPosition().dist(position) < Mine.RADIUS + Circle.RADIUS * 3)
+			{
+				turnAwayFrom(closestMine);
 			}
 			// dodge incoming projectile
 			else if (closestProjectile != null && !((Projectile) closestProjectile).isOwner(circle)
@@ -482,7 +482,7 @@ public class CommitBot extends Mind
 				turnTowards(sightedBehind);
 			}
 			// get shields
-			else if (!circle.isShielded() && closestShield != null && clearPath(closestShield))
+			else if (!circle.isShielded() && closestShield != null && clearPath(closestShield) && closestShield.getPosition().dist(position) < 200)
 			{
 				turnTowards(closestShield);
 			}

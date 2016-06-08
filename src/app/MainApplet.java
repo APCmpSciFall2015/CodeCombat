@@ -109,7 +109,6 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	public void start()
 	{
 		thread = new Thread(this);
-		thread.setDaemon(true);
 		thread.start();
 	}
 
@@ -141,49 +140,33 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	@Override
 	public void paint(Graphics g)
 	{
-		try
+
+		// setup canvas
+		bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
+				BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g2 = bi.createGraphics();
+		g2.setColor(getBackground());
+		g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
+
+		if (gameState.equals(GameState.MENU))
 		{
+			ui.drawMenuScreen(g2);
+		}
+		else
+		{
+			// paint world
+			world.paint(g2);
+			if (gameState.equals(GameState.PAUSED))
+				ui.drawPauseScreen(g2);
+			if (displayFullStatsOverlay)
+				ui.drawFullStatsOverlay(g2);
 
-			// setup canvas
-			bi = new BufferedImage((int) world.getSize().getX(), (int) world.getSize().getY(),
-					BufferedImage.TYPE_4BYTE_ABGR);
-			Graphics2D g2 = bi.createGraphics();
-			g2.setColor(getBackground());
-			g2.fillRect(0, 0, (int) world.getSize().getX(), (int) world.getSize().getY());
-
-			if (gameState.equals(GameState.MENU))
-			{
-				ui.drawMenuScreen(g2);
-			}
 			else
-			{
-				// paint world
-				world.paint(g2);
-				if (gameState.equals(GameState.PAUSED))
-					ui.drawPauseScreen(g2);
-				if (displayFullStatsOverlay)
-					ui.drawFullStatsOverlay(g2);
+				ui.drawLeaderboard(g2);
+		}
 
-				else
-					ui.drawLeaderboard(g2);
-			}
+		g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
 
-			g.drawImage(bi, 0, 0, (int) getSize().getWidth(), (int) getSize().getHeight(), null);
-		}
-		catch (ConcurrentModificationException e)
-		{
-			// skip the rest of the update if paint conflicts with updates
-			// if (Main.debug)
-			// System.err.println("Skip rest of frame: Concurrent
-			// Modification");
-		}
-		catch (NoSuchElementException e)
-		{
-			// ditto here (caused by trying to access world's arraylist of
-			// circles whilst updating: bah humbug
-			// if (Main.debug)
-			// System.err.println("Skip rest of frame: No Such Element");
-		}
 	}
 
 	/*
@@ -194,24 +177,17 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 	@Override
 	public void run()
 	{
+		
 		while (!gameState.equals(GameState.OVER))
 		{
+			
 			long start = System.currentTimeMillis();
 
-			try
+			if (gameState.equals(GameState.PLAY))
 			{
-				if (gameState.equals(GameState.PLAY))
-				{
-					world.update();
-				}
-				repaint();
+				world.update();
 			}
-			catch (ConcurrentModificationException e)
-			{
-				// skip the rest of the update if paint conflicts with updates
-//				if (Main.debug)
-//					System.err.println("Skip rest of frame: Concurrent Modification");
-			}
+			repaint();
 
 			// sleep for rest of frame time
 			while (System.currentTimeMillis() - start < Main.FRAME_RATE)
@@ -313,7 +289,9 @@ public class MainApplet extends JApplet implements Runnable, KeyListener
 				Main.debug = !Main.debug;
 			// restart game
 			if (c == 'r')
+			{
 				world.restart();
+			}
 			// launch game from menu
 			if (c == ' ' && gameState.equals(GameState.MENU))
 			{
