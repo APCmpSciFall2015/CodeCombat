@@ -5,3 +5,4 @@ slot4=ZekeBot
 slot5=RicardoBot
 slot6=JacknJahnBot
 slot7=scuBOT
+slot8=JardBot
