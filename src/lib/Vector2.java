@@ -238,7 +238,7 @@ public class Vector2
 	 */
 	public float cross(Vector2 v)
 	{
-		return x * v.y + y * v.x;
+		return x * v.y - y * v.x;
 	}
 
 	/**
