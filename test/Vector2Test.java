@@ -145,7 +145,7 @@ public class Vector2Test
 	{
 		Vector2 v1 = new Vector2(2, 1);
 		Vector2 v2 = new Vector2(1, 2);
-		assertEquals(v1.cross(v2), 5, 0.001);
+		assertEquals(v1.cross(v2), 3, 0.001);
 	}
 	
 	@Test
