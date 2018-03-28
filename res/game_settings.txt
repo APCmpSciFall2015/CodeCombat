@@ -1,8 +1,8 @@
 slot1=CommitBot
-slot2=null
-slot3=TestBot
-slot4=ZekeBot
+slot2=TestBot
+slot3=ZekeBot
+slot4=RicardoBot
 slot5=RicardoBot
-slot6=JacknJahnBot
-slot7=scuBOT
-slot8=JardBot
+slot6=
+slot7=
+slot8=
